@@ -1,5 +1,5 @@
 <%@ page import="java.sql.*" %>
-<%@ page import="com.mysql.cj.protocol.Resultset" %>
+<%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.awt.*" %>
 <%@ page import="java.io.InputStream" %>
 <%@ page import="java.io.OutputStream" %>
@@ -31,7 +31,7 @@
   <div class="container">
     <nav class="navbar navbar-dark navbar-expand-lg ">
       <div class="container-fluid">
-        <a class="navbar-brand " href="index.html">
+        <a class="navbar-brand " href="index.jsp">
           <h1><img class="navbar-logo" src="images/logo.png" alt="logo"></h1>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -55,7 +55,7 @@
               </ul>
             </li>
             <li class="nav-item ">
-              <a class="nav-link text-white" href="#">Přidat postavu</a>
+              <a class="nav-link text-white" href="add_character.jsp">Přidat postavu</a>
             </li>
           </ul>
         </div>
@@ -196,7 +196,6 @@
               if(count < maxCount && count > (pageNumber - 1) * 24){
                 byte[] imageData = rs.getBytes("obrazek");
                 String base64Image = new String(Base64.getEncoder().encode(imageData));
-
         %>
         <div class="text-center database-item col-12 col-sm-6 col-lg-3">
           <div class="m-2 character-item">

@@ -1,8 +1,9 @@
+package model;
+
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.Date;
 
-public class character implements Serializable{
+public class Character implements Serializable{
     //inicializace všech variables pro filmovou postavu
     private int id;
     private String name;
@@ -12,12 +13,14 @@ public class character implements Serializable{
     private String gender;
     private int age;
     private byte[] image;
-    private  String nickname;
+    private String nickname;
     private String actorName;
     private String adminName;
     private String filmName;
 
-    public character() {
+    public Character() {
+        //seting default value
+        this.age = 999;
     }
 
     public int getId() {
@@ -115,4 +118,5 @@ public class character implements Serializable{
     public void setFilmName(String filmName) {
         this.filmName = filmName;
     }
+
 }

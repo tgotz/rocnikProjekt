@@ -9,23 +9,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9d8529b0-5ff3-4b7a-9b34-b7f03b5d2e48" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/character.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/FilterServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/HelloServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/pagination.jsp" afterDir="false" />
+    <list default="true" id="9d8529b0-5ff3-4b7a-9b34-b7f03b5d2e48" name="Changes" comment="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/AddCharacterServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/FetchFilmsServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/ActorDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/FilmDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/HlaskyDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/lib/mysql-connector-j-8.3.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/add_character.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/form.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/images/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/images/wall.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/styles/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/character.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Character.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/FilterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/FilterServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,8 +39,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Jsp File" />
+        <option value="JavaScript File" />
+        <option value="Servlet" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -83,10 +89,14 @@
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;fileTemplates&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\T.Gotz\IdeaProjects\rocnikProjekt\src\main\java" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.rocnikprojekt" />
     </key>
@@ -191,11 +201,40 @@
       <workItem from="1712254064767" duration="2542000" />
       <workItem from="1712256627978" duration="9196000" />
       <workItem from="1712304399327" duration="7224000" />
-      <workItem from="1712312174945" duration="20111000" />
+      <workItem from="1712312174945" duration="20324000" />
+      <workItem from="1712403191152" duration="2640000" />
+      <workItem from="1712406078294" duration="4567000" />
+      <workItem from="1712423139549" duration="532000" />
+      <workItem from="1712582398298" duration="2011000" />
+      <workItem from="1712584417972" duration="15211000" />
     </task>
+    <task id="LOCAL-00001" summary="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
+      <option name="closed" value="true" />
+      <created>1712351526831</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712351526831</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Funkční index.jsp - filtrace, stránkování, načítání všech dat." />
+    <option name="LAST_COMMIT_MESSAGE" value="Funkční index.jsp - filtrace, stránkování, načítání všech dat." />
   </component>
 </project>

@@ -38,7 +38,7 @@ public class FilterServlet extends HttpServlet {
             }
         }
 
-        //ading gender option
+        //adding gender option
         //checks if at least one gender parameter is not selected and at least one is selected.
         if ((request.getParameter("male") == null || request.getParameter("female") == null || request.getParameter("other") == null) && (request.getParameter("male") != null || request.getParameter("female") != null || request.getParameter("other") != null)){
             String genderSqlWhere ="";
@@ -80,7 +80,6 @@ public class FilterServlet extends HttpServlet {
         }
 
 
-        System.out.println(sql);
         //sending new sql to index.jsp as attribute
         request.setAttribute("sql", sql);
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
