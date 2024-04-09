@@ -99,5 +99,34 @@ public class CharacterDAO {
 
     }
 
+    public Character getCharacterDetail(int id){
+        String query = "SELECT * FROM postavy JOIN filmy on postavy.idfilmu = filmy.idfilmu JOIN herci on postavy.idherce = herci.idherce JOIN administratori on postavy.idadministrator = administratori.idadministrator WHERE postavy.idpostavy = ?";
+        Character character = new Character();
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                character.setId(resultSet.getInt("postavy.idpostavy"));
+                character.setName(resultSet.getString("postavy.jmeno"));
+                character.setDesc(resultSet.getString("postavy.popis"));
+                character.setDateAdded(resultSet.getDate("postavy.datumPridani"));
+                character.setType(resultSet.getString("postavy.typPostavy"));
+                character.setGender(resultSet.getString("postavy.pohlavi"));
+                character.setImage(resultSet.getBytes("postavy.obrazek"));
+                character.setNickname(resultSet.getString("postavy.prezdivka"));
+                character.setActorName(resultSet.getString("herci.jmeno"));
+                character.setActorName(resultSet.getString("herci.jmeno"));
+                character.setAdminName(resultSet.getString("administratori.idadministrator"));
+                character.setFilmName(resultSet.getString("filmy.nazevFilmu"));
+            }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.print(character.getName());
+        System.out.print(character.getDesc());
+        System.out.print(character.getFilmName());
+        return character;
+    };
 }
