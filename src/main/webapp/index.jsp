@@ -48,9 +48,9 @@
                 Žebříčky
               </a>
               <ul class="dropdown-menu ">
-                <li><a class="dropdown-item" href="#">Nejoblíbenější</a></li>
-                <li><a class="dropdown-item" href="#">Nejnenáviděnejší</a></li>
-                <li><a class="dropdown-item" href="#">Nejatraktivější</a></li>
+                <li><a class="dropdown-item" href="leaderBoard?sort=1">Nejoblíbenější</a></li>
+                <li><a class="dropdown-item" href="leaderBoard?sort=2">Nejnenáviděnejší</a></li>
+                <li><a class="dropdown-item" href="leaderBoard?sort=3">Nejatraktivější</a></li>
               </ul>
             </li>
             <li class="nav-item ">
@@ -197,6 +197,7 @@
                 String base64Image = new String(Base64.getEncoder().encode(imageData));
         %>
         <div class="text-center database-item col-12 col-sm-6 col-lg-3">
+          <a href="detail?id=<%=rs.getInt("id")%>">
           <div class="m-2 character-item">
             <img class="character-image" src="data:image/jpeg;base64,<%= base64Image %>"
                  alt="postava">
@@ -205,6 +206,7 @@
               <p class="my-0"><%=rs.getString("id") %></p>
             </div>
           </div>
+          </a>
         </div>
         <%
               }

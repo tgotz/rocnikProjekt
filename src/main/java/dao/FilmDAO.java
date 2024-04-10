@@ -1,26 +1,32 @@
 package dao;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class FilmDAO {
     // Database connection details
-    private static final String URL = "jdbc:mysql://localhost:3306/characters1";
-    private static final String USERNAME = "webik";
-    private static final String PASSWORD = "webik69";
-
-    // Method to establish database connection
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    private Connection connection;
+    public FilmDAO() {
+        try {
+            Properties properties = new Properties();
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
+            properties.load(inputStream);
+            String url = properties.getProperty("db.url");
+            String username = properties.getProperty("db.username");
+            String password = properties.getProperty("db.password");
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
     }
-    public FilmDAO(){
-
-    };
     // Method to fetch film names based on user input
     public List<String> findFilmNames(String input) throws SQLException {
         List<String> filmNames = new ArrayList<>();
         String query = "SELECT nazevFilmu FROM filmy WHERE nazevFilmu LIKE ?";
-        try (Connection connection = getConnection();
+        try (
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, "%" + input + "%");
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -33,7 +39,7 @@ public class FilmDAO {
     }
     public int getFilmId(String filmName) {
         String query = "SELECT idfilmu FROM filmy WHERE nazevFilmu = ?";
-        try (PreparedStatement statement = getConnection().prepareStatement(query)) {
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, filmName);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -47,7 +53,7 @@ public class FilmDAO {
     public int insertFilm(String filmName) {
         System.out.println("zkousim vkladat ");
         String query = "INSERT INTO filmy (nazevFilmu) VALUES (?)";
-        try (PreparedStatement statement = getConnection().prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, filmName);
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 1) {

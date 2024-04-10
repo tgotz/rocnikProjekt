@@ -5,7 +5,7 @@ $(document).ready(function(){
   slidesToScroll: 1,
   dots:true,
   autoplay:true,
-  autoplaySpeed: 4000,
+  autoplaySpeed: 2000,
     responsive: [
       {
 

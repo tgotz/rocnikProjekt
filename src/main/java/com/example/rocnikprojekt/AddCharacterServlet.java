@@ -59,14 +59,10 @@ public class AddCharacterServlet extends HttpServlet {
 
         //making array out of "quotes string" from form
         String[] quotesArray = request.getParameter("quotes").split(";");
-        try {
             CharacterDAO characterDAO = new CharacterDAO();
             characterDAO.addCharacter(newCharacter, quotesArray);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
-        request.setAttribute("outcome", "Postava byla úspěšně přidána!");
+            request.setAttribute("outcome", "Postava byla úspěšně přidána!");
 
         } else{
         //something wasnt provided

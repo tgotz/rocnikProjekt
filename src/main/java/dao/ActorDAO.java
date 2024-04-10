@@ -1,16 +1,26 @@
 package dao;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Properties;
 
 public class ActorDAO {
     private Connection connection;
 
-    public ActorDAO(Connection connection) {
-        this.connection = connection;
+    public ActorDAO() {
+        try {
+            Properties properties = new Properties();
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
+            properties.load(inputStream);
+            String url = properties.getProperty("db.url");
+            String username = properties.getProperty("db.username");
+            String password = properties.getProperty("db.password");
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     //Checks if actor exists

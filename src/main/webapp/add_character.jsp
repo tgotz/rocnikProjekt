@@ -47,9 +47,9 @@
                                 Žebříčky
                             </a>
                             <ul class="dropdown-menu ">
-                                <li><a class="dropdown-item" href="#">Nejoblíbenější</a></li>
-                                <li><a class="dropdown-item" href="#">Nejnenáviděnejší</a></li>
-                                <li><a class="dropdown-item" href="#">Nejatraktivější</a></li>
+                                <li><a class="dropdown-item" href="leaderBoard?sort=1">Nejoblíbenější</a></li>
+                                <li><a class="dropdown-item" href="leaderBoard?sort=2">Nejnenáviděnejší</a></li>
+                                <li><a class="dropdown-item" href="leaderBoard?sort=3">Nejatraktivější</a></li>
                             </ul>
                         </li>
                         <li class="nav-item ">
@@ -62,7 +62,7 @@
         <h2 class="mt-5 mb-5 outline-heading">Přidejte novou postavu</h2>
     </div>
 </header>
-<div class="container">
+<div class="container bg-main pt-2">
 
     <% if(request.getAttribute("outcome") != null){ %>
      <div class="message"><%=request.getAttribute("outcome")%></div>

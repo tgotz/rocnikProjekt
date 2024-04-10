@@ -1,5 +1,5 @@
 :root{
-  --red-main: #ba0305;
+  --dark: #1D1E2A;
   --blue: #00c6c2;
 }
 .navbar-logo{
@@ -70,14 +70,35 @@
   left: 8px;
   background: currentColor;
 }
-header{
-  background-image: url(../images/wall.webp);
-  background-position-x: center;
-  background-position-y: bottom;
-  }
+.arrowUp{
+  border: solid var(--blue);
+  border-width: 0 5px 5px 0;
+  display: inline-block;
+  padding: 8px;
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  cursor: pointer;
+}
+.arrowDown{
+  border: solid var(--blue);
+  border-width: 0 5px 5px 0;
+  display: inline-block;
+  padding: 8px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  cursor: pointer;
+
+}
+.bg-main{
+  background-color: var(--dark);
+  border-radius: 10px;
+}
   body{
-    background-color: #1D1E2A;
+    background-color: var(--dark);
     color: white;
+    background-image: url(../images/wall.jpg);
+    background-position-x: center;
+    background-repeat: no-repeat;
   }
   .slick-carousel-item{
     margin: 0.5rem;

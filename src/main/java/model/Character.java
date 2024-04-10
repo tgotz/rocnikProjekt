@@ -18,6 +18,8 @@ public class Character implements Serializable{
     private String adminName;
     private String filmName;
 
+    private double overallRating;
+    private double attractivenessRating;
     public Character() {
         //seting default value
         this.age = 999;
@@ -119,4 +121,19 @@ public class Character implements Serializable{
         this.filmName = filmName;
     }
 
+    public double getOverallRating() {
+        return overallRating;
+    }
+
+    public void setOverallRating(double overallRating) {
+        this.overallRating = overallRating;
+    }
+
+    public double getAttractivenessRating() {
+        return attractivenessRating;
+    }
+
+    public void setAttractivenessRating(double attractivenessRating) {
+        this.attractivenessRating = attractivenessRating;
+    }
 }

@@ -1,4 +1,7 @@
-<%--
+<%@ page import="model.Character" %>
+<%@ page import="java.util.Base64" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="model.Review" %><%--
   Created by IntelliJ IDEA.
   User: Tomáš
   Date: 09.04.2024
@@ -23,74 +26,123 @@
           href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
 </head>
 <body>
-<div class="container">
-    <h1 class="mt-4">Character Details</h1>
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <h2>Character Name</h2>
-            <img src="character-image.jpg" class="img-fluid rounded" alt="Character Image">
+<header>
+    <div class="container">
+        <nav class="navbar navbar-dark navbar-expand-lg ">
+            <div class="container-fluid">
+                <a class="navbar-brand " href="index.jsp">
+                    <h1><img class="navbar-logo" src="images/logo.png" alt="logo"></h1>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="index.jsp">Domů</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                Žebříčky
+                            </a>
+                            <ul class="dropdown-menu ">
+                                <li><a class="dropdown-item" href="leaderBoard?sort=1">Nejoblíbenější</a></li>
+                                <li><a class="dropdown-item" href="leaderBoard?sort=2">Nejnenáviděnejší</a></li>
+                                <li><a class="dropdown-item" href="leaderBoard?sort=3">Nejatraktivější</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="add_character.jsp">Přidat postavu</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<%
+    Character character = (Character)request.getAttribute("character");
+    String base64Image = new String(Base64.getEncoder().encode(character.getImage()));
+    ArrayList<String> quotesList = (ArrayList<String>) request.getAttribute("quotesList");
+            ArrayList<Review> reviewsList = (ArrayList<Review>) request.getAttribute("reviewList");
+%>
+<div class="container mt-5 bg-main pt-2">
+    <h2>Detaily postavy</h2>
+    <hr>
+    <div class="row">
+
+        <div class="col-md-8">
+            <h3>Jméno: <%=character.getName()%></h3>
+            <% if(character.getNickname()!=null){ %>
+            <p>Přezdívka: <%=character.getNickname()%></p>
+            <%}%>
+            <% if (character.getAge() != 999){%>
+            <p>Věk: <%=character.getAge()%></p>
+           <%}%>
+            <p>Pohlaví: <%=character.getGender()%></p>
+            <p>Typ: <%=character.getType()%></p>
+            <p>Herec/dabér: <%=character.getActorName()%></p>
+            <p>Název filmu: <%=character.getFilmName()%></p>
+            <p><%=character.getDesc()%></p>
         </div>
-        <div class="col-md-6">
-            <ul class="list-group">
-                <li class="list-group-item"><strong>Nickname:</strong> Character's Nickname</li>
-                <li class="list-group-item"><strong>Age:</strong> Character's Age</li>
-                <!-- Add more details like gender, type, etc. -->
-            </ul>
+        <div class="col-md-4">
+            <img src="data:image/jpeg;base64,<%= base64Image %>" class="img-fluid" alt="Character Image">
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h2>Actor Name</h2>
-            <p>Actor's Name</p>
-        </div>
+    <% if(quotesList.size() != 0){%>
+    <h3>Hlášky</h3>
+    <ul>
+        <% for(int i = 0; i < quotesList.size(); i++){%>
+
+        <li><%=quotesList.get(i)%></li>
+        <%} %>
+    </ul>
+    <%}%>
+    <hr>
+    <div class="reviews text-center">
+    <h3>Přidat recenzi </h3>
+        <p></p>
+    <i class="arrowDown"></i>
+    <div id="reviewForm" class="review-form d-none animate__animated animate__fadeOut">
+        <form action="addReviewServlet" method="post">
+            <input type="hidden" name="characterId" value="<%= character.getId() %>">
+            <div class="form-group">
+                <label for="name">Vaše přezdívka(bude zobrazena u recenze):</label>
+                <input dirname="name" type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="overallRating">Celkové hodnocení:</label>
+                <input name="overallRating" min="0" max="10" step="1" type="range" class="form-range" id="overallRating">
+            </div>
+            <div class="form-group">
+                <label for="attractivenessRating">Hodnocení atrakivity postavy:</label>
+                <input dirname="attractivenessRating" min="0" max="10" step="1" name="attractivenessRating" type="range" class="form-range" id="attractivenessRating">
+            </div>
+            <div class="form-group">
+                <label for="reviewText">Text recenze:</label>
+                <textarea dirname="reviewText" class="form-control" id="reviewText" name="reviewText" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Odeslat</button>
+        </form>
+        <i class="arrowUp d-none"></i>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <h2>Quotes</h2>
-            <ul class="list-group">
-                <li class="list-group-item">Quote 1</li>
-                <li class="list-group-item">Quote 2</li>
-                <!-- Add more quotes -->
-            </ul>
-            <a href="#" class="btn btn-primary mt-3">Show More Quotes</a>
-        </div>
-        <div class="col-md-6">
-            <h2>Reviews</h2>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <h4>Review 1</h4>
-                    <p>Overall Rating: 4/5</p>
-                    <p>Attractiveness Rating: 3/5</p>
-                    <p>Review Text: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </li>
-                <!-- Add more reviews -->
-            </ul>
-        </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h2>Add Review</h2>
-            <form>
-                <div class="form-group">
-                    <label for="reviewerName">Reviewer Name</label>
-                    <input type="text" class="form-control" id="reviewerName" placeholder="Enter your name">
-                </div>
-                <div class="form-group">
-                    <label for="overallRating">Overall Rating</label>
-                    <input type="number" class="form-control" id="overallRating" placeholder="Enter overall rating">
-                </div>
-                <div class="form-group">
-                    <label for="attractivenessRating">Attractiveness Rating</label>
-                    <input type="number" class="form-control" id="attractivenessRating" placeholder="Enter attractiveness rating">
-                </div>
-                <div class="form-group">
-                    <label for="reviewText">Review Text</label>
-                    <textarea class="form-control" id="reviewText" rows="3" placeholder="Enter your review"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit Review</button>
-            </form>
-        </div>
-    </div>
+    <h3 class="mt-5">Recenze</h3>
+    <% if(reviewsList.size() == 0){%>
+        <p class="text-center my-2">Nikdo zatím postavu <%=character.getName()%> neohodnotil, nechcete být první?</p>
+   <% }%>
+    <ul class="list-group">
+        <% for(int i = 0; i < reviewsList.size(); i++) {%>
+        <li class="list-group-item my-3">
+            <strong><%=reviewsList.get(i).getAuthorName()%> říká:</strong><br>
+            <strong>Celkové hodnoceí: <%=reviewsList.get(i).getOverallRating()%>/10</strong><br>
+            <strong>Hodnocení atraktivity: <%=reviewsList.get(i).getAttractivenessRating()%>/10</strong><br>
+            <strong><%=reviewsList.get(i).getReviewText()%></strong>
+        </li>
+        <%}%>
+    </ul>
 </div>
 <!-- slick carousel -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -105,6 +157,28 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
 
+
+<script>
+    document.querySelector(".arrowDown").addEventListener("click", function() {
+        document.querySelector("#reviewForm").classList.toggle("d-none");
+        document.querySelector("#reviewForm").classList.toggle("animate__fadeIn");
+        document.querySelector("#reviewForm").classList.toggle("animate__fadeOut");
+
+        document.querySelector(".arrowDown").classList.toggle("d-none")
+        document.querySelector(".arrowUp").classList.toggle("d-none")
+
+    });
+    document.querySelector(".arrowUp").addEventListener("click", function() {
+        document.querySelector("#reviewForm").classList.toggle("animate__fadeOut");
+        document.querySelector("#reviewForm").classList.toggle("animate__fadeIn");
+        setTimeout(function(){
+            document.querySelector("#reviewForm").classList.toggle("d-none");
+            document.querySelector(".arrowDown").classList.toggle("d-none")
+            document.querySelector(".arrowUp").classList.toggle("d-none")
+        }, 700);
+
+    });
+</script>
 
 </body>
 

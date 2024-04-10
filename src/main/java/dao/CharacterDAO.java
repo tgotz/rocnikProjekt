@@ -1,24 +1,33 @@
 package dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Properties;
 
-import dao.ActorDAO;
 import model.Character;
 
 public class CharacterDAO {
     //change if database details change
-    private static final String URL = "jdbc:mysql://localhost:3306/characters1";
-    private static final String USERNAME = "webik";
-    private static final String PASSWORD = "webik69";
     private Connection connection;
-    //database connection
-    public CharacterDAO() throws SQLException {
-        this.connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-    }
 
+    public CharacterDAO() {
+        try {
+            Properties properties = new Properties();
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
+            properties.load(inputStream);
+            String url = properties.getProperty("db.url");
+            String username = properties.getProperty("db.username");
+            String password = properties.getProperty("db.password");
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //method to add character
     public void addCharacter(Character character, String[] quotesArray){
-        ActorDAO actorDAO = new ActorDAO(connection);
+        ActorDAO actorDAO = new ActorDAO();
         FilmDAO filmDAO = new FilmDAO();
 
 
@@ -84,11 +93,11 @@ public class CharacterDAO {
                 idPostavy = resultSet.getInt(1);
             }
             //adding the quotes if there are any quotes
-            HlaskyDAO hlaskyDAO = new HlaskyDAO(connection);
+            QuotesDAO quotesDAO = new QuotesDAO();
             if(idPostavy != -1){
                 for(int i = 0; i < quotesArray.length; i++){
                     if(quotesArray[i] != null && !quotesArray[i].isEmpty()){
-                        hlaskyDAO.insertHlaska(quotesArray[i], idPostavy);
+                        quotesDAO.insertQuote(quotesArray[i], idPostavy);
                     }
                 }
             }
@@ -99,6 +108,7 @@ public class CharacterDAO {
 
     }
 
+    //method to get character's details
     public Character getCharacterDetail(int id){
         String query = "SELECT * FROM postavy JOIN filmy on postavy.idfilmu = filmy.idfilmu JOIN herci on postavy.idherce = herci.idherce JOIN administratori on postavy.idadministrator = administratori.idadministrator WHERE postavy.idpostavy = ?";
         Character character = new Character();
@@ -124,9 +134,32 @@ public class CharacterDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        System.out.print(character.getName());
-        System.out.print(character.getDesc());
-        System.out.print(character.getFilmName());
         return character;
     };
+    public ArrayList<Character> getCharactersLB(String orderBy){
+        String query = "SELECT postavy.idpostavy , postavy.jmeno, postavy.prezdivka, filmy.nazevFilmu, herci.jmeno, AVG(recenze.celkoveHodnoceni) as overall, AVG(recenze.hodnoceniAtraktivity) as attractiveness FROM postavy JOIN filmy on postavy.idfilmu = filmy.idfilmu JOIN herci on postavy.idherce = herci.idherce JOIN recenze on postavy.idpostavy = recenze.idpostavy GROUP BY (postavy.idpostavy) ORDER BY " + orderBy;
+        ArrayList<Character> characterList = new ArrayList<Character>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            int i = 0;
+            while (resultSet.next()){
+                if(i < 50){
+                    Character character = new Character();
+                    character.setId(resultSet.getInt("postavy.idpostavy"));
+                    character.setName(resultSet.getString("postavy.jmeno"));
+                    character.setNickname(resultSet.getString("postavy.prezdivka"));
+                    character.setFilmName(resultSet.getString("filmy.nazevFilmu"));
+                    character.setActorName(resultSet.getString("herci.jmeno"));
+                    character.setOverallRating(resultSet.getDouble("overall"));
+                    character.setAttractivenessRating(resultSet.getDouble("attractiveness"));
+                    characterList.add(character);
+                    i++;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return characterList;
+    }
 }
