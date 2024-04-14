@@ -4,15 +4,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Properties;
 
+import jakarta.servlet.http.HttpServletRequest;
 import model.Character;
+
+import javax.swing.plaf.nimbus.State;
 
 public class CharacterDAO {
     //change if database details change
     private Connection connection;
 
     public CharacterDAO() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
         try {
             Properties properties = new Properties();
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
@@ -161,5 +175,127 @@ public class CharacterDAO {
             throw new RuntimeException(e);
         }
         return characterList;
+    }
+    public ArrayList<Character> getRecentCharacters(){
+        ArrayList<Character> characters = new ArrayList<Character>();
+        try {
+            Statement statement = connection.createStatement();
+
+            //getting characters from the database for the "recently added" section
+            String recentlyAddedQuery = "SELECT postavy.idpostavy as id, postavy.jmeno as jmeno, postavy.obrazek as obrazek, filmy.nazevFilmu as nazevFilmu FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu ORDER BY postavy.datumPridani DESC;";
+            ResultSet resultSet = statement.executeQuery(recentlyAddedQuery);
+            int countRecentlyAdded = 0;
+            while(resultSet.next()){
+                if(countRecentlyAdded < 6){
+                   Character character = new Character();
+                   character.setId(resultSet.getInt("id"));
+                   character.setName(resultSet.getString("jmeno"));
+                    character.setImage(resultSet.getBytes("obrazek"));
+                    character.setFilmName(resultSet.getString("nazevfilmu"));
+                    characters.add(character);
+                }
+                countRecentlyAdded++;
+        }
+    } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return characters;
+
+    }
+    public ArrayList<Character> getCharacters(HttpServletRequest request){
+
+        ArrayList<Character> characters = new ArrayList<>();
+        String sql = "SELECT postavy.idpostavy as id, postavy.typPostavy as typ, postavy.pohlavi as pohlavi, postavy.jmeno as jmeno, postavy.obrazek as obrazek, postavy.datumPridani as datum, filmy.nazevFilmu as nazevFilmu FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu ";
+        ArrayList<String> sqlWhere = new ArrayList<String>();
+        ArrayList<String> values = new ArrayList<>();
+
+        //adding search option
+        if(request.getParameter("search") != null && !request.getParameter("search").isEmpty() ){
+            String search =request.getParameter("search");
+            sqlWhere.add("(jmeno like '%"+ search +"%' OR nazevFilmu like '%" + search +"%')");
+        }
+
+        //adding select type option
+        if( (request.getParameter("cartoon") == null) ^ request.getParameter("irl") == null){
+            if(request.getParameter("cartoon") == null){
+                sqlWhere.add(" typPostavy = ?");
+                values.add("Hraná");
+            } else{
+                sqlWhere.add(" typPostavy = ?");
+                values.add("Animovaná");
+
+            }
+        }
+
+        //adding gender option
+        //checks if at least one gender parameter is not selected and at least one is selected.
+        if ((request.getParameter("male") == null || request.getParameter("female") == null || request.getParameter("other") == null) && (request.getParameter("male") != null || request.getParameter("female") != null || request.getParameter("other") != null)){
+            String genderSqlWhere ="";
+            if(request.getParameter("male") != null ){
+                genderSqlWhere = "(pohlavi = ? ";
+                values.add("Muž");
+
+            }
+            if(request.getParameter("female") != null ){
+                values.add("Žena");
+                if(genderSqlWhere == ""){
+                    genderSqlWhere = "(pohlavi = ? ";
+                } else{
+                    genderSqlWhere += "OR pohlavi = ? ";
+                }
+            }
+            if(request.getParameter("other") != null ){
+                if(genderSqlWhere == ""){
+                    genderSqlWhere = "(pohlavi = ? ";
+                } else{
+                    genderSqlWhere += "OR pohlavi = ? ";
+                }
+                values.add("Jiné");
+            }
+            genderSqlWhere += ")";
+            sqlWhere.add(genderSqlWhere);
+        }
+
+        //adding all the where condition to the sql
+        if(!sqlWhere.isEmpty()){
+            sql += " WHERE ";
+            for(int i = 0; i < sqlWhere.size(); i++){
+                if( i >= 1){
+                    sql += " AND ";
+                }
+                sql += sqlWhere.get(i);
+            }
+        }
+
+        //ading order by option
+        if(request.getParameter("order") != null && !request.getParameter("order").isEmpty()){
+            sql += " ORDER BY " + request.getParameter("order");
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            //setting the values for sql query
+            for(int i = 1; i <= values.size(); i++){
+                statement.setString(i, values.get(i-1));
+            }
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                Character character = new Character();
+                character.setId(resultSet.getInt("id"));
+                character.setName(resultSet.getString("jmeno"));
+                character.setImage(resultSet.getBytes("obrazek"));
+                character.setDesc(resultSet.getString("pohlavi"));
+                character.setDateAdded(resultSet.getDate("datum"));
+                character.setType(resultSet.getString("typ"));
+                character.setGender(resultSet.getString("pohlavi"));
+                character.setFilmName(resultSet.getString("nazevFilmu"));
+                characters.add(character);
+
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return characters;
     }
 }

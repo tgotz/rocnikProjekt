@@ -4,6 +4,12 @@
 <%@ page import="java.io.InputStream" %>
 <%@ page import="java.io.OutputStream" %>
 <%@ page import="java.util.Base64" %>
+<%@ page import="dao.CharacterDAO" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="model.Character" %>
+<%@ page import="java.util.Properties" %>
+<%@ page import="java.io.IOException" %>
+<%@ page import="model.Character"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,39 +85,21 @@
         int maxCount = count + pageNumber * 24;
         int maxPage = 0;
 
-
-        try{
-          //JDBC - connecting to database
-          DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
-          Connection con = DriverManager.getConnection(
-                  "jdbc:mysql://localhost:3306/characters1",
-                  "webik",
-                  "webik69"
-          );
-
-          Statement st = con.createStatement();
-
-          //getting characters from the database for the "recently added" section
-          String recentlyAddedQuery = "SELECT postavy.idpostavy as id, postavy.jmeno as jmeno, postavy.obrazek as obrazek, filmy.nazevFilmu as nazevFilmu FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu ORDER BY postavy.datumPridani DESC;";
-          ResultSet rsRecentlyAdded = st.executeQuery(recentlyAddedQuery);
-          int countRecentlyAdded = 0;
-          while(rsRecentlyAdded.next()){
-
-                if(countRecentlyAdded < 6){
-                  countRecentlyAdded++;
-                  byte[] imageData = rsRecentlyAdded.getBytes("obrazek");
-                  String base64Image = new String(Base64.getEncoder().encode(imageData));
+        //getting recent characters
+        CharacterDAO characterDAO = new CharacterDAO();
+        ArrayList<Character> recentCharacters = characterDAO.getRecentCharacters();
+        for(int i = 0; i < recentCharacters.size(); i++){
+                  String base64Image = new String(Base64.getEncoder().encode(recentCharacters.get(i).getImage()));
       %>
 
       <div class="text-center slick-carousel-item">
         <img class="character-image" src="data:image/jpeg;base64,<%= base64Image %>" alt="postava">
         <div class="caption caption-carousel">
-          <h3 class="my-0"><%=rsRecentlyAdded.getString("jmeno")%></h3>
-          <p class="my-0"><%=rsRecentlyAdded.getString("nazevFilmu")%></p>
+          <h3 class="my-0"><%=recentCharacters.get(i).getName()%></h3>
+          <p class="my-0"><%=recentCharacters.get(i).getFilmName()%></p>
         </div>
       </div>
       <%
-          }
           }
       %>
     </div>
@@ -181,29 +169,30 @@
       <div class="d-flex flex-wrap" id="characterCards">
 
         <%
-            //geting the characters data from database
-          String sql;
-          if(request.getAttribute("sql") != null){
-            sql = (String) request.getAttribute("sql");
-          } else{
-            sql = "SELECT p.idpostavy as id, p.jmeno as jmeno, p.popis as popis, p.datumPridani as datumPridani, p.typPostavy as typPostavy, p.pohlavi as pohlavi, p.vek as vek, p.obrazek as obrazek, p.prezdivka as prezdivka, herci.jmeno as jmenoHerce, filmy.nazevFilmu as nazevFilmu, administratori.username as username FROM postavy p JOIN administratori ON p.idadministrator = administratori.idadministrator JOIN filmy ON p.idfilmu = filmy.idfilmu JOIN herci ON p.idherce = herci.idherce ORDER BY p.idpostavy;";
-          }
-            ResultSet rs = st.executeQuery(sql);
-            //looping trough characters
-            while(rs.next()){
+          ArrayList<Character> characters = new ArrayList<>();
 
+          //checking if servlet has provided filtered data - if not - getting unfiltered data
+          if(request.getAttribute("charactersFiltred") != null){
+            System.out.println("jsem tady");
+            characters = (ArrayList<Character>) request.getAttribute("charactersFiltred");
+          } else{
+            characters = characterDAO.getCharacters(request);
+          }
+
+            for(int i = 0; i < characters.size(); i++) {
+              //paging
               if(count < maxCount && count > (pageNumber - 1) * 24){
-                byte[] imageData = rs.getBytes("obrazek");
-                String base64Image = new String(Base64.getEncoder().encode(imageData));
+                //geting correct image data
+                String base64Image = new String(Base64.getEncoder().encode(characters.get(i).getImage()));
         %>
         <div class="text-center database-item col-12 col-sm-6 col-lg-3">
-          <a href="detail?id=<%=rs.getInt("id")%>">
+          <a href="detail?id=<%=characters.get(i).getId()%>">
           <div class="m-2 character-item">
             <img class="character-image" src="data:image/jpeg;base64,<%= base64Image %>"
                  alt="postava">
             <div class="caption">
-              <h5 class="my-0"><%=rs.getString("jmeno") %></h5>
-              <p class="my-0"><%=rs.getString("id") %></p>
+              <h5 class="my-0"><%=characters.get(i).getName()%></h5>
+              <p class="my-0"><%=characters.get(i).getFilmName() %></p>
             </div>
           </div>
           </a>
@@ -213,18 +202,10 @@
               count++;
             }
             maxPage = (int)Math.ceil(count / 24.0);
-          }catch (SQLException e){
-              e.printStackTrace();
-
-            }
           request.setAttribute("maxPage", maxPage);
           request.setAttribute("count", count);
-
         %>
-
-
       </div>
-
       <%
         //display only on last page - link to add new character
         if(pageNumber >= maxPage){
