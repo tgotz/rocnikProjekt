@@ -67,4 +67,15 @@ public class FilmDAO {
         }
         return -1;
     }
+    public void deleteFilmIfNotUsed(int filmId) {
+        try {
+            String query = "DELETE FROM filmy WHERE idfilmu = ? AND NOT EXISTS (SELECT 1 FROM postavy where idfilmu = ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, filmId);
+            statement.setInt(2, filmId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

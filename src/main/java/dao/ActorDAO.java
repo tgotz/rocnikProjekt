@@ -56,4 +56,18 @@ public class ActorDAO {
         }
         return -1;
     }
+
+    //delete actor if he doesn't have any characters
+    public void deleteActorIfNotUsed(int actorId) {
+        try {
+            String query = "DELETE FROM herci WHERE idherce = ? AND NOT EXISTS (SELECT 1 FROM postavy where idherce = ?)";
+            System.out.println(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, actorId);
+            statement.setInt(2, actorId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

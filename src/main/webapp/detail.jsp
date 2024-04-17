@@ -78,7 +78,7 @@
             <% if(character.getNickname()!=null){ %>
             <p>Přezdívka: <%=character.getNickname()%></p>
             <%}%>
-            <% if (character.getAge() != 999){%>
+            <% if (character.getAge() != 0){%>
             <p>Věk: <%=character.getAge()%></p>
            <%}%>
             <p>Pohlaví: <%=character.getGender()%></p>

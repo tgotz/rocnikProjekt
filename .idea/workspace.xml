@@ -10,10 +10,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9d8529b0-5ff3-4b7a-9b34-b7f03b5d2e48" name="Changes" comment="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/ApproveCharacterServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/ApproveServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/DeleteCharacterServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/LoginServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dao/UserDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/approve.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/login.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/FilterServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/FilterServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/CharacterDetailServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/CharacterDetailServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/HelloServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/rocnikprojekt/HelloServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/ActorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/ActorDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/FilmDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/FilmDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/QuotesDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/QuotesDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/add_character.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/add_character.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/detail.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/detail.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/styles/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +40,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
-        <option value="Class" />
         <option value="Servlet" />
         <option value="Jsp File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -212,7 +228,12 @@
       <workItem from="1712746505940" duration="17454000" />
       <workItem from="1713088633683" duration="269000" />
       <workItem from="1713088917853" duration="3212000" />
-      <workItem from="1713124131643" duration="3244000" />
+      <workItem from="1713124131643" duration="3760000" />
+      <workItem from="1713177023966" duration="2834000" />
+      <workItem from="1713183885340" duration="1929000" />
+      <workItem from="1713185838922" duration="11747000" />
+      <workItem from="1713287815139" duration="4786000" />
+      <workItem from="1713345324088" duration="6223000" />
     </task>
     <task id="LOCAL-00001" summary="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
       <option name="closed" value="true" />
@@ -248,22 +269,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>159</line>
+          <line>158</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>251</line>
+          <line>228</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>152</line>
-          <properties class="dao.CharacterDAO" method="getCharactersLB">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="4" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/webapp/approve.jsp</url>
+          <line>77</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

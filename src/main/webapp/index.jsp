@@ -75,7 +75,6 @@
         int pageNumber;
         if(request.getAttribute("pageNumber") != null){
           pageNumber = (Integer) request.getAttribute("pageNumber");
-          System.out.println("v indexu beru parametr z servletu " + pageNumber);
         } else{
           pageNumber = 1;
         }
@@ -173,7 +172,6 @@
 
           //checking if servlet has provided filtered data - if not - getting unfiltered data
           if(request.getAttribute("charactersFiltred") != null){
-            System.out.println("jsem tady");
             characters = (ArrayList<Character>) request.getAttribute("charactersFiltred");
           } else{
             characters = characterDAO.getCharacters(request);

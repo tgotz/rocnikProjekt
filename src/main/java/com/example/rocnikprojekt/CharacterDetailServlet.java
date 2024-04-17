@@ -40,7 +40,7 @@ public class CharacterDetailServlet extends HttpServlet {
             ArrayList<Review> reviewList = reviewsDAO.getReviews(id);
             //getting character's quotes
             QuotesDAO quotesDAO = new QuotesDAO();
-            ArrayList<String> quotesList = quotesDAO.getHlasky(id);
+            ArrayList<String> quotesList = quotesDAO.getQuotes(id);
             System.out.println((quotesList.size()));
             request.setAttribute("character", character);
             request.setAttribute("reviewList", reviewList);

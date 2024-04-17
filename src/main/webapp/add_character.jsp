@@ -67,7 +67,6 @@
     <% if(request.getAttribute("outcome") != null){ %>
      <div class="message"><%=request.getAttribute("outcome")%></div>
       <%  } %>
-
     <form method="POST" enctype="multipart/form-data" action="/AddCharacterServlet">
         <div class="row">
             <div class="col-md-6">

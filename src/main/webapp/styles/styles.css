@@ -129,3 +129,8 @@
     max-height: 70px;
     overflow-y: auto;
   }
+  .disabled-link {
+    color: gray;
+    cursor: not-allowed;
+    pointer-events: none;
+  }

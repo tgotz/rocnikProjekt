@@ -32,7 +32,7 @@ public class QuotesDAO {
         }
     }
 
-    public ArrayList<String> getHlasky(int id){
+    public ArrayList<String> getQuotes(int id){
         String query = "SELECT texthlasky FROM hlasky WHERE idpostavy = ?";
         ArrayList<String> quotesList = new ArrayList<String>();
         try {
@@ -46,5 +46,15 @@ public class QuotesDAO {
             throw new RuntimeException(e);
         }
         return quotesList;
+    }
+    public void deleteQuotes(int idPostavy){
+        try {
+            String query = "DELETE FROM hlasky WHERE idpostavy = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idPostavy);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
