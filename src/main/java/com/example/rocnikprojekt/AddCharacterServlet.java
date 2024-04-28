@@ -58,7 +58,7 @@ public class AddCharacterServlet extends HttpServlet {
         newCharacter.setImage(fileContent.readAllBytes());
 
         //making array out of "quotes string" from form
-        String[] quotesArray = request.getParameter("quotes").split(";");
+        String[] quotesArray = quotes.split(";");
             CharacterDAO characterDAO = new CharacterDAO();
             characterDAO.addCharacter(newCharacter, quotesArray);
 

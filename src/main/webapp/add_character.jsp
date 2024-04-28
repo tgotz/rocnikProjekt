@@ -12,8 +12,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Česko-Slovenská databáze filmových postav</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    >
+    <link rel="stylesheet" href="styles/bootstrap.css">
+
     <!--Animate.css    -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <!--Vlastní css-->
@@ -55,6 +55,16 @@
                         <li class="nav-item ">
                             <a class="nav-link text-white" href="add_character.jsp">Přidat postavu</a>
                         </li>
+                        <% //checking if user is an admin
+                            if (session != null && session.getAttribute("user") != null) {
+                        %>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="approve">Schvalování postav</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link text-white" href="dashboard">Administrace</a>
+                        </li>
+                        <% }%>
                     </ul>
                 </div>
             </div>
@@ -71,13 +81,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-2">
-                    <label for="characterName">Jméno postavy</label>
+                    <label for="characterName">Jméno postavy *</label>
                     <input name="name" type="text" class="form-control" id="characterName" placeholder="Zadej jméno postavy" required>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group mb-2">
-                    <label for="characterType">Typ</label>
+                    <label for="characterType">Typ *</label>
                     <select name="type" class="form-control" id="characterType" required>
                         <option value="Animovaná">Animovaná</option>
                         <option value="Hraná">Hraná</option>
@@ -88,7 +98,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-2">
-                    <label for="characterGender">Pohlaví</label>
+                    <label for="characterGender">Pohlaví *</label>
                     <select name="gender" class="form-control" id="characterGender" required>
                         <option value="Muž">Muž</option>
                         <option value="Žena">Žena</option>
@@ -98,14 +108,14 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group mb-2">
-                    <label for="filmShow">Film/seriál</label>
+                    <label for="filmShow">Film/seriál *</label>
                     <input name="film" type="text" class="form-control" id="filmShow" onkeyup="fetchFilms(this.value)" placeholder="Zadej jméno filmu/seriál" required>
                     <div  class="suggestions" id="filmSuggestions"></div>
                 </div>
             </div>
         </div>
         <div class="form-group mb-2">
-            <label for="characterDescription">Popis</label>
+            <label for="characterDescription">Popis *</label>
             <textarea name="desc" class="form-control" id="characterDescription" rows="3" placeholder="Zadej popis postavy" required></textarea>
         </div>
         <div class="row">
@@ -117,7 +127,7 @@
             </div>
             <div class="col-md-6 d-flex align-items-center">
                 <div class="form-group mb-2">
-                    <label for="characterImage">Obrázek</label>
+                    <label for="characterImage">Obrázek *</label>
                     <input name="picture" required type="file" class="form-control-file" id="characterImage">
                 </div>
             </div>
@@ -125,7 +135,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group mb-2">
-                    <label for="characterActor">Herec/herečka(dabér, dabérka)</label>
+                    <label for="characterActor">Herec/herečka(dabér, dabérka) *</label>
                     <input name="actor" required type="text" class="form-control" id="characterActor" placeholder="Zadej jméno herce/herečky (dabéra...)">
                 </div>
             </div>

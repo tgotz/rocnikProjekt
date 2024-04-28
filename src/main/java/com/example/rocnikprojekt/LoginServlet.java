@@ -31,6 +31,9 @@ public class LoginServlet extends HttpServlet {
     if(userDAO.verifyPassword(user.getName(), user.getPassword())) {
         // if correct
         HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(60*60);
+        //geting data, that contain ID as well.
+        user = userDAO.getUseByUsername(user.getName());
         //saving user to session
         session.setAttribute("user", user);
 

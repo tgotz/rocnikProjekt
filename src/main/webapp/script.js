@@ -1,11 +1,12 @@
-$(document).ready(function(){
+$(document).ready(function () {
   $('.slick-carousel').slick({
     infinite: true,
-  slidesToShow: 4,
-  slidesToScroll: 1,
-  dots:true,
-  autoplay:true,
-  autoplaySpeed: 2000,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    dots: true,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    arrows: true,
     responsive: [
       {
 
@@ -20,6 +21,7 @@ $(document).ready(function(){
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
+          arrows: false,
         },
       },
       {
@@ -27,8 +29,17 @@ $(document).ready(function(){
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          arrows: false,
         },
       },
     ],
   });
 });
+//for index.jsp sroll
+  window.onload = function() {
+  var urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.size > 0) {
+    var charactersSection = document.getElementById('characters');
+  charactersSection.scrollIntoView({behavior: 'smooth'});
+}
+};

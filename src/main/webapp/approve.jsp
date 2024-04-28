@@ -13,14 +13,23 @@
 <%@ page import="java.lang.reflect.Array" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Base64" %>
+<%@ page import="model.User" %>
+<%
+  //checking if user is logged in - if not - goodbye :D
+  if (session != null && session.getAttribute("user") != null) {
+%>
+<%
+  User user = (User) session.getAttribute("user");
+  System.out.println(user.getId());
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Česko-Slovenská databáze filmových postav</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-  >
+  <link rel="stylesheet" href="styles/bootstrap.css">
+
   <!--Animate.css    -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <!--Vlastní css-->
@@ -58,6 +67,12 @@
             <li class="nav-item ">
               <a class="nav-link text-white" href="add_character.jsp">Přidat postavu</a>
             </li>
+            <li class="nav-item ">
+              <a class="nav-link text-white" href="approve">Schvalování postav</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link text-white" href="dashboard">Administrace</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -66,10 +81,12 @@
 </header>
 <%
   //getting data about character and it's quotes
-  Character character = (Character)request.getAttribute("character");
-  String base64Image = new String(Base64.getEncoder().encode(character.getImage()));
-  ArrayList<String> quotesList = (ArrayList<String>) request.getAttribute("quoteList");
-  int characterCount = (int) request.getAttribute("characterCount");
+  if(request.getAttribute("character") != null){
+    Character character = (Character)request.getAttribute("character");
+    String base64Image = new String(Base64.getEncoder().encode(character.getImage()));
+    ArrayList<String> quotesList = (ArrayList<String>) request.getAttribute("quoteList");
+    int characterCount = (int) request.getAttribute("characterCount");
+
 
 %>
 <div class="container mt-5 bg-main pt-2">
@@ -117,6 +134,9 @@
   <span class="fs-2 p-2 text-success">&#10004;</span>
   </a>
 </div>
+  <% } else{%>
+    <p class="text-center mt-4">Aktuálně žádné postavy nečekají na schválení.</p>
+  <%} %>
 </div>
 <!--Bootstrap-->
 
@@ -126,3 +146,6 @@
 </body>
 
 </html>
+<%}else{
+  response.sendRedirect("login.jsp");
+}%>

@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import jakarta.servlet.http.HttpServletRequest;
 import model.Character;
+import model.User;
 
 import javax.swing.plaf.nimbus.State;
 
@@ -37,6 +38,75 @@ public class CharacterDAO {
             connection = DriverManager.getConnection(url, username, password);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
+        }
+    }
+    public void updateCharacter(Character character, User user){
+        ActorDAO actorDAO = new ActorDAO();
+        FilmDAO filmDAO = new FilmDAO();
+
+        //checking if actor and film already exists
+        //if yes - gettings their ID
+        //if not - inserting them and getting their ID
+        int actorId = actorDAO.getActorId(character.getActorName());
+        if(actorId == -1){
+            actorId = actorDAO.insertActor(character.getActorName());
+        }
+
+        int filmId = filmDAO.getFilmId(character.getFilmName());
+        if(filmId == -1){
+            filmId = filmDAO.insertFilm(character.getFilmName());
+        }
+
+        //building sql query based on what "values" were provided- nickname, image and age are optional.
+        String query = "UPDATE postavy SET jmeno = ?, popis = ?, datumPridani = NOW(), typPostavy = ?, pohlavi = ?, idherce = ?, idadministrator = ?, idfilmu = ?";
+
+        //checking if age != default value (999)
+        if(character.getAge() != 999){
+            query += ", vek = ?";
+
+        }
+        //checking if nickname was provided
+        if(character.getNickname() != null){
+            query += ", prezdivka = ?";
+        }
+        //checking if Image was provided
+        if(character.getImage() != null){
+            query += ", obrazek = ?";
+        }
+        //finishing the query
+        query += " WHERE idpostavy = ?";
+
+        //counter for statements
+        int i = 8;
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            System.out.println(statement);
+            statement.setString(1, character.getName());
+            statement.setString(2, character.getDesc());
+            statement.setString(3, character.getType());
+            statement.setString(4, character.getGender());
+            statement.setInt(5, actorId);
+            statement.setInt(6, user.getId());
+            statement.setInt(7, filmId);
+            if(character.getAge() != 999){
+            statement.setInt(i, character.getAge());
+            i++;
+            }
+            if(character.getNickname() != null){
+
+                statement.setString(i, character.getNickname());
+                i++;
+            }
+            if(character.getImage() != null){
+
+                statement.setBytes(i, character.getImage());
+                i++;
+            }
+
+            statement.setInt(i, character.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     //method to add character
@@ -182,7 +252,7 @@ public class CharacterDAO {
             Statement statement = connection.createStatement();
 
             //getting characters from the database for the "recently added" section
-            String recentlyAddedQuery = "SELECT postavy.idpostavy as id, postavy.jmeno as jmeno, postavy.obrazek as obrazek, filmy.nazevFilmu as nazevFilmu FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu ORDER BY postavy.datumPridani DESC;";
+            String recentlyAddedQuery = "SELECT postavy.idpostavy as id, postavy.jmeno as jmeno, postavy.obrazek as obrazek, filmy.nazevFilmu as nazevFilmu FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu WHERE postavy.schvaleno = 1 ORDER BY postavy.datumPridani DESC;";
             ResultSet resultSet = statement.executeQuery(recentlyAddedQuery);
             int countRecentlyAdded = 0;
             while(resultSet.next()){
@@ -206,7 +276,7 @@ public class CharacterDAO {
     public ArrayList<Character> getCharacters(HttpServletRequest request){
 
         ArrayList<Character> characters = new ArrayList<>();
-        String sql = "SELECT postavy.idpostavy as id, postavy.popis as popis, postavy.vek as age, postavy.typPostavy as typ,postavy.prezdivka as nickname , postavy.pohlavi as pohlavi, postavy.jmeno as jmeno, postavy.obrazek as obrazek, postavy.schvaleno as schvaleno, postavy.datumPridani as datum, filmy.nazevFilmu as nazevFilmu, herci.jmeno as jmenoHerce FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu JOIN herci on herci.idherce = postavy.idherce ";
+        String sql = "SELECT postavy.idpostavy as id, postavy.popis as popis, postavy.vek as age, postavy.typPostavy as typ,postavy.prezdivka as nickname , postavy.pohlavi as pohlavi, postavy.jmeno as jmeno, postavy.obrazek as obrazek, postavy.schvaleno as schvaleno, postavy.datumPridani as datum, filmy.nazevFilmu as nazevFilmu, herci.jmeno as jmenoHerce, administratori.username as admin FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu JOIN herci on herci.idherce = postavy.idherce JOIN administratori ON postavy.idadministrator = administratori.idadministrator ";
         ArrayList<String> sqlWhere = new ArrayList<String>();
         ArrayList<String> values = new ArrayList<>();
 
@@ -222,7 +292,7 @@ public class CharacterDAO {
         //adding search option
         if(request.getParameter("search") != null && !request.getParameter("search").isEmpty() ){
             String search =request.getParameter("search");
-            sqlWhere.add("(jmeno like '%"+ search +"%' OR nazevFilmu like '%" + search +"%')");
+            sqlWhere.add("(postavy.jmeno like '%"+ search +"%' OR nazevFilmu like '%" + search +"%')");
         }
 
         //adding select type option
@@ -302,6 +372,7 @@ public class CharacterDAO {
                 character.setNickname(resultSet.getString("nickname"));
                 character.setDesc(resultSet.getString("popis"));
                 character.setAge(resultSet.getInt("age"));
+                character.setAdminName(resultSet.getString("admin"));
                 characters.add(character);
 
             }
@@ -313,11 +384,12 @@ public class CharacterDAO {
         return characters;
     }
     //method to approve character (to start displaying it on web)
-    public void approveCharacter(int id){
+    public void approveCharacter(int id, User user){
         try {
-            String query = "UPDATE postavy SET schvaleno = 1 WHERE idpostavy = ?";
+            String query = "UPDATE postavy SET schvaleno = 1, idadministrator = ?  WHERE idpostavy = ?";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
+            statement.setInt(1, user.getId());
+            statement.setInt(2, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

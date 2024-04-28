@@ -15,8 +15,6 @@
     int count = (int)request.getAttribute("count");
     //pageination
 
-
-
     if(count >= 24){
 %>
 
@@ -25,7 +23,6 @@
     //function to make url links based on current page number + also int a = what chnange do you want to make to current based on current page number
     //a -1 = previous page ; a + 1 = next etc
     String makeNewUrl(HttpServletRequest request, int a, int pageNumber) {
-        String currentURL = request.getRequestURL().toString();
         String queryString = request.getQueryString();
         if (queryString != null && !queryString.isEmpty()) {
             //check if the page parameter already exists
@@ -55,24 +52,24 @@
         </li>
         <!--page number - 2-->
         <% if(pageNumber == maxPage && pageNumber >= 3) {%>
-        <li class="page-item"><a class="page-link" href="/filter?page=<%=(pageNumber -2)%>"><%=pageNumber - 2%></a></li>
+        <li class="page-item"><a class="page-link" href="<%= makeNewUrl(request, -2, pageNumber) %>"><%=pageNumber - 2%></a></li>
         <%} %>
         <!--page number -1 -->
         <% if(pageNumber > (maxPage -2) && pageNumber >= 2) {%>
-        <li class="page-item"><a class="page-link" href="/filter?page=<%=(pageNumber -1)%>"><%=pageNumber - 1%></a></li>
+        <li class="page-item"><a class="page-link" href="<%= makeNewUrl(request, -1, pageNumber) %>"><%=pageNumber - 1%></a></li>
         <%} %>
 
         <!--current page number-->
-        <li class="page-item font-weight-bold"><a class="page-link" href="/filter?page=<%=(pageNumber)%>"><%=pageNumber%></a></li>
+        <li class="page-item font-weight-bold"><a class="page-link" href="<%= makeNewUrl(request, 0, pageNumber) %>"><%=pageNumber%></a></li>
 
         <!--page number + 1-->
         <% if(pageNumber < maxPage) {%>
-        <li class="page-item"><a class="page-link" href="/filter?page=<%=(pageNumber + 1)%>"><%=pageNumber + 1%></a></li>
+        <li class="page-item"><a class="page-link" href="<%= makeNewUrl(request, +1, pageNumber) %>"><%=pageNumber + 1%></a></li>
         <%} %>
 
         <!--page number + 2-->
         <% if(pageNumber < (maxPage - 1)) {%>
-        <li class="page-item"><a class="page-link" href="/filter?page=<%=(pageNumber + 2)%>"><%=pageNumber + 2%></a></li>
+        <li class="page-item"><a class="page-link" href="<%= makeNewUrl(request, +2, pageNumber) %>"><%=pageNumber + 2%></a></li>
         <%} %>
         <!--next page-->
         <li class="page-item">

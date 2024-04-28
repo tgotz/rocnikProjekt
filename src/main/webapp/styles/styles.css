@@ -5,7 +5,9 @@
 .navbar-logo{
     max-height: 75px;
 }
-
+.btn-primary{
+  color: white !important;
+}
 .caption {
   background-color: rgba(29, 30, 42, .7);
   color: white;
@@ -134,3 +136,14 @@
     cursor: not-allowed;
     pointer-events: none;
   }
+.slick-carousel{
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease;
+  -webkit-transition: opacity 1s ease;
+}
+
+.slick-carousel.slick-initialized {
+  visibility: visible;
+  opacity: 1;
+}

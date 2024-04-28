@@ -18,8 +18,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Česko-Slovenská databáze filmových postav</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/bootstrap.css">
   <!--Animate.css    -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -29,6 +28,11 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
   <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+  <!-- Slick-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type="text/javascript" src="script.js"></script>
 </head>
 
 <body>
@@ -62,6 +66,16 @@
             <li class="nav-item ">
               <a class="nav-link text-white" href="add_character.jsp">Přidat postavu</a>
             </li>
+            <% //checking if user is an admin
+              if (session != null && session.getAttribute("user") != null) {
+            %>
+            <li class="nav-item ">
+              <a class="nav-link text-white" href="approve">Schvalování postav</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link text-white" href="dashboard">Administrace</a>
+            </li>
+            <% }%>
           </ul>
         </div>
       </div>
@@ -92,11 +106,13 @@
       %>
 
       <div class="text-center slick-carousel-item">
+        <a href="detail?id=<%=recentCharacters.get(i).getId()%>">
         <img class="character-image" src="data:image/jpeg;base64,<%= base64Image %>" alt="postava">
         <div class="caption caption-carousel">
           <h3 class="my-0"><%=recentCharacters.get(i).getName()%></h3>
           <p class="my-0"><%=recentCharacters.get(i).getFilmName()%></p>
         </div>
+        </a>
       </div>
       <%
           }
@@ -165,7 +181,7 @@
 
     <div class="col-xl-9">
 
-      <div class="d-flex flex-wrap" id="characterCards">
+      <div class="d-flex flex-wrap" id="characters">
 
         <%
           ArrayList<Character> characters = new ArrayList<>();
@@ -225,13 +241,6 @@
 </div>
 </div>
 
-<!-- slick carousel -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
-<!--Vlastní JS-->
-<script type="text/javascript" src="script.js"></script>
 <!--Bootstrap-->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

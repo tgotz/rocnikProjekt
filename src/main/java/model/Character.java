@@ -17,7 +17,6 @@ public class Character implements Serializable{
     private String actorName;
     private String adminName;
     private String filmName;
-
     private double overallRating;
     private double attractivenessRating;
     public Character() {
