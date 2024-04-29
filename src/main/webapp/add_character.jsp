@@ -18,10 +18,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <!--Vlastní css-->
     <link rel="stylesheet" href="styles/styles.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-    <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-
 </head>
 
 <body>
@@ -153,11 +149,7 @@
         <button type="submit" class="btn btn-primary" >Odeslat</button>
     </form>
 </div>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 <!--Vlastní JS-->
-<script type="text/javascript" src="script.js"></script>
 <script type="text/javascript" src="form.js"></script>
 
 <!--Bootstrap-->

@@ -23,13 +23,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <!--custom css-->
   <link rel="stylesheet" href="styles/styles.css">
-  <!-- slick -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-  <link rel="stylesheet" type="text/css"
-        href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-  <!--custom JS-->
-  <script type="text/javascript" src="script.js"></script>
-
 </head>
 
 <body>

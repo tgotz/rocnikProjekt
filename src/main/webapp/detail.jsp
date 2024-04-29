@@ -19,10 +19,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <!--Vlastní css-->
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
-
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-    <link rel="stylesheet" type="text/css"
-          href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
 </head>
 <body>
 <header>
@@ -133,7 +129,7 @@
                 <label for="reviewText">Text recenze:</label>
                 <textarea dirname="reviewText" class="form-control" id="reviewText" name="reviewText" rows="3" required></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Odeslat</button>
+            <button type="submit" class="btn btn-primary mt-3">Odeslat</button>
         </form>
         <i class="arrowUp d-none"></i>
     </div>
@@ -153,15 +149,7 @@
         <%}%>
     </ul>
 </div>
-<!-- slick carousel -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
-<!--Vlastní JS-->
-<script type="text/javascript" src="script.js"></script>
 <!--Bootstrap-->
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>

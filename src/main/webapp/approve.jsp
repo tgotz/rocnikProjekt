@@ -20,7 +20,6 @@
 %>
 <%
   User user = (User) session.getAttribute("user");
-  System.out.println(user.getId());
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -127,10 +126,10 @@
   <%}%>
   <hr>
 <div class="d-flex justify-content-between">
-  <a href="/delete-character?id=<%=character.getId()%>&CharacterCount=<%=characterCount%>">
+  <a class="text-decoration-none" href="/delete-character?id=<%=character.getId()%>&CharacterCount=<%=characterCount%>">
     <span class="fs-2 p-2 text-danger">&#10008;</span>
   </a>
-  <a href="/approve-character?id=<%=character.getId()%>&CharacterCount=<%=characterCount%>">
+  <a class="text-decoration-none" href="/approve-character?id=<%=character.getId()%>&CharacterCount=<%=characterCount%>">
   <span class="fs-2 p-2 text-success">&#10004;</span>
   </a>
 </div>

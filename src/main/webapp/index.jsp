@@ -168,8 +168,8 @@
             <option value="">Seřadit dle</option>
             <option value="jmeno ASC">Jména (a-z)</option>
             <option value="jmeno DESC">Jména (z-a)</option>
-            <option value="datum ASC">Datum přidání (nové-staré)</option>
-            <option value="datum DESC">Datum přidání (staré-nové)</option>
+            <option value="datum DESC">Datum přidání (nové-staré)</option>
+            <option value="datum ASC">Datum přidání (staré-nové)</option>
           </select>
           <div>
             <button type="submit" class="btn btn-primary">Filtrovat</button>
