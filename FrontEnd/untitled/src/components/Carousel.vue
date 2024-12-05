@@ -1,0 +1,123 @@
+<template>
+  <div class="carousel-wrapper">
+    <h2 class="mt-5 outline-heading">Nově přidané postavy...</h2>
+
+    <div class="slick-carousel">
+      <!-- Struktura itemů carouselu -->
+      <div
+          v-for="character in recentCharacters"
+          :key="character.id"
+          class="text-center slick-carousel-item"
+      >
+        <a :href="'/detail/' + character.id">
+          <img
+              class="character-image"
+              :src="'data:image/jpeg;base64,' + character.image"
+              :alt="character.name"
+          />
+          <div class="caption caption-carousel">
+            <h3 class="my-0">{{ character.name }}</h3>
+            <p class="my-0">{{ character.filmName }}</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <p class="d-flex justify-content-center mt-5">
+      <a href="#database">
+        <i class="arrow"></i>
+      </a>
+    </p>
+  </div>
+</template>
+
+<script>
+import $ from 'jquery'; // Import jQuery
+import 'slick-carousel/slick/slick.css'; // Import CSS Slick Carousel
+import 'slick-carousel/slick/slick-theme.css'; // Import CSS pro téma Slick Carousel
+import 'slick-carousel'; // Import JS Slick Carousel
+
+export default {
+  props: {
+    characters: {
+      type: Array,
+      required: true, // Předáme seznam postav jako prop
+    },
+  },
+  computed: {
+    recentCharacters() {
+      // Vybereme 6 nejnovějších postav podle `dateAdded`
+      return this.characters
+          .slice()
+          .sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
+          .slice(0, 6);
+    },
+  },
+  mounted() {
+    console.log('Carousel DOM before Slick initialization:', this.$el.innerHTML);
+
+    this.$nextTick(() => {
+      // Sleduj změny v recentCharacters a inicializuj Slick až po načtení
+      this.initializeCarousel();
+    });
+  },
+  watch: {
+    recentCharacters(newCharacters) {
+      // Inicializuj Slick, pokud recentCharacters obsahují data
+      if (newCharacters.length > 0) {
+        this.$nextTick(() => {
+          this.initializeCarousel();
+        });
+      }
+    },
+  },
+  methods: {
+    initializeCarousel() {
+      // Ujisti se, že Slick Carousel se inicializuje pouze jednou
+      if ($(this.$el).find('.slick-carousel').hasClass('slick-initialized')) {
+        $(this.$el).find('.slick-carousel').slick('unslick');
+      }
+
+      // Inicializace Slick Carousel
+      $(this.$el).find('.slick-carousel').slick({
+        infinite: true,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        dots: true,
+        autoplay: false,
+        autoplaySpeed: 2000,
+        arrows: true,
+        responsive: [
+          {
+            breakpoint: 1200,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 1,
+            },
+          },
+          {
+            breakpoint: 1000,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 1,
+              arrows: false,
+            },
+          },
+          {
+            breakpoint: 500,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              arrows: false,
+            },
+          },
+        ],
+      });
+      $(this.$el)
+          .find('.slick-slide')
+          .addClass('text-center slick-carousel-item');
+
+    },
+  },
+};
+</script>

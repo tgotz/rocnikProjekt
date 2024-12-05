@@ -1,0 +1,155 @@
+<template>
+  <div class="container">
+    <Carousel v-if="characters.length > 0" :characters="characters" />
+    <div class="row">
+      <h4 id="database" class="text-center fs-2 my-5">Databáze postav</h4>
+      <div class="col-xl-3">
+        <Filters
+            :filters="filters"
+            @filters-changed="onFiltersChanged"
+        />      </div>
+      <div class="col-xl-9">
+        <CharacterList :characters="filteredCharacters" />
+      </div>
+    </div>
+    <Pagination
+        :current-page="currentPage"
+        :max-page="totalPages"
+        @page-changed="changePage"
+    />
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import Filters from '../components/Filters.vue';
+import CharacterList from '../components/CharacterList.vue';
+import Pagination from '../components/Pagination.vue';
+import Carousel from '../components/Carousel.vue';
+
+export default {
+  components: { Carousel, Filters, CharacterList, Pagination },
+  data() {
+    return {
+      characters: [], // Data načtená z API
+      filteredCharacters: [], // Data po filtrování
+      filters: {
+        search: '',
+        showCartoon: true,
+        showIRL: true,
+        genders: ['Muž', 'Žena', 'Jiné'],
+        sortOrder: '',
+      },
+      currentPage: 1,
+      itemsPerPage: 24,
+      totalPages: 1,
+    };
+  },
+  methods: {
+    // Načtení dat z backendu
+    async fetchCharacters() {
+      try {
+        const response = await axios.get('http://localhost:8080/filter');
+        this.characters = response.data; // Načtená data
+        this.filterCharacters(); // Spustíme filtraci po načtení
+      } catch (error) {
+        console.error('Error fetching characters:', error);
+      }
+    },
+
+    // Aplikace filtrace na data
+    filterCharacters() {
+      const { search, showCartoon, showIRL, genders, sortOrder } = this.filters;
+
+      let filtered = this.characters;
+
+      // Filtrace podle jména nebo filmu
+      if (search) {
+        filtered = filtered.filter((character) =>
+            character.name.toLowerCase().includes(search.toLowerCase()) ||
+            character.filmName.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+
+      // Filtrace podle typu postavy
+      filtered = filtered.filter((character) => {
+        if (!showCartoon && character.type === 'Animovaná') return false;
+        if (!showIRL && character.type === 'Hraná') return false;
+        return true;
+      });
+
+      // Filtrace podle pohlaví
+      if (genders.length > 0) {
+        filtered = filtered.filter((character) =>
+            genders.includes(character.gender)
+        );
+      }
+
+      // Řazení
+      if (sortOrder === 'name ASC') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortOrder === 'name DESC') {
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+      } else if (sortOrder === 'date DESC') {
+        filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+      } else if (sortOrder === 'date ASC') {
+        filtered.sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+      }
+
+      // Stránkování
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      this.filteredCharacters = filtered.slice(start, end);
+      this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
+    },
+
+    // Aktualizace stránky
+    changePage(newPage) {
+      if (newPage > 0 && newPage <= this.totalPages) {
+        this.currentPage = newPage;
+        this.updateURL(); // Aktualizuj URL
+        this.filterCharacters(); // Aktualizuj filtrovaná data
+      }
+    },
+
+    // Aktualizace filtrů
+    onFiltersChanged(newFilters) {
+      this.filters = newFilters;
+      this.currentPage = 1; // Reset na první stránku
+      this.updateURL(); // Aktualizuj URL
+      this.filterCharacters(); // Aktualizuj filtrovaná data
+    },
+
+    // Aktualizace URL podle aktuálních filtrů a stránky
+    updateURL() {
+      const query = {
+        page: this.currentPage,
+        search: this.filters.search || undefined, // Odeber z URL, pokud je prázdné
+        showCartoon: this.filters.showCartoon,
+        showIRL: this.filters.showIRL,
+        genders: this.filters.genders.join(','),
+        sortOrder: this.filters.sortOrder || undefined, // Odeber z URL, pokud je prázdné
+      };
+      this.$router.push({ query });
+    },
+
+    // Načtení parametrů z URL
+    loadFromURL() {
+      const query = this.$route.query;
+      this.currentPage = parseInt(query.page) || 1;
+      this.filters = {
+        search: query.search || '',
+        showCartoon: query.showCartoon === 'true',
+        showIRL: query.showIRL === 'true',
+        genders: query.genders ? query.genders.split(',') : ['Muž', 'Žena', 'Jiné'],
+        sortOrder: query.sortOrder || '',
+      };
+    },
+  },
+
+  mounted() {
+    this.loadFromURL(); // Načti parametry z URL
+    this.fetchCharacters(); // Načti data
+  },
+};
+</script>
