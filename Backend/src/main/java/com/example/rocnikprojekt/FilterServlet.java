@@ -29,11 +29,9 @@ public class FilterServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Nastavení odpovědi jako JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Vytvoření DAO a načtení dat
         CharacterDAO characterDAO = new CharacterDAO();
         List<Character> characters = characterDAO.getCharacters();
 

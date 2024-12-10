@@ -1,7 +1,6 @@
 <template>
   <nav aria-label="Page navigation" class="my-5">
     <ul class="pagination justify-content-center mt-3">
-      <!-- Předchozí stránka -->
       <li class="page-item" :class="{ disabled: currentPage === 1 }">
         <button
             class="page-link"
@@ -12,7 +11,6 @@
         </button>
       </li>
 
-      <!-- Dvě předchozí stránky -->
       <li
           v-if="currentPage > 2"
           class="page-item"
@@ -36,14 +34,12 @@
         </button>
       </li>
 
-      <!-- Aktuální stránka -->
       <li class="page-item active">
         <button class="page-link">
           {{ currentPage }}
         </button>
       </li>
 
-      <!-- Dvě následující stránky -->
       <li
           v-if="currentPage < maxPage"
           class="page-item"
@@ -67,7 +63,6 @@
         </button>
       </li>
 
-      <!-- Další stránka -->
       <li class="page-item" :class="{ disabled: currentPage === maxPage }">
         <button
             class="page-link"

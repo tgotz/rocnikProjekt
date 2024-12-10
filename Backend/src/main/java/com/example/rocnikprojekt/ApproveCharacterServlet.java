@@ -10,7 +10,6 @@ public class ApproveCharacterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Nastavení hlaviček
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
@@ -19,7 +18,7 @@ public class ApproveCharacterServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         try {
-            // Ověření oprávnění uživatele
+            // checking if user should have access to this function
             Integer role = (Integer) request.getAttribute("role");
             if (role == null || role < 2) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -27,7 +26,6 @@ public class ApproveCharacterServlet extends HttpServlet {
                 return;
             }
 
-            // Načtení dat z požadavku
             BufferedReader reader = request.getReader();
             StringBuilder jsonBuilder = new StringBuilder();
             String line;
@@ -36,25 +34,20 @@ public class ApproveCharacterServlet extends HttpServlet {
             }
             String requestBody = jsonBuilder.toString();
 
-            // Parsování JSON dat
             com.google.gson.JsonObject json = new com.google.gson.JsonParser().parse(requestBody).getAsJsonObject();
             Integer characterId = json.get("id").getAsInt();
             Integer userId = json.get("userId").getAsInt();
 
-            // Debug log
             System.out.println("Character ID: " + characterId);
             System.out.println("User ID: " + userId);
 
-            // Zavolání metody pro schválení
             CharacterDAO characterDAO = new CharacterDAO();
             characterDAO.approveCharacter(characterId, userId);
 
-            // Úspěšná odpověď
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("{\"message\":\"Character approved successfully.\"}");
 
         } catch (Exception e) {
-            // Zpracování chyby
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"An error occurred while approving the character.\"}");

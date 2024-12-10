@@ -85,7 +85,7 @@ export default {
     const currentIndex = ref(0);
     const userStore = useUserStore();
 
-    // Načtení všech postav
+    // fetching all characters
     const fetchCharacters = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/approve", {
@@ -97,46 +97,45 @@ export default {
       }
     };
 
-    // Aktuální postava
+    // Current character to check
     const currentCharacter = computed(() => characters.value[currentIndex.value]);
 
-    // Přepnutí na další postavu
+    // next character
     const nextCharacter = () => {
       if (currentIndex.value < characters.value.length - 1) {
         currentIndex.value++;
       }
     };
 
-    // Přepnutí na předchozí postavu
+    // previous character
     const prevCharacter = () => {
       if (currentIndex.value > 0) {
         currentIndex.value--;
       }
     };
 
-    // Schválení postavy
+    // approving character
     const approveCharacter = async (id) => {
       console.log(id);
       console.log(userStore.userId);
       try {
-        // Odeslání POST požadavku na schválení postavy
         const response = await axios.post(
             "http://localhost:8080/api/approve-character",
             {
               id: id, // ID postavy
-              userId: userStore.userId // ID uživatele (přihlašovací ID)
+              userId: userStore.userId // id of user who's approving the character (currently logged in)
             },
             {
               withCredentials: true
             }
         );
 
-        // Kontrola úspěšné odpovědi
+
         if (response.status === 200) {
-          // Odebrání schválené postavy ze seznamu
+          // removing the character from the current list
           characters.value.splice(currentIndex.value, 1);
 
-          // Posun na další postavu, pokud existuje
+          // moving to next character if there is one
           if (currentIndex.value >= characters.value.length) {
             currentIndex.value = characters.value.length - 1;
           }
@@ -146,7 +145,7 @@ export default {
       }
     };
 
-    // Odmítnutí postavy
+    // deleting character
     const rejectCharacter = async (id) => {
       console.log(id)
       try {

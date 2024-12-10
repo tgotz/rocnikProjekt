@@ -87,11 +87,10 @@ export default {
   },
   data() {
     return {
-      localFilters: {...this.filters}, // Lokální kopie filtrů
+      localFilters: {...this.filters},
     };
   },
   watch: {
-    // Pokud se změní rodičovské filtry, aktualizujeme lokální kopii
     filters: {
       deep: true,
       handler(newFilters) {
@@ -101,17 +100,15 @@ export default {
   },
   methods: {
     applyFilters() {
-      // Pokud nejsou žádné pohlaví zaškrtnuté, použij všechny jako výchozí
       if (this.localFilters.genders.length === 0) {
         this.localFilters.genders = ['Muž', 'Žena', 'Jiné'];
       }
 
-      console.log('Odesílám filtry:', this.localFilters); // Debugging
-      this.$emit('filters-changed', this.localFilters); // Odesíláme lokální kopii filtrů
+      console.log('Odesílám filtry:', this.localFilters);
+      this.$emit('filters-changed', this.localFilters);
     },
   },
   mounted() {
-    // Zkontroluj, že výchozí hodnoty jsou správně nastavené
     if (this.localFilters.genders.length === 0) {
       this.localFilters.genders = ['Muž', 'Žena', 'Jiné'];
     }

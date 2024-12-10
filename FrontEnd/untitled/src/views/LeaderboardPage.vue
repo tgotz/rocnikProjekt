@@ -41,24 +41,22 @@ export default {
   name: "LeaderboardPage",
   data() {
     return {
-      characters: [], // Postavy pro leaderboard
-      headline: "", // Nadpis leaderboardu
+      characters: [],
+      headline: "",
     };
   },
   watch: {
-    // Reaguje na změnu parametru 'sort'
     "$route.query.sort": "fetchLeaderboard",
   },
   methods: {
     async fetchLeaderboard() {
       try {
-        const sort = this.$route.query.sort || "1"; // Výchozí hodnota sort
+        const sort = this.$route.query.sort || "1";
         const response = await axios.get("http://localhost:8080/leaderboard", {
           params: { sort },
         });
-        this.characters = response.data; // Data postav
+        this.characters = response.data;
 
-        // Nastavení nadpisu podle parametru 'sort'
         switch (sort) {
           case "1":
             this.headline = "Nejoblíbenější postavy";
@@ -78,7 +76,7 @@ export default {
     },
   },
   created() {
-    this.fetchLeaderboard(); // Načtení dat při otevření stránky
+    this.fetchLeaderboard();
   },
 };
 </script>

@@ -21,6 +21,7 @@ public class DeleteUserServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
+        // checking if user should have access to this function
         Integer role = (Integer) request.getAttribute("role");
         if (role == null || role < 4) { // Role 4 = Admin
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

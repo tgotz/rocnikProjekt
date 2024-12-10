@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { useUserStore } from "../stores/userStore"; // Import Pinia store
+import { useUserStore } from "../stores/userStore";
 import axios from "axios";
 
 export default {
@@ -42,12 +42,12 @@ export default {
       username: "",
       password: "",
       role: "",
-      errorMessage: null, // Pro zobrazení chybové zprávy
+      errorMessage: null,
     };
   },
   methods: {
     async login() {
-      const userStore = useUserStore(); // Přístup k Pinia userStore
+      const userStore = useUserStore();
 
       try {
         const response = await axios.post("http://localhost:8080/login", {
@@ -55,17 +55,14 @@ export default {
           password: this.password,
         });
 
-        // Uložení uživatele do Pinia
         await userStore.setUser({
           username: response.data.username,
-          role: parseInt(response.data.role), // Přesný datový typ
-          userId: parseInt(response.data.userId), // Přesný datový typ
+          role: parseInt(response.data.role),
+          userId: parseInt(response.data.userId),
         });
 
-        // Kontrola stavu přihlášení (pro synchronizaci dat)
         await this.checkLoginStatus();
 
-        // Přesměrování na domovskou stránku
         this.$router.push("/");
 
       } catch (error) {
@@ -78,14 +75,13 @@ export default {
     },
 
     async checkLoginStatus() {
-      const userStore = useUserStore(); // Přístup k Pinia store
+      const userStore = useUserStore();
       try {
         const response = await axios.get("http://localhost:8080/user-info", {
-          withCredentials: true, // Zahrnuje cookies
+          withCredentials: true,
         });
 
         if (response.data.username) {
-          // Aktualizace uživatele ve store
           userStore.setUser({
             username: response.data.username,
             role: parseInt(response.data.role),

@@ -2,7 +2,6 @@
   <div class="container bg-main pt-2">
     <h2 class="mt-5 mb-5 outline-heading">Správa uživatelů</h2>
 
-    <!-- Vyhledávání uživatelů -->
     <div class="form-group mb-4">
       <input
           v-model="searchQuery"
@@ -29,7 +28,7 @@
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>
-          <!-- Změna role je povolena pouze pro uživatele s rolemi 1-3 -->
+
           <select
               v-if="user.role >= 1 && user.role <= 3"
               class="form-select"
@@ -63,13 +62,12 @@ import axios from "axios";
 export default {
   data() {
     return {
-      users: [], // Seznam všech uživatelů
-      filteredUsers: [], // Filtrovaný seznam podle vyhledávání
-      searchQuery: "", // Hodnota pro vyhledávání
+      users: [],
+      filteredUsers: [],
+      searchQuery: "",
     };
   },
   methods: {
-    // Načtení uživatelů
     async fetchUsers() {
       try {
         const response = await axios.get("http://localhost:8080/api/users", {
@@ -81,14 +79,12 @@ export default {
         console.error("Chyba při načítání uživatelů:", error);
       }
     },
-    // Filtrování uživatelů podle vyhledávání
     filterUsers() {
       const query = this.searchQuery.toLowerCase();
       this.filteredUsers = this.users.filter((user) =>
           user.name.toLowerCase().includes(query)
       );
     },
-    // Vrací textový popis role
     getRoleLabel(role) {
       switch (role) {
         case 1:
@@ -103,7 +99,6 @@ export default {
           return "Neznámá role";
       }
     },
-    // Aktualizace role uživatele
     async updateUserRole(userId, newRole) {
       try {
         if (newRole === 4) {
@@ -125,7 +120,6 @@ export default {
         alert("Při aktualizaci role došlo k chybě.");
       }
     },
-    // Smazání uživatele
     async deleteUser(userId) {
       if (!confirm("Opravdu chcete tohoto uživatele smazat?")) return;
 
@@ -143,7 +137,7 @@ export default {
     },
   },
   mounted() {
-    this.fetchUsers(); // Načte uživatele při zobrazení stránky
+    this.fetchUsers();
   },
 };
 </script>

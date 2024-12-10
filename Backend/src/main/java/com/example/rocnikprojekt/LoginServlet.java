@@ -23,10 +23,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        // Nastavení hlaviček pro CORS
         setCorsHeaders(response);
 
-        // Získání přihlašovacích údajů
         BufferedReader reader = request.getReader();
         StringBuilder jsonString = new StringBuilder();
         String line;
@@ -34,7 +32,6 @@ public class LoginServlet extends HttpServlet {
             jsonString.append(line);
         }
 
-        // Konverze JSON na mapu nebo objekt
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> jsonMap = mapper.readValue(jsonString.toString(), new TypeReference<Map<String, String>>() {});
 
@@ -42,24 +39,21 @@ public class LoginServlet extends HttpServlet {
         String password = jsonMap.get("password");
 
 
-        // Ověření uživatele
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByUsername(username);
 
         if (user != null && userDAO.verifyPassword(username, password)) {
-            // Pokud je ověření správné, vytvoření JWT tokenu
+            // creating jwt toket
             String token = JwtUtil.generateToken(user);
             Cookie jwtCookie = new Cookie("token", token);
             jwtCookie.setHttpOnly(true);
-            jwtCookie.setPath("/"); // Aby byla cookie přístupná pro všechny endpointy
-            jwtCookie.setMaxAge(60 * 60); // Platnost 1 hodina
+            jwtCookie.setPath("/"); // cookie accessible for all endpoints
+            jwtCookie.setMaxAge(60 * 60); // 1 hour
             response.addCookie(jwtCookie);
 
-            // Vracení odpovědi
             System.out.println(user.getId());
             response.getWriter().write("{\"message\":\"Přihlášení bylo úspěšné\", \"username\":\"" + user.getName() + "\", \"role\":\"" + user.getRole() + "\", \"userId\":\"" + user.getId() + "\"}");
         } else {
-            // Pokud ověření selže
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{\"error\":\"Invalid username or password\"}");
         }

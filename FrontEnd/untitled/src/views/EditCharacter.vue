@@ -160,12 +160,10 @@ export default {
     async fetchCharacter(id) {
       try {
         const response = await axios.get(`http://localhost:8080/character`, {
-          params: { id: id }, // Posíláme správné ID postavy
+          params: { id: id },
         });
-        // Nastavení dat do `character` objektu
         this.character = response.data.character;
         this.quotes = response.data.quotes;
-        // Nastavení obrázku
         if (response.data.image) {
           this.imagePreview = `data:image/jpeg;base64,${response.data.image}`;
         }
@@ -175,7 +173,7 @@ export default {
     },
 
     async fetchFilms(query) {
-      // Fetch film suggestions (mocked or API endpoint)
+      // doesnt work yet
       this.filmSuggestions = ["Film 1", "Film 2", "Film 3"].filter((film) =>
           film.toLowerCase().includes(query.toLowerCase())
       );
@@ -202,7 +200,6 @@ export default {
           return;
         }
 
-        // Vytvoření FormData objektu pro odeslání dat
         const formData = new FormData();
         formData.append("id", this.character.id);
         formData.append("name", this.character.name);
@@ -214,25 +211,21 @@ export default {
         formData.append("actor", this.character.actorName);
         formData.append("nickname", this.character.nickname);
 
-        // Přidání userId
         formData.append("userId", userId);
 
-        // Přidání obrázku, pokud byl nahrán
         if (this.imageFile) {
           formData.append("picture", this.imageFile);
         }
 
-        // Odeslání požadavku na server
         await axios.post("http://localhost:8080/api/update-character", formData, {
-          withCredentials: true, // Zahrnout cookies
+          withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
 
-        // Po úspěšném odeslání
         alert("Postava byla úspěšně upravena!");
-        this.$router.push("/dashboard"); // Přesměrování na dashboard
+        this.$router.push("/dashboard");
       } catch (error) {
         console.error("Chyba při aktualizaci postavy:", error);
         alert("Při aktualizaci postavy došlo k chybě.");

@@ -31,8 +31,8 @@ export default {
   components: { Carousel, Filters, CharacterList, Pagination },
   data() {
     return {
-      characters: [], // Data načtená z API
-      filteredCharacters: [], // Data po filtrování
+      characters: [],
+      filteredCharacters: [],
       filters: {
         search: '',
         showCartoon: true,
@@ -46,24 +46,21 @@ export default {
     };
   },
   methods: {
-    // Načtení dat z backendu
     async fetchCharacters() {
       try {
         const response = await axios.get('http://localhost:8080/filter');
-        this.characters = response.data; // Načtená data
-        this.filterCharacters(); // Spustíme filtraci po načtení
+        this.characters = response.data;
+        this.filterCharacters();
       } catch (error) {
         console.error('Error fetching characters:', error);
       }
     },
 
-    // Aplikace filtrace na data
     filterCharacters() {
       const { search, showCartoon, showIRL, genders, sortOrder } = this.filters;
 
       let filtered = this.characters;
 
-      // Filtrace podle jména nebo filmu
       if (search) {
         filtered = filtered.filter((character) =>
             character.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -71,21 +68,18 @@ export default {
         );
       }
 
-      // Filtrace podle typu postavy
       filtered = filtered.filter((character) => {
         if (!showCartoon && character.type === 'Animovaná') return false;
         if (!showIRL && character.type === 'Hraná') return false;
         return true;
       });
 
-      // Filtrace podle pohlaví
       if (genders.length > 0) {
         filtered = filtered.filter((character) =>
             genders.includes(character.gender)
         );
       }
 
-      // Řazení
       if (sortOrder === 'name ASC') {
         filtered.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sortOrder === 'name DESC') {
@@ -96,14 +90,12 @@ export default {
         filtered.sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
       }
 
-      // Stránkování
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       this.filteredCharacters = filtered.slice(start, end);
       this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
     },
 
-    // Aktualizace stránky
     changePage(newPage) {
       if (newPage > 0 && newPage <= this.totalPages) {
         this.currentPage = newPage;
@@ -112,7 +104,6 @@ export default {
       }
     },
 
-    // Aktualizace filtrů
     onFiltersChanged(newFilters) {
       this.filters = newFilters;
       this.currentPage = 1; // Reset na první stránku
@@ -120,7 +111,6 @@ export default {
       this.filterCharacters(); // Aktualizuj filtrovaná data
     },
 
-    // Aktualizace URL podle aktuálních filtrů a stránky
     updateURL() {
       const query = {
         page: this.currentPage,
@@ -133,7 +123,6 @@ export default {
       this.$router.push({ query });
     },
 
-    // Načtení parametrů z URL
     loadFromURL() {
       const query = this.$route.query;
       this.currentPage = parseInt(query.page) || 1;
@@ -148,8 +137,8 @@ export default {
   },
 
   mounted() {
-    this.loadFromURL(); // Načti parametry z URL
-    this.fetchCharacters(); // Načti data
+    this.loadFromURL();
+    this.fetchCharacters();
   },
 };
 </script>

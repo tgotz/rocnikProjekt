@@ -31,7 +31,8 @@ public class UserInfoServlet extends HttpServlet {
             System.out.println("Dekódovaná role: " + role);
             response.getWriter().write("{\"username\":\"" + username + "\", \"role\":\"" + role + "\", \"userId\":\"" + userId + "\"}");
         } else {
-            response.getWriter().write("{\"loggedIn\": false}");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);  // Nastaví HTTP status na 401
+            response.getWriter().write("{\"error\": \"Unauthorized\"}");
         }
     }
     @Override
