@@ -72,7 +72,7 @@ public class UpdateCharacterServlet extends HttpServlet {
             updatedCharacter.setName(name);
             updatedCharacter.setType(type);
             updatedCharacter.setGender(gender);
-            updatedCharacter.setFilmName(film);
+            //updatedCharacter.setFilmName(film);
             updatedCharacter.setDesc(desc);
 
             // Volitelné parametry
@@ -100,7 +100,7 @@ public class UpdateCharacterServlet extends HttpServlet {
 
             // Aktualizace v databázi
             CharacterDAO characterDAO = new CharacterDAO();
-            characterDAO.updateCharacter(updatedCharacter, user);
+            //characterDAO.updateCharacter(updatedCharacter, user);
 
             // Úspěšná odpověď
             response.getWriter().write("{\"message\":\"Character updated successfully\"}");

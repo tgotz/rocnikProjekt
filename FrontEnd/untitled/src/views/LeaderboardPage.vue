@@ -8,7 +8,7 @@
           <th scope="col">#</th>
           <th scope="col">Jméno</th>
           <th class="d-none d-lg-table-cell" scope="col">Film</th>
-          <th class="d-none d-lg-table-cell" scope="col">Herec</th>
+          <th class="d-none d-lg-table-cell" scope="col">Herec/Dabér</th>
           <th scope="col">Celkové hodnocení</th>
           <th scope="col">Hodnocení atraktivity</th>
         </tr>
@@ -23,9 +23,14 @@
               {{ character.name }}
             </router-link>
           </td>
-          <td class="d-none d-lg-table-cell">{{ character.filmName }}</td>
-          <td class="d-none d-lg-table-cell">{{ character.actorName }}</td>
-          <td>{{ character.overallRating.toFixed(1) }}</td>
+          <td class="d-none d-lg-table-cell">{{ character.movieList[0] }}</td>
+          <td class="d-none d-lg-table-cell">
+            {{
+              character.actorName && character.dabberName
+                  ? character.actorName + ' / ' + character.dabberName
+                  : (character.actorName || character.dabberName)
+            }}
+          </td>          <td>{{ character.overallRating.toFixed(1) }}</td>
           <td>{{ character.attractivenessRating.toFixed(1) }}</td>
         </tr>
         </tbody>

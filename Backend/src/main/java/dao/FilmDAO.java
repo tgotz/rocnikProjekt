@@ -25,25 +25,25 @@ public class FilmDAO {
     // Method to fetch film names based on user input
     public List<String> findFilmNames(String input) throws SQLException {
         List<String> filmNames = new ArrayList<>();
-        String query = "SELECT nazevFilmu FROM filmy WHERE nazevFilmu LIKE ?";
+        String query = "SELECT nameMovie FROM movies WHERE nameMovie LIKE ?";
         try (
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, "%" + input + "%");
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    filmNames.add(resultSet.getString("nazevFilmu"));
+                    filmNames.add(resultSet.getString("nameMovie"));
                 }
             }
         }
         return filmNames;
     }
     public int getFilmId(String filmName) {
-        String query = "SELECT idfilmu FROM filmy WHERE nazevFilmu = ?";
+        String query = "SELECT idMovie FROM movies WHERE nameMovie = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, filmName);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt("idfilmu");
+                return resultSet.getInt("idMovie");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,7 +52,7 @@ public class FilmDAO {
     }
     public int insertFilm(String filmName) {
         System.out.println("zkousim vkladat ");
-        String query = "INSERT INTO filmy (nazevFilmu) VALUES (?)";
+        String query = "INSERT INTO movies (movieName) VALUES (?)";
         try (PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, filmName);
             int rowsAffected = statement.executeUpdate();
@@ -69,7 +69,7 @@ public class FilmDAO {
     }
     public void deleteFilmIfNotUsed(int filmId) {
         try {
-            String query = "DELETE FROM filmy WHERE idfilmu = ? AND NOT EXISTS (SELECT 1 FROM postavy where idfilmu = ?)";
+            String query = "DELETE FROM movies WHERE idMovie = ? AND NOT EXISTS (SELECT 1 FROM characters_movies where idfilmu = ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, filmId);
             statement.setInt(2, filmId);

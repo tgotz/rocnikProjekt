@@ -25,12 +25,12 @@ public class ActorDAO {
 
     //Checks if actor exists
     public int getActorId(String actorName) {
-        String query = "SELECT idherce FROM herci WHERE jmeno = ?";
+        String query = "SELECT idActor FROM actors WHERE name = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, actorName);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt("idherce");
+                return resultSet.getInt("idActor");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,8 +40,8 @@ public class ActorDAO {
 
     //inserting actor (in case he doesnt exists)
     public int insertActor(String actorName) {
-        System.out.println("zkousim vkladat ");
-        String query = "INSERT INTO herci (jmeno) VALUES (?)";
+        System.out.println("Zkouším vkládat ");
+        String query = "INSERT INTO actors (name) VALUES (?)";
         try (PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, actorName);
             int rowsAffected = statement.executeUpdate();
@@ -57,10 +57,11 @@ public class ActorDAO {
         return -1;
     }
 
+
     //delete actor if he doesn't have any characters
     public void deleteActorIfNotUsed(int actorId) {
         try {
-            String query = "DELETE FROM herci WHERE idherce = ? AND NOT EXISTS (SELECT 1 FROM postavy where idherce = ?)";
+            String query = "DELETE FROM actors WHERE idActor = ? AND NOT EXISTS (SELECT 1 FROM characters WHERE idActor = ?)";
             System.out.println(query);
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, actorId);

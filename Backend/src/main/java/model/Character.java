@@ -1,7 +1,9 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Character implements Serializable{
     //inicializace všech variables pro filmovou postavu
@@ -15,8 +17,10 @@ public class Character implements Serializable{
     private String image;
     private String nickname;
     private String actorName;
-    private String adminName;
-    private String filmName;
+    private String dabberName;
+    private String addedBy;
+    private String approvedBy;
+    private List<String> movieList = new ArrayList<>();
     private double overallRating;
     private double attractivenessRating;
     private byte[] imageBytes;
@@ -112,23 +116,6 @@ public class Character implements Serializable{
     public void setActorName(String actorName) {
         this.actorName = actorName;
     }
-
-    public String getAdminName() {
-        return adminName;
-    }
-
-    public void setAdminName(String adminName) {
-        this.adminName = adminName;
-    }
-
-    public String getFilmName() {
-        return filmName;
-    }
-
-    public void setFilmName(String filmName) {
-        this.filmName = filmName;
-    }
-
     public double getOverallRating() {
         return overallRating;
     }
@@ -143,5 +130,37 @@ public class Character implements Serializable{
 
     public void setAttractivenessRating(double attractivenessRating) {
         this.attractivenessRating = attractivenessRating;
+    }
+
+    public String getDabberName() {
+        return dabberName;
+    }
+
+    public void setDabberName(String dabberName) {
+        this.dabberName = dabberName;
+    }
+
+    public String getAddedBy() {
+        return addedBy;
+    }
+
+    public void setAddedBy(String addedBy) {
+        this.addedBy = addedBy;
+    }
+
+    public String getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(String approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
+    public List<String> getMovieList() {
+        return movieList;
+    }
+
+    public void setMovieList(List<String> movieList) {
+        this.movieList = movieList;
     }
 }

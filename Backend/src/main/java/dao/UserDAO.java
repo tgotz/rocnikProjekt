@@ -41,20 +41,18 @@ public class UserDAO {
     public User getUserByUsername(String username) {
         User user = new User();
         String query = "SELECT * FROM users WHERE username = ?";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                user.setId(resultSet.getInt("iduser"));
+                user.setId(resultSet.getInt("idUser"));
                 user.setName(resultSet.getString("username"));
                 user.setPassword(resultSet.getString("password"));
-                user.setRole(resultSet.getInt("usertype"));
+                user.setRole(resultSet.getInt("idRole"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return user;
     }
     public boolean verifyPassword(String username, String password){
@@ -79,7 +77,7 @@ public class UserDAO {
     public void updateUserRole(Integer userid, Integer role){
         try {
             System.out.println("Strikam");
-            String query = "UPDATE users set usertype = ? WHERE iduser = ?";
+            String query = "UPDATE users set idRole = ? WHERE iduser = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, role);
             statement.setInt(2, userid);
@@ -98,9 +96,9 @@ public class UserDAO {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getInt("iduser"));
+                user.setId(resultSet.getInt("idUser"));
                 user.setName(resultSet.getString("username"));
-                user.setRole(resultSet.getInt("usertype"));
+                user.setRole(resultSet.getInt("idRole"));
                 users.add(user);
             }
         } catch (SQLException e) {

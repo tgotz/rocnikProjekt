@@ -3,10 +3,8 @@ package dao;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Properties;
-import java.util.List;
+import java.util.*;
+
 import jakarta.servlet.http.HttpServletRequest;
 import model.Character;
 import model.User;
@@ -40,7 +38,7 @@ public class CharacterDAO {
             e.printStackTrace();
         }
     }
-    public void updateCharacter(Character character, User user){
+   /* public void updateCharacter(Character character, User user){
         ActorDAO actorDAO = new ActorDAO();
         FilmDAO filmDAO = new FilmDAO();
 
@@ -188,31 +186,45 @@ public class CharacterDAO {
 
 
     }
-
+*/
     //method to get character's details - for detail jsp
     public Character getCharacterDetail(int id){
-        String query = "SELECT * FROM postavy JOIN filmy on postavy.idfilmu = filmy.idfilmu JOIN herci on postavy.idherce = herci.idherce JOIN users on postavy.iduser = users.iduser WHERE postavy.idpostavy = ?";
+        String query = "SELECT c.idCharacter, c.name, c.picture, c.type, c.gender,c.age, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c JOIN users u ON c.addedBy = u.idUser JOIN users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.idCharacter = ? GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name ";
         Character character = new Character();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                character.setId(resultSet.getInt("postavy.idpostavy"));
-                character.setName(resultSet.getString("postavy.jmeno"));
-                character.setDesc(resultSet.getString("postavy.popis"));
-                character.setDateAdded(resultSet.getDate("postavy.datumPridani"));
-                character.setType(resultSet.getString("postavy.typPostavy"));
-                character.setGender(resultSet.getString("postavy.pohlavi"));
-                byte[] imageBytes = resultSet.getBytes("obrazek");
+                character.setId(resultSet.getInt("idCharacter"));
+                character.setName(resultSet.getString("name"));
+                byte[] imageBytes = resultSet.getBytes("picture");
                 if (imageBytes != null) {
                     String base64Image = Base64.getEncoder().encodeToString(imageBytes);
                     character.setImage(base64Image); // Nastav Base64 obrázek
-                }                character.setNickname(resultSet.getString("postavy.prezdivka"));
-                character.setActorName(resultSet.getString("herci.jmeno"));
-                character.setAdminName(resultSet.getString("users.username"));
-                character.setFilmName(resultSet.getString("filmy.nazevFilmu"));
-                character.setAge(resultSet.getInt("postavy.vek"));
+                }
+                character.setAge(resultSet.getInt("age"));
+                character.setType(resultSet.getString("type"));
+                character.setGender(resultSet.getString("gender"));
+                character.setDateAdded(resultSet.getDate("dateAdded"));
+                character.setAddedBy(resultSet.getString("addedBy"));
+                character.setApprovedBy(resultSet.getString("approvedBy"));
+
+                String actorName = resultSet.getString("actorName");
+                if(actorName != null){
+                    character.setActorName(actorName);
+                }
+                String dabberName = resultSet.getString("dabberName");
+                if(dabberName != null){
+                    character.setDabberName(dabberName);
+                }
+                String moviesStr = resultSet.getString("movies");
+                List<String> movieList = new ArrayList<>();
+                if (moviesStr != null && !moviesStr.isEmpty()) {
+                    // Rozdělíme řetězec podle čárky a případně odstraníme mezery
+                    movieList = new ArrayList<>(Arrays.asList(moviesStr.split(",\\s*")));
+                }
+                character.setMovieList(movieList);
             }
 
         } catch (SQLException e) {
@@ -222,7 +234,15 @@ public class CharacterDAO {
     };
     //method to get characters for Leaderboards
     public ArrayList<Character> getCharactersLB(String orderBy){
-        String query = "SELECT postavy.idpostavy , postavy.jmeno, postavy.prezdivka, filmy.nazevFilmu, herci.jmeno, AVG(recenze.celkoveHodnoceni) as overall, AVG(recenze.hodnoceniAtraktivity) as attractiveness FROM postavy JOIN filmy on postavy.idfilmu = filmy.idfilmu JOIN herci on postavy.idherce = herci.idherce JOIN recenze on postavy.idpostavy = recenze.idpostavy GROUP BY (postavy.idpostavy) ORDER BY " + orderBy;
+        String query = "SELECT c.idCharacter as id, c.name as name, c.nickname as nickname, d.name as dabberName, a.name as actorName,GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies, AVG(reviews.overalRating) as overall, AVG(reviews.attractivenessRating) as attractiveness\n" +
+                "FROM characters c\n" +
+                "left join actors d on d.idActor = c.idDabber\n" +
+                "left join actors a on a.idActor = c.idActor\n" +
+                "join reviews on reviews.idCharacter = c.idCharacter\n" +
+                "LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie\n" +
+                "GROUP BY c.idCharacter " +
+                "ORDER BY " + orderBy;
+        System.out.println(query);
         ArrayList<Character> characterList = new ArrayList<Character>();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -231,13 +251,26 @@ public class CharacterDAO {
             while (resultSet.next()){
                 if(i < 50){
                     Character character = new Character();
-                    character.setId(resultSet.getInt("postavy.idpostavy"));
-                    character.setName(resultSet.getString("postavy.jmeno"));
-                    character.setNickname(resultSet.getString("postavy.prezdivka"));
-                    character.setFilmName(resultSet.getString("filmy.nazevFilmu"));
-                    character.setActorName(resultSet.getString("herci.jmeno"));
+                    character.setId(resultSet.getInt("id"));
+                    character.setName(resultSet.getString("name"));
+                    character.setNickname(resultSet.getString("nickname"));
                     character.setOverallRating(resultSet.getDouble("overall"));
                     character.setAttractivenessRating(resultSet.getDouble("attractiveness"));
+                    String actorName = resultSet.getString("actorName");
+                    if(actorName != null){
+                        character.setActorName(actorName);
+                    }
+                    String dabberName = resultSet.getString("dabberName");
+                    if(dabberName != null){
+                        character.setDabberName(dabberName);
+                    }
+                    String moviesStr = resultSet.getString("movies");
+                    List<String> movieList = new ArrayList<>();
+                    if (moviesStr != null && !moviesStr.isEmpty()) {
+                        // Rozdělíme řetězec podle čárky a případně odstraníme mezery
+                        movieList = new ArrayList<>(Arrays.asList(moviesStr.split(",\\s*")));
+                    }
+                    character.setMovieList(movieList);
                     characterList.add(character);
                     i++;
                 }
@@ -249,7 +282,9 @@ public class CharacterDAO {
     }
     //method to get recently added characters for index.jsp - recent characters part
     public ArrayList<Character> getRecentCharacters(){
+        System.out.println("použivam recentCharacter");
         ArrayList<Character> characters = new ArrayList<Character>();
+        /*
         try {
             Statement statement = connection.createStatement();
 
@@ -274,37 +309,50 @@ public class CharacterDAO {
     } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        */
         return characters;
 
     }
     public List<Character> getCharacters() {
         List<Character> characters = new ArrayList<>();
-        String sql = "SELECT postavy.idpostavy as id, postavy.jmeno as jmeno, postavy.obrazek as obrazek, " +
-                "postavy.typPostavy as typ, postavy.pohlavi as pohlavi, filmy.nazevFilmu as nazevFilmu, postavy.datumPridani as datumPridani, herci.jmeno as herec, users.username as username  " +
-                "FROM postavy " +
-                "JOIN filmy ON filmy.idfilmu = postavy.idfilmu " +
-                "JOIN herci ON herci.idherce = postavy.idherce " +
-                "JOIN users ON users.iduser = postavy.iduser " +
-                "WHERE postavy.schvaleno = 1";
+        String sql = "SELECT c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c JOIN users u ON c.addedBy = u.idUser JOIN users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.approved = 1 GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name;";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Character character = new Character();
-                character.setId(resultSet.getInt("id"));
-                character.setName(resultSet.getString("jmeno"));
-                byte[] imageBytes = resultSet.getBytes("obrazek");
+                character.setId(resultSet.getInt("idCharacter"));
+                character.setName(resultSet.getString("name"));
+                byte[] imageBytes = resultSet.getBytes("picture");
                 if (imageBytes != null) {
                     String base64Image = Base64.getEncoder().encodeToString(imageBytes);
                     character.setImage(base64Image); // Nastav Base64 obrázek
                 }
-                character.setType(resultSet.getString("typ"));
-                character.setGender(resultSet.getString("pohlavi"));
-                character.setFilmName(resultSet.getString("nazevFilmu"));
-                character.setDateAdded(resultSet.getDate("datumPridani"));
-                character.setAdminName(resultSet.getString("username"));
-                character.setActorName(resultSet.getString("herec"));
+                character.setType(resultSet.getString("type"));
+                character.setGender(resultSet.getString("gender"));
+                character.setDateAdded(resultSet.getDate("dateAdded"));
+                character.setAddedBy(resultSet.getString("addedBy"));
+                character.setApprovedBy(resultSet.getString("approvedBy"));
+
+                String actorName = resultSet.getString("actorName");
+                if(actorName != null){
+                    character.setActorName(actorName);
+                }
+                String dabberName = resultSet.getString("dabberName");
+                if(dabberName != null){
+                    character.setDabberName(dabberName);
+                }
+                String moviesStr = resultSet.getString("movies");
+                List<String> movieList = new ArrayList<>();
+                if (moviesStr != null && !moviesStr.isEmpty()) {
+                    // Rozdělíme řetězec podle čárky a případně odstraníme mezery
+                    movieList = new ArrayList<>(Arrays.asList(moviesStr.split(",\\s*")));
+                }
+                character.setMovieList(movieList);
+
+
                 characters.add(character);
             }
         } catch (SQLException e) {
@@ -380,6 +428,7 @@ public class CharacterDAO {
             throw new RuntimeException(e);
         }
     }
+    /*
     public List<Character> getUnapprovedCharacters(){
         List<Character> characters = new ArrayList<>();
         try {
@@ -410,5 +459,5 @@ public class CharacterDAO {
         }
         return characters;
 
-    }
+    }*/
 }

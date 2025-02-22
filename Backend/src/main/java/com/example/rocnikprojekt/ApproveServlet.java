@@ -47,13 +47,13 @@ public class ApproveServlet extends HttpServlet {
             // Získání neschválených postav
             CharacterDAO characterDAO = new CharacterDAO();
             QuotesDAO quotesDAO = new QuotesDAO();
-            List<Character> characters = characterDAO.getUnapprovedCharacters();
+            //List<Character> characters = characterDAO.getUnapprovedCharacters();
 
             // JSON odpověď
             StringBuilder jsonResponse = new StringBuilder();
             jsonResponse.append("["); // Zahájení pole všech postav
 
-            for (int i = 0; i < characters.size(); i++) {
+            /*for (int i = 0; i < characters.size(); i++) {
                 Character character = characters.get(i);
                 jsonResponse.append("{"); // Zahájení objektu postavy
 
@@ -89,7 +89,7 @@ public class ApproveServlet extends HttpServlet {
                     jsonResponse.append(",");
                 }
             }
-
+*/
             jsonResponse.append("]"); // Uzavření pole všech postav
 
 

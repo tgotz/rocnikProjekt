@@ -23,7 +23,7 @@ public class QuotesDAO {
         }
     }
     public void insertQuote(String hlaska, int idPostavy) throws SQLException {
-        String sql = "INSERT INTO hlasky (textHlasky, idpostavy) VALUES (?, ?)";
+        String sql = "INSERT INTO quotes (textQuote, idCharacter) VALUES (?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, hlaska);
@@ -33,14 +33,14 @@ public class QuotesDAO {
     }
 
     public ArrayList<String> getQuotes(int id){
-        String query = "SELECT texthlasky FROM hlasky WHERE idpostavy = ?";
+        String query = "SELECT textQuote FROM quotes WHERE idCharacter = ?";
         ArrayList<String> quotesList = new ArrayList<String>();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
-                quotesList.add(resultSet.getString("textHlasky"));
+                quotesList.add(resultSet.getString("textQuote"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -49,7 +49,7 @@ public class QuotesDAO {
     }
     public void deleteQuotes(int idPostavy){
         try {
-            String query = "DELETE FROM hlasky WHERE idpostavy = ?";
+            String query = "DELETE FROM quotes WHERE idCharacter = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, idPostavy);
             statement.executeUpdate();

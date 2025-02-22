@@ -61,7 +61,7 @@ public class AddCharacterServlet extends HttpServlet {
             newCharacter.setName(name);
             newCharacter.setType(type);
             newCharacter.setGender(gender);
-            newCharacter.setFilmName(film);
+            //newCharacter.setFilmName(film);
             newCharacter.setDesc(desc);
 
             // Volitelné údaje
@@ -87,7 +87,7 @@ public class AddCharacterServlet extends HttpServlet {
 
             // Uložíme postavu do databáze
             CharacterDAO characterDAO = new CharacterDAO();
-            characterDAO.addCharacter(newCharacter, quotesArray);
+            //characterDAO.addCharacter(newCharacter, quotesArray);
 
             // Úspěšná odpověď
             jsonResponse.put("status", "success");

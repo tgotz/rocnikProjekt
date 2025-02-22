@@ -6,8 +6,14 @@
       <p v-if="character.age">Věk: {{ character.age }}</p>
       <p>Pohlaví: {{ character.gender }}</p>
       <p>Typ: {{ character.type }}</p>
-      <p>Herec/dabér: {{ character.actorName }}</p>
-      <p>Název filmu: {{ character.filmName }}</p>
+      <p v-if="character.actorName">Herec: {{ character.actorName }}</p>
+      <p v-if="character.dabberName">Dabér: {{ character.dabberName }}</p>
+      <p>Filmy</p>
+      <ul>
+        <li v-for="(movie, index) in character.movieList" :key="index">
+          {{ movie }}
+        </li>
+      </ul>
       <p>{{ character.desc }}</p>
     </div>
     <div class="col-md-4">

@@ -67,7 +67,7 @@ export default {
       if (search) {
         filtered = filtered.filter((character) =>
             character.name.toLowerCase().includes(search.toLowerCase()) ||
-            character.filmName.toLowerCase().includes(search.toLowerCase())
+            character.movieList.some(movie => movie.toLowerCase().includes(search.toLowerCase()))
         );
       }
 

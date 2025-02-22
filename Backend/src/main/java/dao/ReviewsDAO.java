@@ -29,7 +29,7 @@ public class ReviewsDAO {
 
     public ReviewsDAO(Connection connection) {}
     public ArrayList<Review> getReviews(int id){
-        String query = "SELECT * FROM recenze WHERE idpostavy = ?";
+        String query = "SELECT * FROM reviews WHERE idCharacter = ?";
         ArrayList<Review> reviewList = new ArrayList<Review>();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -37,13 +37,13 @@ public class ReviewsDAO {
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
                 Review review = new Review();
-                review.setReviewId(resultSet.getInt("idrecenze"));
-                review.setAuthorName(resultSet.getString("jmenoRecenzenta"));
-                review.setOverallRating(resultSet.getInt("celkoveHodnoceni"));
-                review.setAttractivenessRating(resultSet.getInt("hodnoceniAtraktivity"));
-                review.setDateAdded(resultSet.getDate("datumPridani"));
-                review.setReviewText(resultSet.getString("textRecenze"));
-                review.setCharacterId(resultSet.getInt("idpostavy"));
+                review.setReviewId(resultSet.getInt("idReview"));
+                review.setAuthorName(resultSet.getString("nameAuthor"));
+                review.setOverallRating(resultSet.getInt("overalRating"));
+                review.setAttractivenessRating(resultSet.getInt("attractivenessRating"));
+                review.setDateAdded(resultSet.getDate("dateAdded"));
+                review.setReviewText(resultSet.getString("textReview"));
+                review.setCharacterId(resultSet.getInt("idCharacter"));
                 reviewList.add(review);
             }
         } catch (SQLException e) {
@@ -52,7 +52,7 @@ public class ReviewsDAO {
         return reviewList;
     }
     public void insertReview(Review review){
-        String query = "INSERT INTO recenze (jmenoRecenzenta, celkoveHodnoceni, hodnoceniAtraktivity, datumPridani, textRecenze, idPostavy) VALUES (?, ?, ?, NOW(), ?, ?)";
+        String query = "INSERT INTO reviews (nameAuthor, overalRating, attractivenessRating, dateAdded, textReview, idCharacter) VALUES (?, ?, ?, NOW(), ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, review.getAuthorName());
