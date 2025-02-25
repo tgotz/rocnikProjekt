@@ -130,7 +130,7 @@ export default {
       if (!confirm("Opravdu chcete tohoto uživatele smazat?")) return;
 
       try {
-        await axios.delete(`http://localhost:8080/api/delete-user/${userId}`, {
+        axios.delete(`http://localhost:8080/api/delete-user?userId=${userId}`, {
           withCredentials: true,
         });
         this.users = this.users.filter((user) => user.id !== userId);

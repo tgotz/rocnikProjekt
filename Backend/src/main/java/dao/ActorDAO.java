@@ -62,7 +62,6 @@ public class ActorDAO {
     public void deleteActorIfNotUsed(int actorId) {
         try {
             String query = "DELETE FROM actors WHERE idActor = ? AND NOT EXISTS (SELECT 1 FROM characters WHERE idActor = ?)";
-            System.out.println(query);
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, actorId);
             statement.setInt(2, actorId);

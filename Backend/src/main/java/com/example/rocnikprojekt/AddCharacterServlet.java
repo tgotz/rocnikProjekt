@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import model.Character;
 
@@ -35,10 +36,15 @@ public class AddCharacterServlet extends HttpServlet {
         try {
             // Načteme povinné parametry
             String name = request.getParameter("name");
+            System.out.println(name);
             String type = request.getParameter("type");
+            System.out.println(type);
             String gender = request.getParameter("gender");
-            String film = request.getParameter("film");
+            System.out.println(gender);
+            String film = request.getParameter("movies");
+            System.out.println(film);
             String desc = request.getParameter("desc");
+            System.out.println(desc);
             Part filePart = request.getPart("picture");
             System.out.println("File Part: " + filePart);
 
@@ -61,15 +67,17 @@ public class AddCharacterServlet extends HttpServlet {
             newCharacter.setName(name);
             newCharacter.setType(type);
             newCharacter.setGender(gender);
-            //newCharacter.setFilmName(film);
             newCharacter.setDesc(desc);
 
             // Volitelné údaje
             if (request.getParameter("age") != null && !request.getParameter("age").isEmpty()) {
                 newCharacter.setAge(Integer.parseInt(request.getParameter("age")));
             }
-            if (request.getParameter("actor") != null) {
+            if (request.getParameter("actor") != null && !request.getParameter("actor").isEmpty()) {
                 newCharacter.setActorName(request.getParameter("actor"));
+            }
+            if (request.getParameter("dabber") != null && !request.getParameter("dabber").isEmpty()) {
+                newCharacter.setDabberName(request.getParameter("dabber"));
             }
             if (request.getParameter("nickname") != null && !request.getParameter("nickname").isEmpty()) {
                 newCharacter.setNickname(request.getParameter("nickname"));
@@ -81,13 +89,18 @@ public class AddCharacterServlet extends HttpServlet {
             newCharacter.setImageBytes(imageBytes);
             System.out.println("Image Bytes Length: " + imageBytes.length);
 
+
+            // Filmy
+            String movies = request.getParameter("movies");
+            String[] moviesArray = movies != null ? movies.split(";") : new String[0];
+            newCharacter.setMovieList(List.of(moviesArray));
             // Hlášky
             String quotes = request.getParameter("quotes");
             String[] quotesArray = quotes != null ? quotes.split(";") : new String[0];
 
             // Uložíme postavu do databáze
             CharacterDAO characterDAO = new CharacterDAO();
-            //characterDAO.addCharacter(newCharacter, quotesArray);
+            characterDAO.addCharacter(newCharacter, quotesArray);
 
             // Úspěšná odpověď
             jsonResponse.put("status", "success");

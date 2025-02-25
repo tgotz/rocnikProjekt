@@ -1,5 +1,6 @@
 package com.example.rocnikprojekt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.CharacterDAO;
 import dao.QuotesDAO;
 import jakarta.servlet.annotation.WebServlet;
@@ -47,13 +48,13 @@ public class ApproveServlet extends HttpServlet {
             // Získání neschválených postav
             CharacterDAO characterDAO = new CharacterDAO();
             QuotesDAO quotesDAO = new QuotesDAO();
-            //List<Character> characters = characterDAO.getUnapprovedCharacters();
+            List<Character> characters = characterDAO.getUnapprovedCharacters();
 
             // JSON odpověď
             StringBuilder jsonResponse = new StringBuilder();
             jsonResponse.append("["); // Zahájení pole všech postav
 
-            /*for (int i = 0; i < characters.size(); i++) {
+            for (int i = 0; i < characters.size(); i++) {
                 Character character = characters.get(i);
                 jsonResponse.append("{"); // Zahájení objektu postavy
 
@@ -65,7 +66,16 @@ public class ApproveServlet extends HttpServlet {
                 jsonResponse.append("\"gender\": ").append(character.getGender() != null ? "\"" + escapeJson(character.getGender()) + "\"" : null).append(",");
                 jsonResponse.append("\"type\": ").append(character.getType() != null ? "\"" + escapeJson(character.getType()) + "\"" : null).append(",");
                 jsonResponse.append("\"actorName\": ").append(character.getActorName() != null ? "\"" + escapeJson(character.getActorName()) + "\"" : null).append(",");
-                jsonResponse.append("\"filmName\": ").append(character.getFilmName() != null ? "\"" + escapeJson(character.getFilmName()) + "\"" : null).append(",");
+                jsonResponse.append("\"dabberName\": ").append(character.getDabberName() != null ? "\"" + escapeJson(character.getDabberName()) + "\"" : null).append(",");
+                jsonResponse.append("\"movieList\": [");
+                List<String> movieList = character.getMovieList();
+                for (int k = 0; k < movieList.size(); k++) {
+                    jsonResponse.append("\"").append(escapeJson(movieList.get(k))).append("\"");
+                    if (k < movieList.size() - 1) {
+                        jsonResponse.append(",");
+                    }
+                }
+                jsonResponse.append("],");
                 jsonResponse.append("\"description\": ").append(character.getDesc() != null ? "\"" + escapeJson(character.getDesc()) + "\"" : null).append(",");
                 jsonResponse.append("\"image\": \"")
                         .append(character.getImage()) // Už je Base64 string
@@ -89,9 +99,8 @@ public class ApproveServlet extends HttpServlet {
                     jsonResponse.append(",");
                 }
             }
-*/
-            jsonResponse.append("]"); // Uzavření pole všech postav
 
+            jsonResponse.append("]"); // Uzavření pole všech postav
 
             // Odeslání odpovědi
             response.setStatus(HttpServletResponse.SC_OK);

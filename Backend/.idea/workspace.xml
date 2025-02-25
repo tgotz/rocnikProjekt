@@ -10,10 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9d8529b0-5ff3-4b7a-9b34-b7f03b5d2e48" name="Changes" comment="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterDetail.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/HomePage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/HomePage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LeaderboardPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LeaderboardPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/AddCharacterPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/AddCharacterPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/ApproveCharacter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/ApproveCharacter.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/UsersDashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/UsersDashboard.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -232,6 +231,8 @@
       <workItem from="1733217490572" duration="14628000" />
       <workItem from="1733407652485" duration="9467000" />
       <workItem from="1740239127770" duration="8528000" />
+      <workItem from="1740394434875" duration="125000" />
+      <workItem from="1740394584575" duration="11216000" />
     </task>
     <task id="LOCAL-00001" summary="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
       <option name="closed" value="true" />
@@ -267,7 +268,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>228</line>
+          <line>263</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -292,27 +293,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>317</line>
+          <line>351</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>395</line>
+          <line>429</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>432</line>
+          <line>482</line>
           <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dao/FilmDAO.java</url>
-          <line>26</line>
-          <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>429</line>
+          <line>479</line>
           <properties class="dao.CharacterDAO">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -348,16 +344,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>40</line>
-          <properties class="dao.CharacterDAO" method="updateCharacter">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>283</line>
+          <line>317</line>
           <properties class="dao.CharacterDAO" method="getRecentCharacters">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -366,12 +353,30 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>235</line>
+          <line>270</line>
           <properties class="dao.CharacterDAO" method="getCharactersLB">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/dao/FilmDAO.java</url>
+          <line>39</line>
+          <properties class="dao.FilmDAO" method="getFilmId">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
+          <line>17</line>
+          <properties class="dao.CharacterDAO" method="&lt;init&gt;">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

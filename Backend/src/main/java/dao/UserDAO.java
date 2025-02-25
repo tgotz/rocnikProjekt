@@ -64,7 +64,7 @@ public class UserDAO {
     }
     public void deleteUser(Integer userid){
         try {
-            String query = "DELETE FROM users WHERE iduser = ?";
+            String query = "DELETE FROM users WHERE idUser = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userid);
 

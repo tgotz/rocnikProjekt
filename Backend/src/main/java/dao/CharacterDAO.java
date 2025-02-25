@@ -106,7 +106,7 @@ public class CharacterDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
     //method to add character
     public void addCharacter(Character character, String[] quotesArray){
         ActorDAO actorDAO = new ActorDAO();
@@ -116,33 +116,58 @@ public class CharacterDAO {
         //checking if actor and film already exists
         //if yes - gettings their ID
         //if not - inserting them and getting their ID
-        int actorId = actorDAO.getActorId(character.getActorName());
-        if(actorId == -1){
-            actorId = actorDAO.insertActor(character.getActorName());
+        int actorId = -1;
+        if(character.getActorName() != null) {
+                actorId = actorDAO.getActorId(character.getActorName());
+            if (actorId == -1) {
+                actorId = actorDAO.insertActor(character.getActorName());
+            }
+        }
+        int dabberId = -1;
+        if(character.getDabberName() != null) {
+               dabberId = actorDAO.getActorId(character.getDabberName());
+            if (dabberId == -1) {
+                dabberId = actorDAO.insertActor(character.getDabberName());
+            }
         }
 
-        int filmId = filmDAO.getFilmId(character.getFilmName());
-        if(filmId == -1){
-            filmId = filmDAO.insertFilm(character.getFilmName());
+        List<Integer> movieIds = new ArrayList<>();
+        for(int i = 0; i < character.getMovieList().size(); i++){
+           movieIds.add(filmDAO.getFilmId(character.getMovieList().get(i)));
+        if(movieIds.get(i) == -1){
+            movieIds.remove(i);
+            movieIds.add(filmDAO.insertFilm(character.getMovieList().get(i)));
+        }
         }
         //building sql query based on what "values" were provided- nickname and age are optional.
-        String sqlPart1 = "INSERT INTO postavy (jmeno, popis, datumPridani, typPostavy, pohlavi, obrazek, idherce, iduser, idfilmu";
-        String values = "(?, ?, NOW(), ?, ?, ?, ?, ?, ?";
+        String sqlPart1 = "INSERT INTO characters (name, description, dateAdded, type, gender, picture";
+        String values = "(?, ?, NOW(), ?, ?, ?";
 
         //checking if age != default value (999)
         if(character.getAge() != 999){
-            sqlPart1 += ", vek";
+            sqlPart1 += ", age";
             values += ", ?";
         }
         //checking if nickname was provided
         if(character.getNickname() != null){
-            sqlPart1 += ", prezdivka";
+            sqlPart1 += ", nickname";
+            values += ", ?";
+        }
+        //checking if actor was provided
+        if(character.getActorName() != null){
+            sqlPart1 += ", idActor";
+            values += ", ?";
+        }
+        //checking if actor was provided
+        if(character.getDabberName() != null){
+            sqlPart1 += ", idDabber";
             values += ", ?";
         }
         //finishing the query
         sqlPart1 += ")";
         values += ")";
         String query = sqlPart1 + " VALUES " + values;
+        int count = 6;
         try {
             PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1,character.getName());
@@ -150,21 +175,25 @@ public class CharacterDAO {
             statement.setString(3,character.getType());
             statement.setString(4,character.getGender());
             statement.setBytes(5,character.getImageBytes());
-            statement.setInt(6,actorId);
-            statement.setInt(7,1);
-            statement.setInt(8,(filmId));
             if(character.getAge() != 999){
-                statement.setInt(9, character.getAge());
+                statement.setInt(count, character.getAge());
+                count++;
             }
             if(character.getNickname() != null){
-                if(character.getAge() ==999){
-                    statement.setString(9, character.getNickname());
-                } else{
-                    statement.setString(10, character.getNickname());
-
-                }
+                    statement.setString(count, character.getNickname());
+                    count++;
             }
+            if(character.getActorName() != null){
+                statement.setInt(count, actorId);
+                count++;
+            }
+            if(character.getDabberName() != null){
+                statement.setInt(count, dabberId);
+                count++;
+            }
+
             statement.executeUpdate();
+
             //geting id of the new added character
             ResultSet resultSet = statement.getGeneratedKeys();
             int idPostavy = -1;
@@ -180,13 +209,19 @@ public class CharacterDAO {
                     }
                 }
             }
+            filmDAO = new FilmDAO();
+            if(idPostavy != -1){
+                for(int i = 0; i < movieIds.size(); i++){
+
+                    filmDAO.assignFilm(movieIds.get(i), idPostavy);
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
 
     }
-*/
     //method to get character's details - for detail jsp
     public Character getCharacterDetail(int id){
         String query = "SELECT c.idCharacter, c.name, c.picture, c.type, c.gender,c.age, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c JOIN users u ON c.addedBy = u.idUser JOIN users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.idCharacter = ? GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name ";
@@ -242,7 +277,6 @@ public class CharacterDAO {
                 "LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie\n" +
                 "GROUP BY c.idCharacter " +
                 "ORDER BY " + orderBy;
-        System.out.println(query);
         ArrayList<Character> characterList = new ArrayList<Character>();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -316,7 +350,7 @@ public class CharacterDAO {
     }
     public List<Character> getCharacters() {
         List<Character> characters = new ArrayList<>();
-        String sql = "SELECT c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c JOIN users u ON c.addedBy = u.idUser JOIN users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.approved = 1 GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name;";
+        String sql = "SELECT c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c LEFT JOIN users u ON c.addedBy = u.idUser LEFT JOIN users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.approved = 1 GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name;";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -381,7 +415,7 @@ public class CharacterDAO {
     //method to approve character (to start displaying it on web)
     public void approveCharacter(int id, int userId){
         try {
-            String query = "UPDATE postavy SET schvaleno = 1, iduser = ?  WHERE idpostavy = ?";
+            String query = "UPDATE characters SET approved = 1, approvedBy = ?  WHERE idCharacter = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, userId);
             statement.setInt(2, id);
@@ -393,24 +427,37 @@ public class CharacterDAO {
     }
     //method to NOT approve character - delete it from database
     public void deleteCharacter(int id){
-        int idActor = 0;
-        int idFilm = 0;
+        List<Integer> actorIds = new ArrayList<>();
+        List<Integer> movieIds = new ArrayList<>();
         try {
             //select to get id of actor and id of film
-            String selectQuery = "SELECT idherce, idfilmu FROM postavy WHERE idpostavy = ?";
+            String selectQuery = "SELECT idActor, idDabber FROM characters WHERE idCharacter = ?";
             PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
             selectStatement.setInt(1, id);
             ResultSet resultSet = selectStatement.executeQuery();
             while(resultSet.next()){
-                idActor = resultSet.getInt("idherce");
-                idFilm = resultSet.getInt("idfilmu");
+                actorIds.add(resultSet.getInt("idActor"));
+                actorIds.add(resultSet.getInt("idDabber"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         try {
-            String query = "DELETE FROM postavy WHERE idpostavy = ?";
+            String selectQuery = "SELECT idMovie FROM characters_movies WHERE idCharacter = ?";
+            PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+            selectStatement.setInt(1, id);
+            ResultSet resultSet = selectStatement.executeQuery();
+            while(resultSet.next()){
+                movieIds.add(resultSet.getInt("idMovie"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        try {
+            String query = "DELETE FROM characters WHERE idCharacter = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             //deleting the character's quotes as well
@@ -420,44 +467,64 @@ public class CharacterDAO {
             statement.executeUpdate();
             //deleting the actor if doesnt have any other characters
             ActorDAO actorDAO = new ActorDAO();
-            actorDAO.deleteActorIfNotUsed(idActor);
+            actorDAO.deleteActorIfNotUsed(actorIds.get(0));
+            actorDAO.deleteActorIfNotUsed(actorIds.get(1));
             //deleting the film if doesnt have any other characters
             FilmDAO filmDAO = new FilmDAO();
-            filmDAO.deleteFilmIfNotUsed(idFilm);
+            for(int i = 0; i < movieIds.size(); i++) {
+                filmDAO.deleteFilmIfNotUsed(movieIds.get(i));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    /*
+
     public List<Character> getUnapprovedCharacters(){
         List<Character> characters = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
 
             //getting characters from the database for the "recently added" section
-            String unapprovedCharactersQuery = "SELECT postavy.idpostavy as id, postavy.jmeno as jmeno, postavy.obrazek as obrazek, postavy.typPostavy as typ, postavy.pohlavi as pohlavi, filmy.nazevFilmu as nazevFilmu, postavy.datumPridani as datumPridani, postavy.popis as popis, herci.jmeno as herec, postavy.prezdivka as prezdivka FROM postavy JOIN filmy ON filmy.idfilmu = postavy.idfilmu JOIN herci ON herci.idherce = postavy.idherce WHERE postavy.schvaleno = 0;\n";
-            ResultSet resultSet = statement.executeQuery(unapprovedCharactersQuery);
-            while(resultSet.next()){
-                    Character character = new Character();
-                    character.setId(resultSet.getInt("id"));
-                    character.setName(resultSet.getString("jmeno"));
-                    byte[] imageBytes = resultSet.getBytes("obrazek");
-                    if (imageBytes != null) {
-                        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-                        character.setImage(base64Image); // Nastav Base64 obrázek
-                    }
-                    character.setFilmName(resultSet.getString("nazevfilmu"));
-                    character.setNickname(resultSet.getString("prezdivka"));
-                    character.setDesc(resultSet.getString("popis"));
-                    character.setActorName(resultSet.getString("herec"));
-                    character.setType(resultSet.getString("typ"));
-                    character.setGender(resultSet.getString("pohlavi"));
-                    characters.add(character);
+            String sql = "SELECT c.idCharacter, c.description, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c LEFT JOIN users u ON c.addedBy = u.idUser LEFT JOIN users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.approved = 0 GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name;";
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                Character character = new Character();
+                character.setId(resultSet.getInt("idCharacter"));
+                character.setName(resultSet.getString("name"));
+                character.setDesc(resultSet.getString("description"));
+                byte[] imageBytes = resultSet.getBytes("picture");
+                if (imageBytes != null) {
+                    String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                    character.setImage(base64Image); // Nastav Base64 obrázek
+                }
+                character.setType(resultSet.getString("type"));
+                character.setGender(resultSet.getString("gender"));
+                character.setDateAdded(resultSet.getDate("dateAdded"));
+                character.setAddedBy(resultSet.getString("addedBy"));
+                character.setApprovedBy(resultSet.getString("approvedBy"));
+
+                String actorName = resultSet.getString("actorName");
+                if(actorName != null){
+                    character.setActorName(actorName);
+                }
+                String dabberName = resultSet.getString("dabberName");
+                if(dabberName != null){
+                    character.setDabberName(dabberName);
+                }
+                String moviesStr = resultSet.getString("movies");
+                List<String> movieList = new ArrayList<>();
+                if (moviesStr != null && !moviesStr.isEmpty()) {
+                    // Rozdělíme řetězec podle čárky a případně odstraníme mezery
+                    movieList = new ArrayList<>(Arrays.asList(moviesStr.split(",\\s*")));
+                }
+                character.setMovieList(movieList);
+
+                characters.add(character);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return characters;
 
-    }*/
+    }
 }

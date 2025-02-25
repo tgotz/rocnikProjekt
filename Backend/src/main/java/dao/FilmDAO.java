@@ -52,7 +52,7 @@ public class FilmDAO {
     }
     public int insertFilm(String filmName) {
         System.out.println("zkousim vkladat ");
-        String query = "INSERT INTO movies (movieName) VALUES (?)";
+        String query = "INSERT INTO movies (nameMovie) VALUES (?)";
         try (PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, filmName);
             int rowsAffected = statement.executeUpdate();
@@ -69,7 +69,7 @@ public class FilmDAO {
     }
     public void deleteFilmIfNotUsed(int filmId) {
         try {
-            String query = "DELETE FROM movies WHERE idMovie = ? AND NOT EXISTS (SELECT 1 FROM characters_movies where idfilmu = ?)";
+            String query = "DELETE FROM movies WHERE idMovie = ? AND NOT EXISTS (SELECT 1 FROM characters_movies where idMovie = ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, filmId);
             statement.setInt(2, filmId);
@@ -78,4 +78,16 @@ public class FilmDAO {
             throw new RuntimeException(e);
         }
     }
+    public void assignFilm(int idMovie, int idCharacter) {
+        String query = "INSERT INTO characters_movies (idCharacter, idMovie) VALUES (?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, idCharacter);
+            statement.setInt(2, idMovie);
+            System.out.println(statement);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Chyba při přiřazování filmu k postavě: " + e.getMessage(), e);
+        }
+    }
+
 }

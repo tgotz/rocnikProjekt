@@ -55,15 +55,14 @@
         </div>
         <div class="col-md-6">
           <div class="form-group mb-2">
-            <label for="filmShow">Film/seriál *</label>
+            <label for="filmShow">Přezdívka</label>
             <input
-                v-model="formData.film"
-                name="film"
+                v-model="formData.nickname"
+                name="nickname"
                 type="text"
                 class="form-control"
                 id="filmShow"
-                placeholder="Zadejte název filmu/seriálu"
-                required
+                placeholder="Zadejte přezdívku postavy"
             />
           </div>
         </div>
@@ -112,7 +111,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group mb-2">
-            <label for="characterActor">Herec/herečka(dabér, dabérka) *</label>
+            <label for="characterActor">Herec</label>
             <input
                 v-model="formData.actor"
                 name="actor"
@@ -120,23 +119,34 @@
                 class="form-control"
                 id="characterActor"
                 placeholder="Zadejte jméno herce/herečky"
-                required
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group mb-2">
-            <label for="characterNickname">Přezdívka</label>
+            <label for="characterNickname">Dabér</label>
             <input
-                v-model="formData.nickname"
-                name="nickname"
+                v-model="formData.dabber"
+                name="dabber"
                 type="text"
                 class="form-control"
                 id="characterNickname"
-                placeholder="Zadejte přezdívku postavy"
+                placeholder="Zadejte jméno dabera/daberky"
             />
           </div>
         </div>
+      </div>
+      <div class="form-group mb-2">
+        <label for="characterQuotes">Filmy *</label>
+        <textarea
+            v-model="formData.movies"
+            name="movies"
+            class="form-control"
+            id="characterQuotes"
+            rows="3"
+            placeholder="Zadejte filmy, ve kterých postava hrála oddělené středníkem (;)"
+            required
+        ></textarea>
       </div>
       <div class="form-group mb-2">
         <label for="characterQuotes">Hlášky</label>

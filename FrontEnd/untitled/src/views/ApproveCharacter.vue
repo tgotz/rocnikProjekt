@@ -29,8 +29,15 @@
         <p v-if="currentCharacter.age !== 999">Věk: {{ currentCharacter.age }}</p>
         <p>Pohlaví: {{ currentCharacter.gender }}</p>
         <p>Typ: {{ currentCharacter.type }}</p>
-        <p>Herec/dabér: {{ currentCharacter.actorName }}</p>
-        <p>Název filmu: {{ currentCharacter.filmName }}</p>
+        <p v-if="currentCharacter.actorName">Herec: {{ currentCharacter.actorName }}</p>
+        <p v-if="currentCharacter.dabberName">Dabér: {{ currentCharacter.dabberName }}</p>
+
+        <p>Filmy</p>
+        <ul>
+          <li v-for="(movie, index) in currentCharacter.movieList" :key="index">
+            {{ movie }}
+          </li>
+        </ul>
         <p>{{ currentCharacter.description }}</p>
       </div>
       <div class="col-md-4">
