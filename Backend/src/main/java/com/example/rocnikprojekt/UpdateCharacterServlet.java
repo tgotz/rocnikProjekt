@@ -28,7 +28,7 @@ public class UpdateCharacterServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         try {
-            // Ověření oprávnění uživatele
+            // checking if user should have access to this function
             Integer role = (Integer) request.getAttribute("role");
             if (role == null || role < 3) { // Role 3 = Moderátor nebo vyšší
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -36,7 +36,7 @@ public class UpdateCharacterServlet extends HttpServlet {
                 return;
             }
 
-            // Získání ID uživatele
+            // getting user id
             String userId = request.getParameter("userId");
             if (userId == null || userId.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -46,7 +46,7 @@ public class UpdateCharacterServlet extends HttpServlet {
             User user = new User();
             user.setId(Integer.parseInt(userId));
 
-            // Získání parametrů
+            // getting parameters
             String id = request.getParameter("id");
             String name = request.getParameter("name");
             String type = request.getParameter("type");
@@ -54,7 +54,7 @@ public class UpdateCharacterServlet extends HttpServlet {
             String film = request.getParameter("film");
             String desc = request.getParameter("desc");
 
-            // Kontrola povinných polí
+            // checking required parameters
             if (id == null || id.isEmpty() ||
                     name == null || name.isEmpty() ||
                     type == null || type.isEmpty() ||
@@ -66,7 +66,7 @@ public class UpdateCharacterServlet extends HttpServlet {
                 return;
             }
 
-            // Sestavení postavy
+
             Character updatedCharacter = new Character();
             updatedCharacter.setId(Integer.parseInt(id));
             updatedCharacter.setName(name);
@@ -75,7 +75,7 @@ public class UpdateCharacterServlet extends HttpServlet {
             //updatedCharacter.setFilmName(film);
             updatedCharacter.setDesc(desc);
 
-            // Volitelné parametry
+            // optional parameters
             String age = request.getParameter("age");
             if (age != null && !age.isEmpty()) {
                 updatedCharacter.setAge(Integer.parseInt(age));
@@ -91,18 +91,16 @@ public class UpdateCharacterServlet extends HttpServlet {
                 updatedCharacter.setNickname(nickname);
             }
 
-            // Zpracování obrázku
+            // dealing with image
             Part filePart = request.getPart("picture");
             if (filePart != null && filePart.getSize() > 0) {
                 InputStream fileContent = filePart.getInputStream();
                 updatedCharacter.setImageBytes(fileContent.readAllBytes());
             }
 
-            // Aktualizace v databázi
             CharacterDAO characterDAO = new CharacterDAO();
             //characterDAO.updateCharacter(updatedCharacter, user);
 
-            // Úspěšná odpověď
             response.getWriter().write("{\"message\":\"Character updated successfully\"}");
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,7 +36,7 @@ public class ApproveServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
-        // Kontrola přihlášení a role
+        // checking if user should have access to this function
         Integer role = (Integer) request.getAttribute("role");
         if (role == null || role < 2) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -45,20 +45,18 @@ public class ApproveServlet extends HttpServlet {
         }
 
         try {
-            // Získání neschválených postav
+            // getting not approved characters
             CharacterDAO characterDAO = new CharacterDAO();
             QuotesDAO quotesDAO = new QuotesDAO();
             List<Character> characters = characterDAO.getUnapprovedCharacters();
 
-            // JSON odpověď
             StringBuilder jsonResponse = new StringBuilder();
-            jsonResponse.append("["); // Zahájení pole všech postav
+            jsonResponse.append("[");
 
             for (int i = 0; i < characters.size(); i++) {
                 Character character = characters.get(i);
-                jsonResponse.append("{"); // Zahájení objektu postavy
+                jsonResponse.append("{");
 
-                // Přidání vlastností postavy
                 jsonResponse.append("\"id\": ").append(character.getId()).append(",");
                 jsonResponse.append("\"name\": ").append(character.getName() != null ? "\"" + escapeJson(character.getName()) + "\"" : null).append(",");
                 jsonResponse.append("\"nickname\": ").append(character.getNickname() != null ? "\"" + escapeJson(character.getNickname()) + "\"" : null).append(",");
@@ -78,29 +76,27 @@ public class ApproveServlet extends HttpServlet {
                 jsonResponse.append("],");
                 jsonResponse.append("\"description\": ").append(character.getDesc() != null ? "\"" + escapeJson(character.getDesc()) + "\"" : null).append(",");
                 jsonResponse.append("\"image\": \"")
-                        .append(character.getImage()) // Už je Base64 string
+                        .append(character.getImage())
                         .append("\",");
 
-                // Přidání hlášek
                 jsonResponse.append("\"quotes\": [");
                 List<String> quotes = quotesDAO.getQuotes(character.getId());
                 for (int j = 0; j < quotes.size(); j++) {
                     jsonResponse.append("\"").append(escapeJson(quotes.get(j))).append("\"");
                     if (j < quotes.size() - 1) {
-                        jsonResponse.append(","); // Čárka pouze mezi hláškami, ne na konci
+                        jsonResponse.append(",");
                     }
                 }
-                jsonResponse.append("]"); // Uzavření pole hlášek
+                jsonResponse.append("]");
 
-                jsonResponse.append("}"); // Uzavření objektu postavy
+                jsonResponse.append("}");
 
-                // Přidání čárky mezi objekty postav (kromě posledního objektu)
                 if (i < characters.size() - 1) {
                     jsonResponse.append(",");
                 }
             }
 
-            jsonResponse.append("]"); // Uzavření pole všech postav
+            jsonResponse.append("]");
 
             // Odeslání odpovědi
             response.setStatus(HttpServletResponse.SC_OK);

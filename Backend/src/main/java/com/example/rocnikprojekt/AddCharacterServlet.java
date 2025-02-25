@@ -34,7 +34,7 @@ public class AddCharacterServlet extends HttpServlet {
         Map<String, String> jsonResponse = new HashMap<>();
 
         try {
-            // Načteme povinné parametry
+            // getting required paramater
             String name = request.getParameter("name");
             System.out.println(name);
             String type = request.getParameter("type");
@@ -48,7 +48,7 @@ public class AddCharacterServlet extends HttpServlet {
             Part filePart = request.getPart("picture");
             System.out.println("File Part: " + filePart);
 
-            // Zkontrolujeme, zda jsou povinné údaje zadány
+            // checking required parametrs
             if (name == null || name.isEmpty() ||
                     type == null || type.isEmpty() ||
                     gender == null || gender.isEmpty() ||
@@ -62,14 +62,13 @@ public class AddCharacterServlet extends HttpServlet {
                 return;
             }
 
-            // Vytvoříme novou postavu
             Character newCharacter = new Character();
             newCharacter.setName(name);
             newCharacter.setType(type);
             newCharacter.setGender(gender);
             newCharacter.setDesc(desc);
 
-            // Volitelné údaje
+            // optional parameters
             if (request.getParameter("age") != null && !request.getParameter("age").isEmpty()) {
                 newCharacter.setAge(Integer.parseInt(request.getParameter("age")));
             }
@@ -83,7 +82,7 @@ public class AddCharacterServlet extends HttpServlet {
                 newCharacter.setNickname(request.getParameter("nickname"));
             }
 
-            // Obrazek (převedeme na byte[])
+
             InputStream fileContent = filePart.getInputStream();
             byte[] imageBytes = fileContent.readAllBytes();
             newCharacter.setImageBytes(imageBytes);
@@ -95,24 +94,21 @@ public class AddCharacterServlet extends HttpServlet {
             String[] moviesArray = movies != null ? movies.split(";") : new String[0];
             newCharacter.setMovieList(List.of(moviesArray));
             // Hlášky
+            // quotes
             String quotes = request.getParameter("quotes");
             String[] quotesArray = quotes != null ? quotes.split(";") : new String[0];
 
-            // Uložíme postavu do databáze
             CharacterDAO characterDAO = new CharacterDAO();
             characterDAO.addCharacter(newCharacter, quotesArray);
 
-            // Úspěšná odpověď
             jsonResponse.put("status", "success");
             jsonResponse.put("message", "Postava byla úspěšně přidána!");
         } catch (Exception e) {
-            // Zpracování chyb
             e.printStackTrace();
             jsonResponse.put("status", "error");
             jsonResponse.put("message", "Nastala chyba při přidávání postavy.");
         }
 
-        // Odeslání odpovědi
         response.getWriter().write(new com.google.gson.Gson().toJson(jsonResponse));
     }
 }

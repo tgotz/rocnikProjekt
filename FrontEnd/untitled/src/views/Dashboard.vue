@@ -1,6 +1,5 @@
 <template>
   <div class="container mt-5 bg-main pt-2">
-    <!-- Vyhledávací pole -->
     <input
         v-model="searchQuery"
         type="text"
@@ -8,7 +7,7 @@
         placeholder="Vyhledat postavu, film nebo herce"
     />
 
-    <!-- Tabulka postav -->
+    <!-- Table of characters -->
     <table class="table table-striped mb-3">
       <thead>
       <tr>
@@ -48,12 +47,12 @@ import axios from "axios";
 export default {
   data() {
     return {
-      characters: [], // Seznam všech postav
-      searchQuery: "", // Hledaný text
+      characters: [],
+      searchQuery: "",
     };
   },
   computed: {
-    // Filtrované postavy na základě vyhledávání
+    // filteted characters based on search query
     filteredCharacters() {
       return this.characters.filter((character) =>
           [character.name, character.filmName, character.actorName]
@@ -64,7 +63,6 @@ export default {
     },
   },
   methods: {
-    // Načtení seznamu postav z backendu
     async fetchCharacters() {
       try {
         const response = await axios.get("http://localhost:8080/api/dashboard", {
@@ -75,14 +73,14 @@ export default {
         console.error("Chyba při načítání postav:", error);
       }
     },
-    // Smazání postavy
+
     async deleteCharacter(id) {
       if (confirm("Opravdu chcete smazat tuto postavu?")) {
         try {
           await axios.delete(`/api/delete-character?id=${id}`, {
             withCredentials: true,
           });
-          // Aktualizace seznamu postav po smazání
+          // updating list of characters
           this.characters = this.characters.filter((character) => character.id !== id);
         } catch (error) {
           console.error("Chyba při mazání postavy:", error);

@@ -22,7 +22,7 @@ public class FetchUsersServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
-        // Ověření oprávnění uživatele
+        // checking if user should have access to this function
         Integer role = (Integer) request.getAttribute("role");
         if (role == null || role < 4) { // Role 4 = Admin
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -31,7 +31,7 @@ public class FetchUsersServlet extends HttpServlet {
         }
 
         UserDAO userDAO = new UserDAO();
-        List<User> users = userDAO.getAllUsers(); // Předpokládá metodu v DAO pro získání všech uživatelů
+        List<User> users = userDAO.getAllUsers();
 
         Gson gson = new Gson();
         String json = gson.toJson(users);

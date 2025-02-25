@@ -186,10 +186,10 @@ export default {
         actor: "",
         nickname: "",
         quotes: "",
-        picture: null, // Soubor obrázku
+        picture: null,
       },
-      outcome: null, // Zpráva o výsledku
-      success: false, // Určuje, zda se přidání povedlo
+      outcome: null,
+      success: false,
     };
   },
   methods: {
@@ -232,7 +232,7 @@ export default {
         quotes: "",
         picture: null,
       };
-      // Reset pole obrázku ručně
+
       const fileInput = this.$refs.fileInput;
       if (fileInput) {
         fileInput.value = '';

@@ -33,23 +33,19 @@ public class CharacterDetailServlet extends HttpServlet {
         Map<String, Object> responseData = new HashMap<>();
 
         try {
-            // Kontrola, zda je ID postavy poskytováno
+            // checking if user should have access to this function
             if (request.getParameter("id") != null && !request.getParameter("id").isEmpty()) {
                 int id = Integer.parseInt(request.getParameter("id"));
 
-                // Načtení detailů postavy
                 CharacterDAO characterDAO = new CharacterDAO();
                 Character character = characterDAO.getCharacterDetail(id);
 
-                // Načtení recenzí
                 ReviewsDAO reviewsDAO = new ReviewsDAO();
                 ArrayList<Review> reviewList = reviewsDAO.getReviews(id);
 
-                // Načtení hlášek
                 QuotesDAO quotesDAO = new QuotesDAO();
                 ArrayList<String> quotesList = quotesDAO.getQuotes(id);
 
-                // Naplnění odpovědi daty
                 responseData.put("character", character);
                 responseData.put("reviews", reviewList);
                 responseData.put("quotes", quotesList);

@@ -24,15 +24,14 @@ public class LogOutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         setCorsHeaders(response);
 
-        // Vynulování cookies
+        // nulling cookies
         Cookie cookie = new Cookie("token", "");
-        cookie.setMaxAge(0);      // Okamžité vypršení
-        cookie.setHttpOnly(true); // Stejné jako při přihlášení
-        cookie.setSecure(false);  // Upravte na true, pokud používáte HTTPS
-        cookie.setPath("/");      // Stejná cesta jako při přihlášení
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);  // set to true if using https
+        cookie.setPath("/");
         response.addCookie(cookie);
 
-        // Odpověď
         response.getWriter().write("{\"message\":\"Logged out successfully\"}");
     }
 

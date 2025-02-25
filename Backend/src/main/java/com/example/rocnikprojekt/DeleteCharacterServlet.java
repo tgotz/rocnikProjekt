@@ -21,6 +21,8 @@ public class DeleteCharacterServlet extends HttpServlet {
 
 System.out.println("zde3");
         // Kontrola přihlášení a role
+
+        // checking if user should have access to this function
         Integer role = (Integer) request.getAttribute("role");
         if (role == null || role < 3) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

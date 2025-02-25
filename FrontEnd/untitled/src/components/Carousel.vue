@@ -3,7 +3,6 @@
     <h2 class="mt-5 outline-heading">Nově přidané postavy...</h2>
 
     <div class="slick-carousel">
-      <!-- Struktura itemů carouselu -->
       <div
           v-for="character in recentCharacters"
           :key="character.id"
@@ -32,21 +31,20 @@
 </template>
 
 <script>
-import $ from 'jquery'; // Import jQuery
-import 'slick-carousel/slick/slick.css'; // Import CSS Slick Carousel
-import 'slick-carousel/slick/slick-theme.css'; // Import CSS pro téma Slick Carousel
-import 'slick-carousel'; // Import JS Slick Carousel
+import $ from 'jquery';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel';
 
 export default {
   props: {
     characters: {
       type: Array,
-      required: true, // Předáme seznam postav jako prop
+      required: true,
     },
   },
   computed: {
     recentCharacters() {
-      // Vybereme 6 nejnovějších postav podle `dateAdded`
       return this.characters
           .slice()
           .sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded))
@@ -57,13 +55,11 @@ export default {
     console.log('Carousel DOM before Slick initialization:', this.$el.innerHTML);
 
     this.$nextTick(() => {
-      // Sleduj změny v recentCharacters a inicializuj Slick až po načtení
       this.initializeCarousel();
     });
   },
   watch: {
     recentCharacters(newCharacters) {
-      // Inicializuj Slick, pokud recentCharacters obsahují data
       if (newCharacters.length > 0) {
         this.$nextTick(() => {
           this.initializeCarousel();
@@ -73,18 +69,16 @@ export default {
   },
   methods: {
     initializeCarousel() {
-      // Ujisti se, že Slick Carousel se inicializuje pouze jednou
       if ($(this.$el).find('.slick-carousel').hasClass('slick-initialized')) {
         $(this.$el).find('.slick-carousel').slick('unslick');
       }
 
-      // Inicializace Slick Carousel
       $(this.$el).find('.slick-carousel').slick({
         infinite: true,
         slidesToShow: 4,
         slidesToScroll: 1,
         dots: true,
-        autoplay: false,
+        autoplay: true,
         autoplaySpeed: 2000,
         arrows: true,
         responsive: [

@@ -18,6 +18,7 @@ public class FetchFilmsServlet extends HttpServlet {
         String input = request.getParameter("input");
         List<String> filmNames = new ArrayList<>();
 
+        //currently doesnt work
         try {
             // Create an instance of FilmDAO
             FilmDAO filmDAO = new FilmDAO();

@@ -8,15 +8,18 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import axios from 'axios';
+import createAppRouter from "./router";
+import {createPinia} from "pinia";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8080";
+(async () => {
+    const app = createApp(App);
 
-import { createPinia } from "pinia";
+    const pinia = createPinia(); // Pinia - for user management
+    app.use(pinia);
 
-const pinia = createPinia();
+    const router = await createAppRouter(pinia);
+    app.use(router);
 
-const app = createApp(App);
-app.use(pinia);
-app.use(router); // Použití routeru
-app.mount('#app');
-
+    app.mount('#app');
+})();

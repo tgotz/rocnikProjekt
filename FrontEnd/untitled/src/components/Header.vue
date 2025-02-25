@@ -3,13 +3,11 @@
     <div class="container">
       <nav class="navbar navbar-dark navbar-expand-lg">
         <div class="container-fluid">
-          <!-- Logo -->
           <router-link class="navbar-brand" to="/">
             <h1>
               <img class="navbar-logo" src="/images/logo.png" alt="logo" />
             </h1>
           </router-link>
-          <!-- Mobilní toggle -->
           <button
               class="navbar-toggler"
               type="button"
@@ -21,10 +19,8 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <!-- Navigace -->
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
             <ul class="navbar-nav d-flex align-items-center">
-              <!-- Odkazy -->
               <li class="nav-item">
                 <router-link class="nav-link active" aria-current="page" to="/">Domů</router-link>
               </li>
@@ -53,7 +49,7 @@
               <li class="nav-item">
                 <router-link class="nav-link text-white" to="/add-character">Přidat postavu</router-link>
               </li>
-              <!-- Administrace Dropdown -->
+              <!-- administration dropdown - for logged in users only -->
               <li
                   class="nav-item dropdown"
                   style="cursor: pointer;"
@@ -80,7 +76,6 @@
                   </li>
                 </ul>
               </li>
-              <!-- Ikonka uživatele -->
               <li class="nav-item dropdown fs-2" style="cursor: pointer;">
                 <a
                     v-if="isLoggedIn"
@@ -126,26 +121,24 @@ import { ref, computed, onMounted } from "vue";
 
 export default {
   setup() {
-    const userStore = useUserStore(); // Přístup k Pinia store
-    const user = computed(() => userStore.user); // Dynamická vazba na uživatele
-    const isLoggedIn = computed(() => userStore.isLoggedIn); // Kontrola přihlášení
+    const userStore = useUserStore();
+    const user = computed(() => userStore.user);
+    const isLoggedIn = computed(() => userStore.isLoggedIn);
 
-    // Kontrola stavu přihlášení
     const checkLoginStatus = async () => {
       try {
         const response = await axios.get("http://localhost:8080/user-info", {
-          withCredentials: true, // Odesíláme HttpOnly cookies s tokenem
+          withCredentials: true,
         });
 
-        // Pokud je uživatel autentizován
         if (response.data.username) {
           userStore.setUser({
-            username: response.data.username, // Nastavení username
-            role: parseInt(response.data.role), // Nastavení role
-            userId: parseInt(response.data.userId), // Nastavení userId
+            username: response.data.username,
+            role: parseInt(response.data.role),
+            userId: parseInt(response.data.userId),
           });
         } else {
-          userStore.clearUser(); // Pokud není přihlášen
+          userStore.clearUser();
         }
       } catch (error) {
         console.error("Chyba při ověřování uživatele:", error);
@@ -153,7 +146,6 @@ export default {
       }
     };
 
-    // Převod role na textový popis
     const roleLabel = computed(() => {
       if (!user.value?.role) return "Načítání role...";
 
@@ -171,7 +163,6 @@ export default {
       }
     });
 
-    // Odhlášení uživatele
     const logout = async () => {
       try {
         await axios.post(
@@ -185,7 +176,6 @@ export default {
       }
     };
 
-    // Přesměrování na přihlášení
     const redirectToLogin = () => {
       window.location.href = "/login";
     };

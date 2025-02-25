@@ -3,7 +3,6 @@
     <div class="reviews text-center">
       <h3>Přidat recenzi</h3>
       <p></p>
-      <!-- Šipka dolů -->
       <i
           class="arrowDown animate__animated"
           :class="showForm ? 'animate__fadeOut' : 'animate__fadeIn'"
@@ -11,7 +10,6 @@
           @click="openForm"
       ></i>
 
-      <!-- Formulář recenze -->
       <div
           id="reviewForm"
           :class="[
@@ -70,7 +68,6 @@
           </div>
           <button type="submit" class="btn btn-primary mt-3">Odeslat</button>
         </form>
-        <!-- Šipka nahoru -->
         <i
             class="arrowUp animate__animated mt-4"
             :class="showForm ? 'animate__fadeIn' : 'animate__fadeOut'"

@@ -3,14 +3,14 @@
     <div class="container mt-5 bg-main pt-2">
       <h2>Detaily postavy</h2>
       <hr />
-      <!-- Základní informace o postavě -->
+      <!-- Basic info -->
       <CharacterDetail v-if="character" :character="character" />
 
-      <!-- Hlášky -->
+      <!-- Quotes  -->
       <CharacterQuotes v-if="quotes.length" :quotes="quotes" />
       <hr />
 
-      <!-- Formulář pro přidání recenze -->
+      <!-- Form for reviews -->
       <ReviewForm
           v-if="character"
           :character-id="character.id"
@@ -18,7 +18,7 @@
       />
       <h3 class="mt-5">Recenze</h3>
 
-      <!-- Seznam recenzí -->
+      <!-- list of reviews -->
       <ReviewsList v-if="reviews.length" :reviews="reviews" />
       <p v-else class="text-center my-2">
         Nikdo zatím postavu neohodnotil, nechcete být první?
@@ -63,7 +63,6 @@ export default {
       }
     },
     async fetchReviews() {
-      // Použito po odeslání recenze, aby se seznam recenzí aktualizoval
       try {
         const response = await axios.get(`http://localhost:8080/reviews`, {
           params: { characterId: this.character.id },
