@@ -9,26 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9d8529b0-5ff3-4b7a-9b34-b7f03b5d2e48" name="Changes" comment="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Carousel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Carousel.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Filters.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Filters.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Header.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Pagination.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Pagination.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/ReviewForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/ReviewForm.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/stores/userStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/stores/userStore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/AddCharacterPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/AddCharacterPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/ApproveCharacter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/ApproveCharacter.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/CharacterPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/CharacterPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/Dashboard.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/EditCharacter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/EditCharacter.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/HomePage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/HomePage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LeaderboardPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LeaderboardPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LoginPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LoginPage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/UsersDashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/UsersDashboard.vue" afterDir="false" />
-    </list>
+    <list default="true" id="9d8529b0-5ff3-4b7a-9b34-b7f03b5d2e48" name="Changes" comment="Funkční index.jsp - filtrace, stránkování, načítání všech dat." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -70,28 +51,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Tomcat Server.Tomcat 10.1.19.executor&quot;: &quot;Run&quot;,
-    &quot;Tomcat Server.Tomcat 10.1.20.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Tomáš/Desktop/rocnikProjekt/Backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Tomcat Server.Tomcat 10.1.19.executor": "Run",
+    "Tomcat Server.Tomcat 10.1.20.executor": "Run",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Tomas/Documents/GitHub/rocnikProjekt/Backend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Tomas\Documents\GitHub\rocnikProjekt\src\main\webapp\styles" />
@@ -104,7 +85,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="Tomcat 10.1.20" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.20" ALTERNATIVE_JRE_ENABLED="false">
+    <configuration name="Tomcat 10.1.20" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.19" ALTERNATIVE_JRE_ENABLED="false">
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
         <artifact name="rocnikProjekt:war exploded">
@@ -249,6 +230,8 @@
       <workItem from="1740394434875" duration="125000" />
       <workItem from="1740394584575" duration="11216000" />
       <workItem from="1733407725059" duration="6300000" />
+      <workItem from="1740506971186" duration="47000" />
+      <workItem from="1740507036144" duration="630000" />
     </task>
     <task id="LOCAL-00001" summary="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
       <option name="closed" value="true" />

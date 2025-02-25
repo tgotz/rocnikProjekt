@@ -224,7 +224,7 @@ public class CharacterDAO {
     }
     //method to get character's details - for detail jsp
     public Character getCharacterDetail(int id){
-        String query = "SELECT c.idCharacter, c.name, c.picture, c.type, c.gender,c.age, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c JOIN users u ON c.addedBy = u.idUser JOIN users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.idCharacter = ? GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name ";
+        String query = "SELECT c.idCharacter, c.name, c.picture, c.type, c.gender,c.age, c.dateAdded, u.username AS addedBy, admin.username AS approvedBy, actor.name AS actorName, dabber.name AS dabberName, GROUP_CONCAT(m.nameMovie SEPARATOR ', ') AS movies FROM characters c LEFT JOIN users u ON c.addedBy = u.idUser LEFT JOIN  users admin ON c.approvedBy = admin.idUser LEFT JOIN actors actor ON c.idActor = actor.idActor LEFT JOIN actors dabber ON c.idDabber = dabber.idActor LEFT JOIN characters_movies cm ON c.idCharacter = cm.idCharacter LEFT JOIN movies m ON cm.idMovie = m.idMovie WHERE c.idCharacter = ? GROUP BY c.idCharacter, c.name, c.picture, c.type, c.gender, c.dateAdded, u.username, admin.username, actor.name, dabber.name ";
         Character character = new Character();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
