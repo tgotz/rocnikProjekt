@@ -13,9 +13,10 @@
       <tr>
         <th>#</th>
         <th>Jméno</th>
-        <th>Schválil</th>
+        <th class="d-none d-md-table-cell">Schválil</th>
+        <th class="d-none d-md-table-cell">Přidal</th>
         <th class="d-none d-lg-table-cell">Film</th>
-        <th class="d-none d-lg-table-cell">Herec</th>
+        <th class="d-none d-lg-table-cell">Herec/Dabér</th>
         <th></th>
         <th></th>
       </tr>
@@ -26,10 +27,16 @@
         <td>
           <a :href="`/detail/${character.id}`" class="text-dark text-decoration-none"  target="_blank">{{ character.name }}</a>
         </td>
-        <td>{{ character.adminName }}</td>
-        <td class="d-none d-lg-table-cell">{{ character.filmName }}</td>
-        <td class="d-none d-lg-table-cell">{{ character.actorName }}</td>
-        <td>
+        <td class="d-none d-md-table-cell">{{ character.approvedBy }}</td>
+        <td class="d-none d-md-table-cell">{{ character.addedBy ?? "Nepřihlášený uživatel" }}</td>
+        <td class="d-none d-lg-table-cell">{{ character.movieList[0] }}</td>
+        <td class="d-none d-lg-table-cell">
+          {{
+            character.actorName && character.dabberName
+                ? character.actorName + ' / ' + character.dabberName
+                : (character.actorName || character.dabberName)
+          }}
+        </td>        <td>
           <a :href="`/edit-character/${character.id}`" class="text-dark text-decoration-none"  target="_blank">Upravit</a>
         </td>
         <td>
@@ -54,13 +61,24 @@ export default {
   computed: {
     // filteted characters based on search query
     filteredCharacters() {
-      return this.characters.filter((character) =>
-          [character.name, character.filmName, character.actorName]
-              .join(" ")
-              .toLowerCase()
-              .includes(this.searchQuery.toLowerCase())
-      );
-    },
+      return this.characters.filter((character) => {
+        const searchText = this.searchQuery.toLowerCase();
+
+        // Sloučení všech relevantních hodnot do jednoho stringu
+        const characterData = [
+          character.name,
+          character.filmName,
+          character.actorName,
+          character.dabberName,
+
+          ...(Array.isArray(character.movieList) ? character.movieList : []) // Ověříme, že `movieList` je pole
+        ]
+            .join(" ")
+            .toLowerCase();
+
+        return characterData.includes(searchText);
+      });
+    }
   },
   methods: {
     async fetchCharacters() {
@@ -77,7 +95,7 @@ export default {
     async deleteCharacter(id) {
       if (confirm("Opravdu chcete smazat tuto postavu?")) {
         try {
-          await axios.delete(`/api/delete-character?id=${id}`, {
+          await axios.post(`/api/delete-character?id=${id}`, {
             withCredentials: true,
           });
           // updating list of characters

@@ -57,4 +57,6 @@ public class QuotesDAO {
             throw new RuntimeException(e);
         }
     }
+
+
 }

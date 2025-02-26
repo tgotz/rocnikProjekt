@@ -14,7 +14,7 @@
       <ReviewForm
           v-if="character"
           :character-id="character.id"
-          @review-submitted="fetchReviews"
+          @review-submitted="fetchCharacterData"
       />
       <h3 class="mt-5">Recenze</h3>
 
@@ -58,18 +58,11 @@ export default {
         this.character = response.data.character;
         this.quotes = response.data.quotes;
         this.reviews = response.data.reviews;
+        console.log("Postava načtena:", this.character);
+        console.log("Recenze při načtení:", this.reviews);
+
       } catch (error) {
         console.error('Error fetching character data:', error);
-      }
-    },
-    async fetchReviews() {
-      try {
-        const response = await axios.get(`http://localhost:8080/reviews`, {
-          params: { characterId: this.character.id },
-        });
-        this.reviews = response.data.reviews;
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
       }
     },
   },

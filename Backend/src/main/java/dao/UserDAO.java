@@ -99,6 +99,7 @@ public class UserDAO {
                 user.setId(resultSet.getInt("idUser"));
                 user.setName(resultSet.getString("username"));
                 user.setRole(resultSet.getInt("idRole"));
+                user.setEmail(resultSet.getString("email"));
                 users.add(user);
             }
         } catch (SQLException e) {

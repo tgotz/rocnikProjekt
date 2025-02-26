@@ -85,6 +85,8 @@
 
 ```javascript
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -109,12 +111,46 @@ export default {
         this.isHidden = true; // Úplně skryj formulář po animaci
       }, 700); // Doba trvání animace
     },
-    submitReview() {
-      // Logika pro odeslání recenze
-      console.log('Odesílám recenzi:', this.formData);
-      // Tady by se volalo API pro odeslání recenze
-      this.closeForm(); // Skryj formulář po odeslání
-    },
+    async submitReview() {
+      try {
+        const characterId = this.$route.params.id;
+        console.log("Odesílám characterId:", characterId);
+
+        const formData = new URLSearchParams();
+        formData.append("name", this.formData.name);
+        formData.append("overallRating", this.formData.overallRating);
+        formData.append("attractivenessRating", this.formData.attractivenessRating);
+        formData.append("reviewText", this.formData.reviewText);
+        formData.append("characterId", characterId);
+
+        const response = await axios.post("http://localhost:8080/addReviewServlet", formData, {
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        });
+
+        console.log("Server odpověděl:", response);
+
+        if (response.data.status === "success") {
+
+          // 🔥 Emitujeme event PO úspěšném odeslání
+          this.$emit("review-submitted");
+
+          // Reset formuláře
+          this.formData = {
+            name: "",
+            overallRating: 5,
+            attractivenessRating: 5,
+            reviewText: "",
+          };
+
+          this.closeForm();
+        } else {
+          throw new Error(response.data.message || "Neznámá chyba");
+        }
+      } catch (error) {
+        console.error("Chyba při odesílání recenze:", error);
+        alert("Nepodařilo se odeslat recenzi. Zkuste to znovu.");
+      }
+    }
   },
 };
 </script>

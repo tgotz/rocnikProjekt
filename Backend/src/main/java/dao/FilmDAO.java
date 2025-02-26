@@ -89,5 +89,16 @@ public class FilmDAO {
             throw new RuntimeException("Chyba při přiřazování filmu k postavě: " + e.getMessage(), e);
         }
     }
+    public void deleteAssignedFilms(int idCharacter){
+        try {
+            String query = "DELETE FROM characters_movies WHERE idCharacter = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, idCharacter);
+            System.out.println(statement);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

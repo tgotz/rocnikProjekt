@@ -41,24 +41,15 @@
         </div>
         <div class="col-md-6">
           <div class="form-group mb-2">
-            <label for="filmShow">Film/seriál</label>
+            <label for="characterNickname">Přezdívka</label>
             <input
-                v-model="character.filmName"
-                name="film"
+                v-model="character.nickname"
+                name="nickname"
                 type="text"
                 class="form-control"
-                id="filmShow"
-                placeholder="Zadej jméno filmu/seriálu"
-                @keyup="fetchFilms"
-                required
+                id="characterNickname"
+                placeholder="Zadej přezdívku postavy"
             />
-            <div class="suggestions" v-if="filmSuggestions.length">
-              <ul>
-                <li v-for="film in filmSuggestions" :key="film" @click="selectFilm(film)">
-                  {{ film }}
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
@@ -103,7 +94,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group mb-2">
-            <label for="characterActor">Herec/herečka (dabér, dabérka)</label>
+            <label for="characterActor">Herec/herečka</label>
             <input
                 v-model="character.actorName"
                 name="actor"
@@ -111,23 +102,47 @@
                 class="form-control"
                 id="characterActor"
                 placeholder="Zadej jméno herce/herečky"
-                required
+
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group mb-2">
-            <label for="characterNickname">Přezdívka</label>
+            <label for="characterActor">Daber/dabérka</label>
             <input
-                v-model="character.nickname"
-                name="nickname"
+                v-model="character.dabberName"
+                name="dabber"
                 type="text"
                 class="form-control"
-                id="characterNickname"
-                placeholder="Zadej přezdívku postavy"
+                id="characterDabber"
+                placeholder="Zadej jméno herce/herečky"
+
             />
           </div>
         </div>
+      </div>
+      <div class="form-group mb-2">
+        <label for="characterQuotes">Filmy *</label>
+        <textarea
+            v-model="formattedMovieList"
+            name="movies"
+            class="form-control"
+            id="characterQuotes"
+            rows="3"
+            placeholder="Zadejte filmy, ve kterých postava hrála oddělené středníkem (;)"
+
+        ></textarea>
+      </div>
+      <div class="form-group mb-2">
+        <label for="characterQuotes">Hlášky</label>
+        <textarea
+            v-model="formattedQuotesList"
+            name="quotes"
+            class="form-control"
+            id="characterQuotes"
+            rows="3"
+            placeholder="Zadejte hlášky postavy oddělené středníkem (;)"
+        ></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Odeslat</button>
     </form>
@@ -138,6 +153,25 @@
 import axios from "axios";
 import { useUserStore } from "../stores/userStore";
 export default {
+  computed: {
+    formattedMovieList: {
+      get() {
+        return this.character.movieList ? this.character.movieList.join(";") : "";
+      },
+      set(value) {
+        this.character.movieList = value.split(";").map(item => item.trim());
+      }
+    },
+    formattedQuotesList: {
+      get() {
+        return Array.isArray(this.quotes) ? this.quotes.join("; ") : "";
+      },
+      set(value) {
+        this.quotes = value ? value.split(";").map(item => item.trim()) : [];
+      }
+    }
+
+  },
   data() {
     return {
       character: {
@@ -145,7 +179,7 @@ export default {
         name: "",
         type: "",
         gender: "",
-        filmName: "",
+        movieList: "",
         desc: "",
         age: "",
         actorName: "",
@@ -154,6 +188,7 @@ export default {
       imageFile: null,
       imagePreview: "",
       filmSuggestions: [],
+      quotes: "",
     };
   },
   methods: {
@@ -164,6 +199,7 @@ export default {
         });
         this.character = response.data.character;
         this.quotes = response.data.quotes;
+        this.movies = response.data.movies;
         if (response.data.image) {
           this.imagePreview = `data:image/jpeg;base64,${response.data.image}`;
         }
@@ -193,24 +229,35 @@ export default {
     async submitForm() {
       try {
         const userStore = useUserStore();
-        const userId =         userStore.userId;
+        const userId = userStore.userId;
 
         if (!userId) {
           alert("Uživatel není přihlášen.");
           return;
         }
 
+        // Ověření povinných polí
+        if (!this.character.name || !this.character.type || !this.character.gender || !this.character.desc) {
+          alert("Vyplňte všechna povinná pole označená hvězdičkou.");
+          return;
+        }
+
+        // Převedení polí na správný formát
+        const movieListString = this.character.movieList ? this.character.movieList.join(";") : "";
+        const quotesString = this.quotes ? this.quotes.join(";") : "";
+
         const formData = new FormData();
         formData.append("id", this.character.id);
         formData.append("name", this.character.name);
         formData.append("type", this.character.type);
         formData.append("gender", this.character.gender);
-        formData.append("film", this.character.filmName);
         formData.append("desc", this.character.desc);
-        formData.append("age", this.character.age);
-        formData.append("actor", this.character.actorName);
-        formData.append("nickname", this.character.nickname);
-
+        formData.append("age", this.character.age ?? "");
+        formData.append("nickname", this.character.nickname ?? "");
+        formData.append("actor", this.character.actorName ?? "");
+        formData.append("dabber", this.character.dabberName ?? "");
+        formData.append("movies", movieListString);
+        formData.append("quotes", quotesString);
         formData.append("userId", userId);
 
         if (this.imageFile) {
@@ -226,12 +273,12 @@ export default {
 
         alert("Postava byla úspěšně upravena!");
         this.$router.push("/dashboard");
+
       } catch (error) {
         console.error("Chyba při aktualizaci postavy:", error);
         alert("Při aktualizaci postavy došlo k chybě.");
       }
     }
-
   },
   mounted() {
     const characterId = this.$route.params.id; // ID získané z URL

@@ -1,6 +1,7 @@
 package com.example.rocnikprojekt;
 
 import dao.CharacterDAO;
+import dao.QuotesDAO;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -9,6 +10,7 @@ import model.User;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @WebServlet(name = "UpdateCharacterServlet", value = "/api/update-character")
 @MultipartConfig(
@@ -26,7 +28,6 @@ public class UpdateCharacterServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
         response.setHeader("Access-Control-Allow-Credentials", "true");
-
         try {
             // checking if user should have access to this function
             Integer role = (Integer) request.getAttribute("role");
@@ -47,60 +48,73 @@ public class UpdateCharacterServlet extends HttpServlet {
             user.setId(Integer.parseInt(userId));
 
             // getting parameters
+            String movies = request.getParameter("movies");
+            String[] moviesArray = movies != null ? movies.split(";") : new String[0];
+
             String id = request.getParameter("id");
+
             String name = request.getParameter("name");
+
             String type = request.getParameter("type");
+
             String gender = request.getParameter("gender");
-            String film = request.getParameter("film");
+
             String desc = request.getParameter("desc");
+
 
             // checking required parameters
             if (id == null || id.isEmpty() ||
                     name == null || name.isEmpty() ||
                     type == null || type.isEmpty() ||
                     gender == null || gender.isEmpty() ||
-                    film == null || film.isEmpty() ||
-                    desc == null || desc.isEmpty()) {
+                    desc == null || desc.isEmpty() ||
+                    moviesArray.length == 0)
+            {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write("{\"error\":\"Missing required fields\"}");
                 return;
             }
-
 
             Character updatedCharacter = new Character();
             updatedCharacter.setId(Integer.parseInt(id));
             updatedCharacter.setName(name);
             updatedCharacter.setType(type);
             updatedCharacter.setGender(gender);
-            //updatedCharacter.setFilmName(film);
             updatedCharacter.setDesc(desc);
 
+
             // optional parameters
-            String age = request.getParameter("age");
-            if (age != null && !age.isEmpty()) {
-                updatedCharacter.setAge(Integer.parseInt(age));
+            if (request.getParameter("age") != null && !request.getParameter("age").isEmpty()) {
+                updatedCharacter.setAge(Integer.parseInt(request.getParameter("age")));
+            }
+            if (request.getParameter("actor") != null && !request.getParameter("actor").isEmpty()) {
+                updatedCharacter.setActorName(request.getParameter("actor"));
+            }
+            if (request.getParameter("dabber") != null && !request.getParameter("dabber").isEmpty()) {
+                updatedCharacter.setDabberName(request.getParameter("dabber"));
+            }
+            if (request.getParameter("nickname") != null && !request.getParameter("nickname").isEmpty()) {
+                updatedCharacter.setNickname(request.getParameter("nickname"));
             }
 
-            String actor = request.getParameter("actor");
-            if (actor != null && !actor.isEmpty()) {
-                updatedCharacter.setActorName(actor);
-            }
-
-            String nickname = request.getParameter("nickname");
-            if (nickname != null && !nickname.isEmpty()) {
-                updatedCharacter.setNickname(nickname);
-            }
-
-            // dealing with image
+            //getting image
             Part filePart = request.getPart("picture");
-            if (filePart != null && filePart.getSize() > 0) {
+            if(filePart != null){
                 InputStream fileContent = filePart.getInputStream();
-                updatedCharacter.setImageBytes(fileContent.readAllBytes());
+                byte[] imageBytes = fileContent.readAllBytes();
+                updatedCharacter.setImageBytes(imageBytes);
+                System.out.println("Image Bytes Length: " + imageBytes.length);
             }
+
+            //movies
+            updatedCharacter.setMovieList(List.of(moviesArray));
+
+            //quotes
+            String quotes = request.getParameter("quotes");
+            String[] quotesArray = quotes != null ? quotes.split(";") : new String[0];
 
             CharacterDAO characterDAO = new CharacterDAO();
-            //characterDAO.updateCharacter(updatedCharacter, user);
-
+            characterDAO.updateCharacter(updatedCharacter, user, quotesArray);
             response.getWriter().write("{\"message\":\"Character updated successfully\"}");
         } catch (Exception e) {
             e.printStackTrace();

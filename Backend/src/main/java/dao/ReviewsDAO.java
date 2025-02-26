@@ -14,6 +14,16 @@ public class ReviewsDAO {
 
     public ReviewsDAO() {
         try {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
             Properties properties = new Properties();
             InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
             properties.load(inputStream);
@@ -21,13 +31,11 @@ public class ReviewsDAO {
             String username = properties.getProperty("db.username");
             String password = properties.getProperty("db.password");
             connection = DriverManager.getConnection(url, username, password);
-
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public ReviewsDAO(Connection connection) {}
     public ArrayList<Review> getReviews(int id){
         String query = "SELECT * FROM reviews WHERE idCharacter = ?";
         ArrayList<Review> reviewList = new ArrayList<Review>();
@@ -53,6 +61,7 @@ public class ReviewsDAO {
     }
     public void insertReview(Review review){
         String query = "INSERT INTO reviews (nameAuthor, overalRating, attractivenessRating, dateAdded, textReview, idCharacter) VALUES (?, ?, ?, NOW(), ?, ?)";
+
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, review.getAuthorName());
