@@ -50,10 +50,13 @@ export default {
       const userStore = useUserStore();
 
       try {
-        const response = await axios.post("http://localhost:8080/login", {
+        const response = await axios.post("http://localhost:8080/api/auth/login", {
           username: this.username,
           password: this.password,
         });
+
+        const { token, username, role, userId } = response.data;
+        localStorage.setItem("jwt", token);
 
         await userStore.setUser({
           username: response.data.username,
@@ -77,7 +80,7 @@ export default {
     async checkLoginStatus() {
       const userStore = useUserStore();
       try {
-        const response = await axios.get("http://localhost:8080/user-info", {
+        const response = await axios.get("http://localhost:8080/api/users/user-info", {
           withCredentials: true,
         });
 

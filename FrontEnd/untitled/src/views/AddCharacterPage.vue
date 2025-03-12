@@ -201,7 +201,7 @@ export default {
         });
 
         const response = await axios.post(
-            "http://localhost:8080/AddCharacterServlet",
+            "http://localhost:8080/api/character/add",
             form,
             {
               headers: {

@@ -445,22 +445,6 @@ public class CharacterDAO {
         return characters;
     }
 
-    // Načtení celkového počtu postav (pro stránkování)
-    public int getTotalCount() {
-        String sql = "SELECT COUNT(*) FROM postavy";
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching total count", e);
-        }
-
-        return 0;
-    }
-
     //method to approve character (to start displaying it on web)
     public void approveCharacter(int id, int userId){
         try {

@@ -23,15 +23,15 @@
               {{ character.name }}
             </router-link>
           </td>
-          <td class="d-none d-lg-table-cell">{{ character.movieList[0] }}</td>
+          <td class="d-none d-lg-table-cell">{{ character.movies[0].nameMovie }}</td>
           <td class="d-none d-lg-table-cell">
             {{
               character.actorName && character.dabberName
                   ? character.actorName + ' / ' + character.dabberName
                   : (character.actorName || character.dabberName)
             }}
-          </td>          <td>{{ character.overallRating.toFixed(1) }}</td>
-          <td>{{ character.attractivenessRating.toFixed(1) }}</td>
+          </td>          <td>{{ character.overall.toFixed(1) }}</td>
+          <td>{{ character.attractiveness.toFixed(1) }}</td>
         </tr>
         </tbody>
       </table>
@@ -56,29 +56,17 @@ export default {
   methods: {
     async fetchLeaderboard() {
       try {
-        const sort = this.$route.query.sort || "1";
-        const response = await axios.get("http://localhost:8080/leaderboard", {
+        const sort = this.$route.query.sort || "overall DESC";
+        const response = await axios.get("http://localhost:8080/api/leaderboard", {
           params: { sort },
         });
-        this.characters = response.data;
 
-        switch (sort) {
-          case "1":
-            this.headline = "Nejoblíbenější postavy";
-            break;
-          case "2":
-            this.headline = "Nejnenáviděnější postavy";
-            break;
-          case "3":
-            this.headline = "Nejatraktivnější postavy";
-            break;
-          default:
-            this.headline = "Nejoblíbenější postavy";
-        }
+        this.characters = response.data;
       } catch (error) {
         console.error("Chyba při načítání leaderboardu:", error);
       }
-    },
+
+  },
   },
   created() {
     this.fetchLeaderboard();

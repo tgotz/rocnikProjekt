@@ -18,7 +18,7 @@ export const useUserStore = defineStore("user", {
         },
         async fetchUser() {
             try {
-                const response = await axios.get('http://localhost:8080/user-info');
+                const response = await axios.get('http://localhost:8080/api/users/user-info');
                 this.user = response.data;
             } catch (error) {
                 console.log("jsem v routeru")

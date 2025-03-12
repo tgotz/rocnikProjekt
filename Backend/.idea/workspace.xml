@@ -10,10 +10,57 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9d8529b0-5ff3-4b7a-9b34-b7f03b5d2e48" name="Changes" comment="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/config/CustomUserDetailsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/config/JwtAuthenticationFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/config/JwtTokenProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/config/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/controller/CharacterController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/controller/LeaderboardController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/controller/ReviewController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/controller/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/dto/AuthRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/dto/AuthResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/dto/CharacterLeaderboardDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/Actor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/Character.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/CharacterMovie.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/CharacterMovieId.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/Movie.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/Quote.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/Review.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/Role.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/model/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/repository/ActorRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/repository/CharacterMovieRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/repository/CharacterRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/repository/MovieRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/repository/QuoteRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/repository/ReviewRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/service/ActorService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/service/CharacterMovieService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/service/CharacterService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/service/MovieService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/service/QuoteService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/service/ReviewService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BackendSpring/src/main/java/com/example/backendspring/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Carousel.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Carousel.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterCard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterCard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterQuotes.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/CharacterQuotes.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/Header.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/ReviewForm.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/components/ReviewForm.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/stores/userStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/stores/userStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/AddCharacterPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/AddCharacterPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/ApproveCharacter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/ApproveCharacter.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/CharacterPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/CharacterPage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/Dashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/Dashboard.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/EditCharacter.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/EditCharacter.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/HomePage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/HomePage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LeaderboardPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LeaderboardPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LoginPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/LoginPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/UsersDashboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/untitled/src/views/UsersDashboard.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +112,7 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Tomas/Documents/GitHub/rocnikProjekt/FrontEnd/untitled",
+    "last_opened_file_path": "C:/Users/Tomas/Documents/GitHub/rocnikProjekt/Backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -238,6 +285,13 @@
       <workItem from="1740506971186" duration="47000" />
       <workItem from="1740507036144" duration="630000" />
       <workItem from="1740563615489" duration="13587000" />
+      <workItem from="1740829527030" duration="5316000" />
+      <workItem from="1740913425228" duration="1343000" />
+      <workItem from="1741002914423" duration="3919000" />
+      <workItem from="1741168127717" duration="35000" />
+      <workItem from="1741168676943" duration="6270000" />
+      <workItem from="1741601381843" duration="6059000" />
+      <workItem from="1741799966284" duration="2200000" />
     </task>
     <task id="LOCAL-00001" summary="Funkční index.jsp - filtrace, stránkování, načítání všech dat.">
       <option name="closed" value="true" />
@@ -303,12 +357,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>478</line>
+          <line>462</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>531</line>
+          <line>515</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -321,9 +375,19 @@
           <line>50</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dao/QuotesDAO.java</url>
+          <line>12</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
+          <line>320</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/dao/CharacterDAO.java</url>
-          <line>528</line>
+          <line>512</line>
           <properties class="dao.CharacterDAO">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
@@ -419,6 +483,12 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/src/main/java/dao/UserDAO.java</url>
+          <line>15</line>
+          <properties field="connection" class="dao.UserDAO" />
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

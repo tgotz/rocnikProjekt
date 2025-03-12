@@ -26,7 +26,7 @@
         <p v-if="currentCharacter.nickname">
           Přezdívka: {{ currentCharacter.nickname }}
         </p>
-        <p v-if="currentCharacter.age !== 999">Věk: {{ currentCharacter.age }}</p>
+        <p v-if="currentCharacter.age !== null">Věk: {{ currentCharacter.age }}</p>
         <p>Pohlaví: {{ currentCharacter.gender }}</p>
         <p>Typ: {{ currentCharacter.type }}</p>
         <p v-if="currentCharacter.actorName">Herec: {{ currentCharacter.actorName }}</p>
@@ -34,7 +34,7 @@
 
         <p>Filmy</p>
         <ul>
-          <li v-for="(movie, index) in currentCharacter.movieList" :key="index">
+          <li v-for="(movie, index) in currentCharacter.movies" :key="index">
             {{ movie }}
           </li>
         </ul>
@@ -51,7 +51,7 @@
         <h3>Hlášky</h3>
         <ul>
           <li v-for="(quote, index) in currentCharacter.quotes" :key="index">
-            {{ quote }}
+            {{ quote.textQuote }}
           </li>
         </ul>
       </div>
@@ -95,7 +95,7 @@ export default {
     // fetching all characters
     const fetchCharacters = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/approve", {
+        const response = await axios.get("http://localhost:8080/api/character/approve", {
           withCredentials: true,
         });
         characters.value = response.data;
@@ -127,7 +127,7 @@ export default {
       console.log(userStore.userId);
       try {
         const response = await axios.post(
-            "http://localhost:8080/api/approve-character",
+            "http://localhost:8080/api/character/approve-character",
             {
               id: id, // ID postavy
               userId: userStore.userId // id of user who's approving the character (currently logged in)
@@ -157,7 +157,7 @@ export default {
       console.log(id)
       try {
         await axios.post(
-            `http://localhost:8080/api/delete-character?id=${id}`,
+            `http://localhost:8080/api/character/delete-character/${id}`,
             {},
             { withCredentials: true }
         );

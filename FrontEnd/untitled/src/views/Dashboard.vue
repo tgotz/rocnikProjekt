@@ -27,14 +27,14 @@
         <td>
           <a :href="`/detail/${character.id}`" class="text-dark text-decoration-none"  target="_blank">{{ character.name }}</a>
         </td>
-        <td class="d-none d-md-table-cell">{{ character.approvedBy }}</td>
-        <td class="d-none d-md-table-cell">{{ character.addedBy ?? "Nepřihlášený uživatel" }}</td>
-        <td class="d-none d-lg-table-cell">{{ character.movieList[0] }}</td>
+        <td class="d-none d-md-table-cell">{{ character.approvedBy.username }}</td>
+        <td class="d-none d-md-table-cell">  {{ character.addedBy ? character.addedBy.username : "Nepřihlášený uživatel" }}</td>
+        <td class="d-none d-lg-table-cell">{{ character.movies[0].nameMovie }}</td>
         <td class="d-none d-lg-table-cell">
           {{
-            character.actorName && character.dabberName
-                ? character.actorName + ' / ' + character.dabberName
-                : (character.actorName || character.dabberName)
+            character.actor  && character.dabber
+                ? character.actor.name + ' / ' + character.dabber.name
+                : (character.actor?.name || character.dabber?.name || "")
           }}
         </td>        <td>
           <a :href="`/edit-character/${character.id}`" class="text-dark text-decoration-none"  target="_blank">Upravit</a>
@@ -64,14 +64,19 @@ export default {
       return this.characters.filter((character) => {
         const searchText = this.searchQuery.toLowerCase();
 
-        // Sloučení všech relevantních hodnot do jednoho stringu
-        const characterData = [
-          character.name,
-          character.filmName,
-          character.actorName,
-          character.dabberName,
+        // Bezpečné načtení hodnot (i při null)
+        const actorName = character.actor?.name || "";
+        const dabberName = character.dabber?.name || "";
 
-          ...(Array.isArray(character.movieList) ? character.movieList : []) // Ověříme, že `movieList` je pole
+        const movieNames = Array.isArray(character.movies)
+            ? character.movies.map(movie => movie.nameMovie || "").join(" ")
+            : "";
+
+        const characterData = [
+          character.name || "",
+          actorName,
+          dabberName,
+          movieNames
         ]
             .join(" ")
             .toLowerCase();
@@ -79,11 +84,12 @@ export default {
         return characterData.includes(searchText);
       });
     }
+
   },
   methods: {
     async fetchCharacters() {
       try {
-        const response = await axios.get("http://localhost:8080/api/dashboard", {
+        const response = await axios.get("http://localhost:8080/api/character/dashboard", {
           withCredentials: true,
         });
         this.characters = response.data;
@@ -95,9 +101,11 @@ export default {
     async deleteCharacter(id) {
       if (confirm("Opravdu chcete smazat tuto postavu?")) {
         try {
-          await axios.post(`/api/delete-character?id=${id}`, {
-            withCredentials: true,
-          });
+          await axios.post(
+              `http://localhost:8080/api/character/delete-character/${id}`,
+              {},
+              { withCredentials: true }
+          );
           // updating list of characters
           this.characters = this.characters.filter((character) => character.id !== id);
         } catch (error) {

@@ -11,7 +11,7 @@
         <a :href="'/detail/' + character.id">
           <img
               class="character-image"
-              :src="'data:image/jpeg;base64,' + character.image"
+              :src="'data:image/jpeg;base64,' + character.imageBytes"
               :alt="character.name"
           />
           <div class="caption caption-carousel">

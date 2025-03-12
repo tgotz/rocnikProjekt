@@ -116,15 +116,16 @@ export default {
         const characterId = this.$route.params.id;
         console.log("Odesílám characterId:", characterId);
 
-        const formData = new URLSearchParams();
-        formData.append("name", this.formData.name);
-        formData.append("overallRating", this.formData.overallRating);
-        formData.append("attractivenessRating", this.formData.attractivenessRating);
-        formData.append("reviewText", this.formData.reviewText);
-        formData.append("characterId", characterId);
+        const requestData = {
+          authorName: this.formData.name,
+          overallRating: this.formData.overallRating,
+          attractivenessRating: this.formData.attractivenessRating,
+          reviewText: this.formData.reviewText,
+          character: { id: characterId } // ⚠️ Odkaz na postavu
+        };
 
-        const response = await axios.post("http://localhost:8080/addReviewServlet", formData, {
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        const response = await axios.post("http://localhost:8080/api/reviews/add", requestData, {
+          headers: { "Content-Type": "application/json" }
         });
 
         console.log("Server odpověděl:", response);

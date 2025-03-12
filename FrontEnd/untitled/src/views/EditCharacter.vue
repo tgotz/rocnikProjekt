@@ -56,7 +56,7 @@
       <div class="form-group mb-2">
         <label for="characterDescription">Popis</label>
         <textarea
-            v-model="character.desc"
+            v-model="character.description"
             name="desc"
             class="form-control"
             id="characterDescription"
@@ -85,7 +85,7 @@
             <input @change="onFileChange" name="picture" type="file" class="form-control-file" id="characterImage" />
           </div>
           <img
-              :src="'data:image/jpeg;base64,' + character.image"
+              :src="'data:image/jpeg;base64,' + character.imageBytes"
               class="img-preview"
               alt="Character Image"
           />
@@ -96,7 +96,7 @@
           <div class="form-group mb-2">
             <label for="characterActor">Herec/herečka</label>
             <input
-                v-model="character.actorName"
+                v-model="actorName"
                 name="actor"
                 type="text"
                 class="form-control"
@@ -110,7 +110,7 @@
           <div class="form-group mb-2">
             <label for="characterActor">Daber/dabérka</label>
             <input
-                v-model="character.dabberName"
+                v-model="dabberName"
                 name="dabber"
                 type="text"
                 class="form-control"
@@ -124,7 +124,7 @@
       <div class="form-group mb-2">
         <label for="characterQuotes">Filmy *</label>
         <textarea
-            v-model="formattedMovieList"
+            v-model="moviesInput"
             name="movies"
             class="form-control"
             id="characterQuotes"
@@ -136,7 +136,7 @@
       <div class="form-group mb-2">
         <label for="characterQuotes">Hlášky</label>
         <textarea
-            v-model="formattedQuotesList"
+            v-model="quotesInput"
             name="quotes"
             class="form-control"
             id="characterQuotes"
@@ -154,22 +154,30 @@ import axios from "axios";
 import { useUserStore } from "../stores/userStore";
 export default {
   computed: {
-    formattedMovieList: {
+    dabberName: {
       get() {
-        return this.character.movieList ? this.character.movieList.join(";") : "";
+        return this.character.dabber ? this.character.dabber.name : '';
       },
       set(value) {
-        this.character.movieList = value.split(";").map(item => item.trim());
+        if (!this.character.dabber) {
+          this.character.dabber = { name: value };
+        } else {
+          this.character.dabber.name = value;
+        }
       }
     },
-    formattedQuotesList: {
-      get() {
-        return Array.isArray(this.quotes) ? this.quotes.join("; ") : "";
+      actorName: {
+        get() {
+          return this.character.actor ? this.character.actor.name : '';
+        },
+        set(value) {
+          if (!this.character.actor) {
+            this.character.actor = { name: value };
+          } else {
+            this.character.actor.name = value;
+          }
+        }
       },
-      set(value) {
-        this.quotes = value ? value.split(";").map(item => item.trim()) : [];
-      }
-    }
 
   },
   data() {
@@ -188,18 +196,20 @@ export default {
       imageFile: null,
       imagePreview: "",
       filmSuggestions: [],
-      quotes: "",
+      quotesInput: "",
+      moviesInput: "",
+
     };
   },
   methods: {
     async fetchCharacter(id) {
       try {
-        const response = await axios.get(`http://localhost:8080/character`, {
-          params: { id: id },
-        });
+        const response = await axios.get(`http://localhost:8080/api/character/${id}`);
         this.character = response.data.character;
         this.quotes = response.data.quotes;
-        this.movies = response.data.movies;
+        this.quotesInput = this.quotes.map(q => q.textQuote).join("; ");
+        this.movies = response.data.character.movies;
+        this.moviesInput = this.character.movies?.map(m => m.nameMovie).join("; ") || "";
         if (response.data.image) {
           this.imagePreview = `data:image/jpeg;base64,${response.data.image}`;
         }
@@ -207,7 +217,13 @@ export default {
         console.error("Error fetching character data:", error);
       }
     },
-
+    prepareQuotesArray() {
+      this.quotes = this.quotesInput
+          .split(";")
+          .map(q => q.trim())
+          .filter(q => q.length > 0)
+          .map(q => ({ textQuote: q }));
+    },
     async fetchFilms(query) {
       // doesnt work yet
       this.filmSuggestions = ["Film 1", "Film 2", "Film 3"].filter((film) =>
@@ -228,6 +244,8 @@ export default {
     },
     async submitForm() {
       try {
+        this.prepareQuotesArray();
+
         const userStore = useUserStore();
         const userId = userStore.userId;
 
@@ -237,34 +255,37 @@ export default {
         }
 
         // Ověření povinných polí
-        if (!this.character.name || !this.character.type || !this.character.gender || !this.character.desc) {
+        if (!this.character.name || !this.character.type || !this.character.gender || !this.character.description) {
           alert("Vyplňte všechna povinná pole označená hvězdičkou.");
           return;
         }
 
-        // Převedení polí na správný formát
-        const movieListString = this.character.movieList ? this.character.movieList.join(";") : "";
-        const quotesString = this.quotes ? this.quotes.join(";") : "";
-
+        // ✅ Tady vytvořit FormData
         const formData = new FormData();
+
+        // ✨ Převedení polí na správný formát
+        const movieListString = this.moviesInput ? this.moviesInput.split(";").map(item => item.trim()).join(";") : "";
+        const quotesString = this.quotes.map(q => q.textQuote).join(";");
+
+        // ✅ Naplnění dat
         formData.append("id", this.character.id);
         formData.append("name", this.character.name);
         formData.append("type", this.character.type);
         formData.append("gender", this.character.gender);
-        formData.append("desc", this.character.desc);
+        formData.append("description", this.character.description);
         formData.append("age", this.character.age ?? "");
         formData.append("nickname", this.character.nickname ?? "");
-        formData.append("actor", this.character.actorName ?? "");
-        formData.append("dabber", this.character.dabberName ?? "");
+        formData.append("actor", this.character.actor ? this.character.actor.name ?? "" : "");
+        formData.append("dabber", this.character.dabber ? this.character.dabber.name ?? "" : "");
         formData.append("movies", movieListString);
         formData.append("quotes", quotesString);
         formData.append("userId", userId);
-
+          console.log(formData)
         if (this.imageFile) {
           formData.append("picture", this.imageFile);
         }
 
-        await axios.post("http://localhost:8080/api/update-character", formData, {
+        await axios.post("http://localhost:8080/api/character/update-character", formData, {
           withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
@@ -280,7 +301,7 @@ export default {
       }
     }
   },
-  mounted() {
+    mounted() {
     const characterId = this.$route.params.id; // ID získané z URL
     if (characterId) {
       this.fetchCharacter(characterId); // Načtení dat postavy

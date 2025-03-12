@@ -30,7 +30,6 @@ public class DashboardServlet extends HttpServlet {
         } else{
             CharacterDAO characterDAO = new CharacterDAO();
             List<Character> characterList = characterDAO.getCharacters();
-
             Gson gson = new Gson();
             String jsonResponse = gson.toJson(characterList);
 

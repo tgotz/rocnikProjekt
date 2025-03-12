@@ -2,7 +2,7 @@
   <div>
     <h3>Hlášky</h3>
     <ul>
-      <li v-for="(quote, index) in quotes" :key="index">{{ quote }}</li>
+      <li v-for="(quote, index) in quotes" :key="index">{{ quote.textQuote }}</li>
     </ul>
   </div>
 </template>

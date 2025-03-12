@@ -48,7 +48,7 @@ export default {
   methods: {
     async fetchCharacters() {
       try {
-        const response = await axios.get('http://localhost:8080/filter');
+        const response = await axios.get('http://localhost:8080/api/character');
         this.characters = response.data;
         this.filterCharacters();
       } catch (error) {
@@ -64,7 +64,7 @@ export default {
       if (search) {
         filtered = filtered.filter((character) =>
             character.name.toLowerCase().includes(search.toLowerCase()) ||
-            character.movieList.some(movie => movie.toLowerCase().includes(search.toLowerCase()))
+            (character.movies?.some(movie => movie.nameMovie.toLowerCase().includes(search.toLowerCase())) ?? false)
         );
       }
 

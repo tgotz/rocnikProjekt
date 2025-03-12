@@ -51,9 +51,7 @@ export default {
   methods: {
     async fetchCharacterData() {
       try {
-        const response = await axios.get(`http://localhost:8080/character`, {
-          params: { id: this.$route.params.id },
-        });
+        const response = await axios.get(`http://localhost:8080/api/character/${this.$route.params.id}`);
 
         this.character = response.data.character;
         this.quotes = response.data.quotes;
