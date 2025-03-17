@@ -1,9 +1,7 @@
 package com.example.backendspring.config;
 
 import com.example.backendspring.model.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,9 +44,34 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
-        return getUsernameFromToken(token) != null && !isTokenExpired(token);
-    }
+        public boolean validateToken(String token) {
+            try {
+                // Pokud nemůžeme získat uživatelské jméno z tokenu, token není validní
+                String username = getUsernameFromToken(token);
+                if (username == null) {
+                    return false;
+                }
+
+                // Pokud je token expirovaný, není platný
+                if (isTokenExpired(token)) {
+                    return false;
+                }
+
+                // Pokud všechny podmínky prošly, token je validní
+                return true;
+            } catch (SignatureException e) {
+                System.out.println("❌ Token není podepsán správně: " + e.getMessage());
+            } catch (ExpiredJwtException e) {
+                System.out.println("❌ Token vypršel: " + e.getMessage());
+            } catch (MalformedJwtException e) {
+                System.out.println("❌ Token je poškozený: " + e.getMessage());
+            } catch (UnsupportedJwtException e) {
+                System.out.println("❌ Token není podporován: " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println("❌ Token je prázdný nebo neplatný: " + e.getMessage());
+            }
+            return false; // Pokud se dostaneme sem, token není validní
+        }
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

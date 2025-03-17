@@ -69,7 +69,13 @@ export default {
         this.$router.push("/");
 
       } catch (error) {
-        if (error.response && error.response.status === 401) {
+        if (error.response?.status === 403 && error.response?.data?.error === 'NOT_VERIFIED') {
+          localStorage.setItem('tempPassword', this.password);
+          this.$router.push({
+            path: '/register',
+            query: {otp: 'true',  email: error.response.data.email, username: error.response.data.username, autoSendOtp: 'true' }
+          });
+        } else if (error.response && error.response.status === 401) {
           this.errorMessage = "Nesprávné heslo nebo přihlašovací jméno.";
         } else {
           this.errorMessage = "Nastala chyba. Zkuste to prosím později.";

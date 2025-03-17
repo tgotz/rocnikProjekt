@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -45,7 +46,21 @@ public class AuthController {
             if (userOpt.isEmpty()) {
                 return ResponseEntity.status(401).body("Uživatel neexistuje");
             }
+
             User user = userOpt.get();
+
+            // ✅ ⚠️ NOVĚ: kontrola, zda je ověřený
+            if (!user.isVerified()) {
+                // Volitelně můžeš poslat i email zpět, aby si ho frontend mohl předdat
+                return ResponseEntity.status(403).body(Map.of(
+                        "error", "NOT_VERIFIED",
+                        "message", "Účet není ověřený",
+                        "email", user.getEmail(),
+                        "username", user.getUsername(),
+                        "password", user.getPassword()
+                ));
+            }
+
 
             // ✅ Generování tokenu
             String token = jwtTokenProvider.generateToken(user);

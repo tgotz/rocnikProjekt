@@ -26,6 +26,9 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "verified", nullable = false)
+    private boolean verified = false;
+
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;  // Nyní správně odkazuje na `Role` místo `int`

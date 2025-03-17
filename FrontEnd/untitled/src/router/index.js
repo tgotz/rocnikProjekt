@@ -9,6 +9,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import EditCharacter from "@/views/EditCharacter.vue";
 import UsersDashboard from "@/views/UsersDashboard.vue";
 import { useUserStore } from "@/stores/userStore.js";
+import RegisterPage from "@/views/RegisterPage.vue";
 
 //function to check if user has permition to access certain site
 const requireRole = (minRole) => (to, from, next) => {
@@ -99,7 +100,13 @@ const createAppRouter = async (pinia) => {
             component: UsersDashboard,
             beforeEnter: requireRole(4),
         },
-    ];
+        {
+            path: '/register',
+            name: 'Register',
+            component: RegisterPage
+        },
+
+];
 
     return createRouter({
         history: createWebHistory(),

@@ -23,6 +23,12 @@ export const useUserStore = defineStore("user", {
             } catch (error) {
                 console.log("jsem v routeru")
                 console.error("Chyba při načítání uživatele:", error);
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    // Smazání tokenu z cookies
+                    await axios.post("http://localhost:8080/api/auth/logout", {}, { withCredentials: true });
+                    this.clearUser();
+                }
+
                 this.user = null;
             }
             console.log("jsem ve fetchi")
