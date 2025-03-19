@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // ❌ Vypnout CSRF pro REST API
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 📌 REST API je bezstavové                .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/character", "/api/character/{id}", "api/character/add").permitAll()  // ✅ Veřejné endpointy
+                        .requestMatchers("/api/character", "/api/character/{id}", "/api/character/{id}/similar", "/api/character/add").permitAll()  // ✅ Veřejné endpointy
                         .requestMatchers("/api/reviews/add").permitAll()  // ✅ Přidávání recenzí je veřejné
                         .requestMatchers("/api/leaderboard").permitAll()
                         .requestMatchers("/api/auth/login").permitAll() // Přihlášení a user-info jsou veřejné

@@ -2,7 +2,7 @@
   <div>
     <div class="reviews text-center">
       <h3>Přidat recenzi</h3>
-      <p></p>
+
       <i
           class="arrowDown animate__animated"
           :class="showForm ? 'animate__fadeOut' : 'animate__fadeIn'"
@@ -19,18 +19,12 @@
           isHidden ? 'd-none' : ''
         ]"
       >
-        <form @submit.prevent="submitReview">
-          <div class="form-group">
-            <label for="name">Vaše přezdívka (bude zobrazena u recenze):</label>
-            <input
-                v-model="formData.name"
-                type="text"
-                class="form-control"
-                id="name"
-                name="name"
-                required
-            />
-          </div>
+        <p v-if="!isLoggedIn">
+          Pro přidání recenze se musíte <router-link to="/login">přihlásit</router-link>.
+        </p>
+        <p v-else></p>
+
+        <form v-if="isLoggedIn" @submit.prevent="submitReview">
           <div class="form-group">
             <label for="overallRating">Celkové hodnocení:</label>
             <input
@@ -71,7 +65,7 @@
         <i
             class="arrowUp animate__animated mt-4"
             :class="showForm ? 'animate__fadeIn' : 'animate__fadeOut'"
-            v-if="showForm"
+            v-if="isLoggedIn && showForm"
             @click="closeForm"
         ></i>
       </div>
@@ -79,12 +73,8 @@
   </div>
 </template>
 
----
-
-### Logika ve scriptu
-
-```javascript
 <script>
+import { useUserStore } from "@/stores/userStore"; // Importuj userStore
 import axios from "axios";
 
 export default {
@@ -93,12 +83,19 @@ export default {
       showForm: false, // Řídí viditelnost formuláře (pro animace)
       isHidden: true, // Řídí úplné skrytí formuláře po animaci
       formData: {
-        name: '',
+        name: "",
         overallRating: 5,
         attractivenessRating: 5,
-        reviewText: '',
+        reviewText: "",
       },
     };
+  },
+  computed: {
+    // Získání stavu přihlášení z userStore
+    isLoggedIn() {
+      const userStore = useUserStore();
+      return userStore.isLoggedIn; // Vrací true pokud je uživatel přihlášený
+    },
   },
   methods: {
     openForm() {
@@ -114,24 +111,25 @@ export default {
     async submitReview() {
       try {
         const characterId = this.$route.params.id;
+        const userId = useUserStore().userId;
+        console.log(userId);
         console.log("Odesílám characterId:", characterId);
 
         const requestData = {
-          authorName: this.formData.name,
           overallRating: this.formData.overallRating,
           attractivenessRating: this.formData.attractivenessRating,
           reviewText: this.formData.reviewText,
-          character: { id: characterId } // ⚠️ Odkaz na postavu
+          character: { id: characterId },
+          user: {id: userId}
         };
 
         const response = await axios.post("http://localhost:8080/api/reviews/add", requestData, {
-          headers: { "Content-Type": "application/json" }
+          headers: { "Content-Type": "application/json" },
         });
 
         console.log("Server odpověděl:", response);
 
         if (response.data.status === "success") {
-
           // 🔥 Emitujeme event PO úspěšném odeslání
           this.$emit("review-submitted");
 
@@ -151,7 +149,7 @@ export default {
         console.error("Chyba při odesílání recenze:", error);
         alert("Nepodařilo se odeslat recenzi. Zkuste to znovu.");
       }
-    }
+    },
   },
 };
 </script>

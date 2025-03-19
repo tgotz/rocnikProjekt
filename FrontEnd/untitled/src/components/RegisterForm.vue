@@ -34,10 +34,13 @@
             required
         />
       </div>
-      <button type="submit" class="btn btn-primary mt-3" :disabled="isLoading">
+      <div class="mt-2 d-flex justify-content-between align-items-center">
+      <button type="submit" class="btn btn-primary " :disabled="isLoading">
         <span v-if="isLoading" class="spinner-border spinner-border-sm me-2"></span>
         {{ isLoading ? 'Odesílání...' : 'Zaregistrovat' }}
       </button>
+        <router-link aria-current="page" to="/login">Už máte účet? Přihlašte se</router-link>
+      </div>
     </form>
   </div>
 </template>

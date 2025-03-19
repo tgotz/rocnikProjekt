@@ -244,6 +244,31 @@ System.out.println("zde1");
         return characterRepository.findTopCharacters(pageable).getContent();
     }
 
+    public List<Character> getSimilarCharacters(int characterId) {
+        // Získáme detaily postavy podle ID
+        Character character = characterRepository.findById(characterId)
+                .orElseThrow(() -> new RuntimeException("Postava s tímto ID nebyla nalezena"));
+
+        // Získáme seznam filmů, ve kterých je postava
+        List<Movie> characterMovies = character.getMovies();
+        // Pokud postava není v žádném filmu, vracíme prázdný seznam
+        if (characterMovies.isEmpty()) {
+            return List.of(); // nebo můžeš vrátit nějakou informaci, že postava nemá žádný film
+        }
+
+        // Najdeme všechny postavy, které se vyskytují v těchto filmech, kromě aktuální postavy
+        List<Character> charactersInSameMovies = characterRepository.findCharactersByMovies(characterMovies, characterId);
+        // Pokud chceme náhodně vybrat 3-4 postavy, použijeme random výběr
+        Random random = new Random();
+        int limit = Math.min(4, charactersInSameMovies.size()); // Ne více než 4 postavy
+        List<Character> similarCharacters = random.ints(0, charactersInSameMovies.size())
+                .distinct()
+                .limit(limit)
+                .mapToObj(charactersInSameMovies::get)
+                .toList();
+
+        return similarCharacters;
+    }
 
 
 }

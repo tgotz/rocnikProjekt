@@ -2,7 +2,7 @@
   <div>
     <ul class="list-group">
       <li class="list-group-item my-3" v-for="(review, index) in reviews" :key="index">
-        <strong>{{ review.authorName }} říká:</strong><br />
+        <strong>{{ review.user.username }} říká:</strong><br />
         <strong>Celkové hodnocení: {{ review.overallRating }}/10</strong><br />
         <strong>Hodnocení atraktivity: {{ review.attractivenessRating }}/10</strong><br />
         <strong>{{ review.reviewText }}</strong>

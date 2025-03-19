@@ -6,6 +6,7 @@ import com.example.backendspring.service.CharacterService;
 import com.example.backendspring.service.QuoteService;
 import com.example.backendspring.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
@@ -231,5 +232,10 @@ public class CharacterController {
     public ResponseEntity<List<Character>> getDashboardData() {
         List<Character> characterList = characterService.getCharacters();  // přes service/DAO
         return ResponseEntity.ok(characterList);
+    }
+
+    @GetMapping("/{id}/similar")
+    public List<Character> getSimilarCharacters(@PathVariable int id) {
+        return characterService.getSimilarCharacters(id);
     }
 }

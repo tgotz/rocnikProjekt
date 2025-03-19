@@ -10,6 +10,8 @@
       <CharacterQuotes v-if="quotes.length" :quotes="quotes" />
       <hr />
 
+      <SimiliarCharacters          v-if="character" :characterId="character.id" />
+
       <!-- Form for reviews -->
       <ReviewForm
           v-if="character"
@@ -33,9 +35,12 @@ import CharacterQuotes from '../components/CharacterQuotes.vue';
 import ReviewForm from '../components/ReviewForm.vue';
 import ReviewsList from '../components/ReviewsList.vue';
 import axios from 'axios';
+import SimiliarCharacters from "@/components/SimiliarCharacters.vue";
+
 
 export default {
   components: {
+    SimiliarCharacters,
     CharacterDetail,
     CharacterQuotes,
     ReviewForm,

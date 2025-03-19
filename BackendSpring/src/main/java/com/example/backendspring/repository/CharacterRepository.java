@@ -1,10 +1,12 @@
 package com.example.backendspring.repository;
 
 import com.example.backendspring.model.Character;
+import com.example.backendspring.model.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.backendspring.dto.CharacterLeaderboardDTO;
 import java.util.List;
@@ -41,6 +43,10 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
     """, nativeQuery = true)
     Page<CharacterLeaderboardDTO> findTopCharacters(Pageable pageable);
 
-
+    @Query("SELECT c FROM Character c JOIN c.movies m WHERE m IN :movies AND c.id != :characterId")
+    List<Character> findCharactersByMovies(
+            @Param("movies") List<Movie> movies,
+            @Param("characterId") int characterId
+    );
 
 }

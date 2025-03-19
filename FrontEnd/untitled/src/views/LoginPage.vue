@@ -25,7 +25,11 @@
                 required
             />
           </div>
-          <button type="submit" class="btn btn-primary mt-3">Přihlásit</button>
+          <div class=" mt-2 d-flex justify-content-between align-items-center">
+            <button type="submit" class="btn btn-primary">Přihlásit</button>
+            <router-link class="" aria-current="page" to="/register">Nemáte ještě účet? Zaregistrujte se</router-link>
+
+          </div>
         </form>
       </div>
     </div>
