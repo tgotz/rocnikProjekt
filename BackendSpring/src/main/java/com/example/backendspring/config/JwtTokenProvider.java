@@ -28,7 +28,6 @@ public class JwtTokenProvider {
     private final long EXPIRATION_TIME = 86400000; // 1 den
 
     private final UserDetailsService userDetailsService;
-
     public JwtTokenProvider(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }

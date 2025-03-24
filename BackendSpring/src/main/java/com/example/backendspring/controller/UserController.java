@@ -61,7 +61,7 @@ public class UserController {
         }
     }
     @GetMapping()
-    @PreAuthorize("hasAnyAuthority('ROLE_4', 'ROLE_3')")
+    @PreAuthorize("hasAnyAuthority('ROLE_4')")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }

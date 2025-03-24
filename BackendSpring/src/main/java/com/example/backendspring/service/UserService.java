@@ -21,6 +21,7 @@ public class UserService {
         return userRepository.findByUsername(username).orElse(null);
     }
 
+    public User getUserById(int id) {return userRepository.findById(id).orElse(null);}
     // Ověří heslo uživatele
     public boolean verifyPassword(String username, String password) {
         User user = getUserByUsername(username);

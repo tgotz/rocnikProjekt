@@ -43,7 +43,7 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
     """, nativeQuery = true)
     Page<CharacterLeaderboardDTO> findTopCharacters(Pageable pageable);
 
-    @Query("SELECT c FROM Character c JOIN c.movies m WHERE m IN :movies AND c.id != :characterId")
+    @Query("SELECT c FROM Character c JOIN c.movies m WHERE m IN :movies AND c.id != :characterId AND c.approved = true")
     List<Character> findCharactersByMovies(
             @Param("movies") List<Movie> movies,
             @Param("characterId") int characterId

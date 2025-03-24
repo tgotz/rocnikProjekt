@@ -1,10 +1,12 @@
 package com.example.backendspring.controller;
 
+import com.example.backendspring.config.SecurityConfig;
 import com.example.backendspring.model.*;
 import com.example.backendspring.model.Character;
 import com.example.backendspring.service.CharacterService;
 import com.example.backendspring.service.QuoteService;
 import com.example.backendspring.service.ReviewService;
+import com.example.backendspring.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +26,14 @@ public class CharacterController {
     private final CharacterService characterService;
     private final ReviewService reviewService;
     private final QuoteService quoteService;
+    private final UserService userService;
 
-    public CharacterController(CharacterService characterService, ReviewService reviewService, QuoteService quoteService, JwtTokenProvider jwtTokenProvider) {
+    public CharacterController(CharacterService characterService, ReviewService reviewService, QuoteService quoteService, JwtTokenProvider jwtTokenProvider, SecurityConfig securityConfig, UserService userService) {
         this.characterService = characterService;
         this.reviewService = reviewService;
         this.quoteService = quoteService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -76,7 +80,8 @@ public class CharacterController {
             @RequestParam(value = "dabber", required = false) String dabberName,
             @RequestParam("movies") String movies,
             @RequestParam(value = "quotes", required = false) String quotes,
-            @RequestParam("picture") MultipartFile picture
+            @RequestParam("picture") MultipartFile picture,
+            HttpServletRequest request
     ) {
         try {
             // 🎬 Rozsekneme filmy a hlášky
@@ -97,8 +102,12 @@ public class CharacterController {
             actor.setName(actorName);
             Actor dabber = new Actor();
             dabber.setName(dabberName);
-            character.setActor(actor);
-            character.setDabber(dabber);
+            if(actorName != null && !actorName.isEmpty()) {
+                character.setActor(actor);
+            }
+            if(dabberName != null && !dabberName.isEmpty()) {
+                character.setDabber(dabber);
+            }
             List<Movie> moviesList = new ArrayList<>();
             for(int i = 0; i < movieNames.size(); i++){
                 Movie movie = new Movie();
@@ -107,7 +116,25 @@ public class CharacterController {
             }
             character.setMovies(moviesList);
             // 🔥 Posíláme do service, kde přidáme filmy a hlášky
+            String token = jwtTokenProvider.getTokenFromCookies(request);
+            System.out.println(token);
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                int userId = jwtTokenProvider.getUserIdFromToken(token);
+                User user = userService.getUserById(userId);
+                character.setAddedBy(user);
+                if(user.getRole().getId() >= 2){
+                    System.out.println("skibidi");
+                    character.setApproved(true);
+                    character.setApprovedBy(user);
+                }
+            }
+
+
+
             Map<String, String> response = characterService.addCharacter(character, quoteList);
+
+
+
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -117,14 +144,14 @@ public class CharacterController {
 
 
     @GetMapping("/approve")
-    @PreAuthorize("hasAuthority('ROLE_MODERATOR')") // 🔥 Kontrola oprávnění přes Spring Security
+    @PreAuthorize("hasAuthority('ROLE_MODERATOR')")
     public ResponseEntity<List<Map<String, Object>>> getUnapprovedCharacters() {
         List<Map<String, Object>> characters = characterService.getUnapprovedCharactersWithQuotes();
         return ResponseEntity.ok(characters);
     }
 
     @PostMapping("/delete-character/{id}")
-    @PreAuthorize("hasAnyAuthority('ROLE_2', 'ROLE_3', 'ROLE_4')") // 🔥 Pouze administrátor může mazat postavy
+    @PreAuthorize("hasAnyAuthority('ROLE_2', 'ROLE_3', 'ROLE_4')")
     public ResponseEntity<?> deleteCharacter(@PathVariable int id) {
         try {
             characterService.deleteCharacter(id);

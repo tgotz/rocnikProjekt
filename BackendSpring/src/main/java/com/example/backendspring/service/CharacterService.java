@@ -32,23 +32,21 @@ public class CharacterService {
     // 📌 Přidání nové postavy (bez mazání filmů/citátů)
     public Map<String, String> addCharacter(Character character, List<String> quotes) {
         try {
-            int actorId = (character.getActor().getName() != null) ?
+            int actorId = (character.getActor() != null) ?
                     actorService.getActorId(character.getActor().getName()) : -1;
 
-            int dabberId = (character.getDabber().getName() != null) ?
+            int dabberId = (character.getDabber() != null) ?
                     actorService.getActorId(character.getDabber().getName()) : -1;
 
-            if (actorId == -1 && character.getActor().getName() != null) {
+            if (actorId == -1 && character.getActor() != null) {
                 actorId = actorService.insertActor(character.getActor().getName());
             }
-            if (dabberId == -1 && character.getDabber().getName() != null) {
+            if (dabberId == -1 && character.getDabber() != null) {
                 dabberId = actorService.insertActor(character.getDabber().getName());
             }
 
             character.setActor(actorService.findById(actorId));
             character.setDabber(actorService.findById(dabberId));
-            System.out.println(character.getActor());
-            System.out.println(character.getDabber());
             character.setDateAdded(new Date());
 
 
