@@ -27,7 +27,11 @@
       <h3 class="mt-5">Recenze</h3>
 
       <!-- list of reviews -->
-      <ReviewsList v-if="reviews.length" :reviews="reviews" />
+      <ReviewsList v-if="reviews.length"
+                   :reviews="reviews"
+                   :user="user"
+                   @delete-review="deleteReview"
+      />
       <p v-else class="text-center mt-2 mb-5">
         Nikdo zatím postavu neohodnotil, nechcete být první?
       </p>
@@ -94,6 +98,21 @@ export default {
         console.error('Error fetching character data:', error);
       }
     },
+    async deleteReview(reviewId) {
+      console.log("sem tady 2")
+      if (!confirm("Opravdu chcete smazat tuto recenzi?")) return;
+
+      try {
+        await axios.delete(`http://localhost:8080/api/reviews/${reviewId}`, {
+          withCredentials: true
+        });
+        this.reviews = this.reviews.filter(r => r.id !== reviewId);
+        alert("Recenze byla smazána.");
+      } catch (error) {
+        console.error("Chyba při mazání recenze:", error);
+        alert("Při mazání došlo k chybě.");
+      }
+    }
   },
   mounted() {
     this.fetchCharacterData();
