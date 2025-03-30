@@ -95,6 +95,9 @@
                     <strong>Role:</strong> {{ roleLabel}}
                   </li>
                   <li>
+                    <router-link to="/my-account" class="dropdown-item">Můj účet</router-link>
+                  </li>
+                  <li>
                     <button class="dropdown-item" @click="logout">Odhlásit se</button>
                   </li>
                 </ul>

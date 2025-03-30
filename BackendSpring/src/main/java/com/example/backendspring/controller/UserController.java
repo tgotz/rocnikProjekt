@@ -8,6 +8,7 @@ import com.example.backendspring.service.OtpService;
 import com.example.backendspring.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,6 +61,20 @@ public class UserController {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(errorResponse);
         }
     }
+    @GetMapping("/profile")
+    public ResponseEntity<Map<String, Object>> getProfile(HttpServletRequest request) {
+        String token = jwtTokenProvider.getTokenFromCookies(request);
+System.out.println("zdeee");
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            Integer userId = jwtTokenProvider.getUserIdFromToken(token);
+            Map<String, Object> userInfo = userService.getUserProfile(userId);
+            return ResponseEntity.ok(userInfo);
+        }
+
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Unauthorized");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ROLE_4')")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -78,6 +93,21 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("Uživatel byl úspěšně smazán.");
+    }
+
+    @PostMapping("/send-otp")
+    public ResponseEntity<String> sendOtp(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("Email je povinný.");
+        }
+
+        try {
+            otpService.generateAndSendOtp(email);
+            return ResponseEntity.ok("OTP bylo odesláno na email.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nepodařilo se odeslat OTP.");
+        }
     }
 
     @PostMapping("/register")
@@ -134,6 +164,33 @@ public class UserController {
         otpService.generateAndSendOtp(email);
         return ResponseEntity.ok(Map.of("message", "Ověřovací kód byl znovu odeslán"));
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(
+            @RequestBody Map<String, String> requestBody,
+            HttpServletRequest request
+    ) {
+        System.out.println("TADYY SOOM");
+        String token = jwtTokenProvider.getTokenFromCookies(request);
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neautorizovaný přístup.");
+        }
+
+        int userId = jwtTokenProvider.getUserIdFromToken(token);
+        System.out.println("TADYY SOOM2");
+
+        String oldPassword = requestBody.get("oldPassword");
+        String newPassword = requestBody.get("newPassword");
+        String otp = requestBody.get("otp");
+
+        try {
+            userService.changePassword(userId, oldPassword, newPassword, otp);
+            return ResponseEntity.ok("Heslo bylo úspěšně změněno.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
 
 }

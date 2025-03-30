@@ -2,6 +2,7 @@ package com.example.backendspring.config;
 import com.example.backendspring.config.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -38,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reviews/add").permitAll()  // ✅ Přidávání recenzí je veřejné
                         .requestMatchers("/api/leaderboard").permitAll()
                         .requestMatchers("/api/auth/login").permitAll() // Přihlášení a user-info jsou veřejné
+                        .requestMatchers("/api/users/profile", "/api/users/send-otp", "/api/users/change-password").hasAnyAuthority("ROLE_1", "ROLE_2", "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/auth/logout", "/api/users/user-info", "api/users/register", "api/users/verify-otp", "api/users/resend-otp").permitAll()
                         .requestMatchers("/api/character/approve").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4") // 🔒 Přístup jen pro moderátory+
                         .requestMatchers("/api/character/delete-character/**").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4") // 🔥 Pouze ADMIN může mazat postavy
