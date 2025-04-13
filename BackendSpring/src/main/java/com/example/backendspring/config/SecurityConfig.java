@@ -39,13 +39,22 @@ public class SecurityConfig {
                         .requestMatchers("/api/reviews/add").permitAll()  // ✅ Přidávání recenzí je veřejné
                         .requestMatchers("/api/leaderboard").permitAll()
                         .requestMatchers("/api/auth/login").permitAll() // Přihlášení a user-info jsou veřejné
-                        .requestMatchers("/api/users/profile", "/api/users/send-otp", "/api/users/change-password").hasAnyAuthority("ROLE_1", "ROLE_2", "ROLE_3", "ROLE_4")
+                        .requestMatchers("/api/users/profile", "/api/users/send-otp", "/api/users/change-password", "/api/reports/add").hasAnyAuthority("ROLE_1", "ROLE_2", "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/auth/logout", "/api/users/user-info", "api/users/register", "api/users/verify-otp", "api/users/resend-otp").permitAll()
                         .requestMatchers("/api/character/approve").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4") // 🔒 Přístup jen pro moderátory+
                         .requestMatchers("/api/character/delete-character/**").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4") // 🔥 Pouze ADMIN může mazat postavy
                         .requestMatchers( "/api/character/dashboard").hasAnyAuthority( "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/character/update-character").hasAnyAuthority( "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/users", "api/users/{id}", "api/users/{id}/role").hasAnyAuthority("ROLE_3", "ROLE_4")
+                        .requestMatchers("/api/reports/solved", "/api/reports").hasAnyAuthority("ROLE_3", "ROLE_4")
+                        .requestMatchers(
+                                "/api/reports/admin/characters",
+                                "/api/reports/admin/reviews",
+                                "/api/reports/admin/character/**",
+                                "/api/reports/admin/review/**",
+                                "/api/reports/admin/resolve/character/**",
+                                "/api/reports/admin/resolve/review/**"
+                        ).hasAnyAuthority("ROLE_3", "ROLE_4")
 
 
                         .anyRequest().authenticated()

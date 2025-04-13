@@ -11,6 +11,7 @@ import UsersDashboard from "@/views/UsersDashboard.vue";
 import { useUserStore } from "@/stores/userStore.js";
 import RegisterPage from "@/views/RegisterPage.vue";
 import MyAccount from "@/views/MyAccount.vue";
+import ReportsDashboard from "@/views/ReportsDashboard.vue";
 
 //function to check if user has permition to access certain site
 const requireRole = (minRole) => (to, from, next) => {
@@ -111,7 +112,12 @@ const createAppRouter = async (pinia) => {
             name: MyAccount,
             component: MyAccount,
             beforeEnter: requireRole(1),
-
+        },
+        {
+            path:'/reports-dashboard',
+            name: ReportsDashboard,
+            component: ReportsDashboard,
+            beforeEnter: requireRole(3),
         }
 
 ];

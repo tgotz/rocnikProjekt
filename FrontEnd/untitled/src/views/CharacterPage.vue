@@ -3,9 +3,17 @@
     <div class="container mt-5 bg-main pt-2">
       <div class="d-flex justify-content-between">
         <h2>Detaily postavy</h2>
-        <div v-if="user?.role && user.role >= 3 && character?.id">
-          <a :href="`/edit-character/${character.id}`" class=" text-decoration-none me-3" target="_blank">Upravit</a>
-          <a href="#" class=" text-decoration-none" @click.prevent="deleteCharacter(character.id)">Smazat</a>
+        <div v-if="user && character" class="d-flex align-items-center">
+          <ReportPopup
+              v-if="character?.id && user?.userId"
+              :type="'character'"
+              :targetId="character.id"
+              :userId="user.userId"
+          />
+            <div class="ms-3" v-if="user?.role && user.role >= 3 && character?.id">
+            <a :href="`/edit-character/${character.id}`" class=" text-decoration-none me-3" target="_blank">Upravit</a>
+            <a href="#" class=" text-decoration-none" @click.prevent="deleteCharacter(character.id)">Smazat</a>
+          </div>
         </div>
       </div>
       <hr />
@@ -40,6 +48,7 @@
 </template>
 
 <script>
+
 import CharacterDetail from '../components/CharacterDetail.vue';
 import CharacterQuotes from '../components/CharacterQuotes.vue';
 import ReviewForm from '../components/ReviewForm.vue';
@@ -47,9 +56,12 @@ import ReviewsList from '../components/ReviewsList.vue';
 import axios from 'axios';
 import SimiliarCharacters from "@/components/SimiliarCharacters.vue";
 import { useUserStore } from "../stores/userStore";
+import ReportPopup from "@/components/ReportPopup.vue";
+
 
 export default {
   components: {
+    ReportPopup,
     SimiliarCharacters,
     CharacterDetail,
     CharacterQuotes,
@@ -93,7 +105,7 @@ export default {
         this.reviews = response.data.reviews;
         console.log("Postava načtena:", this.character);
         console.log("Recenze při načtení:", this.reviews);
-
+        console.log(this.user)
       } catch (error) {
         console.error('Error fetching character data:', error);
       }
