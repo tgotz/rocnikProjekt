@@ -95,43 +95,34 @@
         <div class="col-md-6">
           <div class="form-group mb-2">
             <label for="characterActor">Herec/herečka</label>
-            <input
+            <AutocompleteInput
                 v-model="actorName"
-                name="actor"
-                type="text"
-                class="form-control"
-                id="characterActor"
-                placeholder="Zadej jméno herce/herečky"
-
+                :search-url="'http://localhost:8080/api/actors/search'"
+                placeholder="Zadejte jméno herce/herečky"
+                :required="false"
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group mb-2">
             <label for="characterActor">Daber/dabérka</label>
-            <input
+            <AutocompleteInput
                 v-model="dabberName"
-                name="dabber"
-                type="text"
-                class="form-control"
-                id="characterDabber"
-                placeholder="Zadej jméno herce/herečky"
-
+                :search-url="'http://localhost:8080/api/actors/search'"
+                placeholder="Zadejte jméno dabéra/dabérky"
+                :required="false"
             />
           </div>
         </div>
       </div>
       <div class="form-group mb-2">
-        <label for="characterQuotes">Filmy *</label>
-        <textarea
-            v-model="moviesInput"
-            name="movies"
-            class="form-control"
-            id="characterQuotes"
-            rows="3"
-            placeholder="Zadejte filmy, ve kterých postava hrála oddělené středníkem (;)"
-
-        ></textarea>
+        <div class="form-group mb-2">
+          <AutocompleteMultiInput
+              v-model="multiMovieInput"
+              ref="multiMovieInputRef"
+              name="movies"
+          />
+        </div>
       </div>
       <div class="form-group mb-2">
         <label for="characterQuotes">Hlášky</label>
@@ -152,7 +143,13 @@
 <script>
 import axios from "axios";
 import { useUserStore } from "../stores/userStore";
+import AutocompleteInput from "@/components/AutocompleteInput.vue";
+import AutocompleteMultiInput from "@/components/AutocompleteMultiInput.vue";
+
 export default {
+  components: {AutocompleteInput,
+    AutocompleteMultiInput
+  },
   computed: {
     dabberName: {
       get() {
@@ -193,11 +190,11 @@ export default {
         actorName: "",
         nickname: "",
       },
+      multiMovieInput: "",
       imageFile: null,
       imagePreview: "",
       filmSuggestions: [],
       quotesInput: "",
-      moviesInput: "",
 
     };
   },
@@ -207,9 +204,15 @@ export default {
         const response = await axios.get(`http://localhost:8080/api/character/${id}`);
         this.character = response.data.character;
         this.quotes = response.data.quotes;
-        this.quotesInput = this.quotes.map(q => q.textQuote).join("; ");
+        this.quotesInput = this.quotes.map(q => q.textQuote).join("\n");
         this.movies = response.data.character.movies;
-        this.moviesInput = this.character.movies?.map(m => m.nameMovie).join("; ") || "";
+        this.multiMovieInput = this.character.movies?.map(m => m.nameMovie).join("\n") || "";
+
+        this.$nextTick(() => {
+          if (this.$refs.multiMovieInputRef) {
+            this.$refs.multiMovieInputRef.setText(this.multiMovieInput);
+          }
+        });
         if (response.data.image) {
           this.imagePreview = `data:image/jpeg;base64,${response.data.image}`;
         }
@@ -264,8 +267,12 @@ export default {
         const formData = new FormData();
 
         // ✨ Převedení polí na správný formát
-        const movieListString = this.moviesInput ? this.moviesInput.split(";").map(item => item.trim()).join(";") : "";
-        const quotesString = this.quotes.map(q => q.textQuote).join(";");
+        const movieListString = this.multiMovieInput
+            ? this.multiMovieInput.split("\n").map(item => item.trim()).filter(item => item.length > 0).join(";")
+            : "";
+        const quotesString = this.quotesInput
+            ? this.quotesInput.split("\n").map(q => q.trim()).filter(q => q.length > 0).join(";")
+            : "";
 
         // ✅ Naplnění dat
         formData.append("id", this.character.id);

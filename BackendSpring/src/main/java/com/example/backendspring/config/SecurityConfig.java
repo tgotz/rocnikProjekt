@@ -55,7 +55,8 @@ public class SecurityConfig {
                                 "/api/reports/admin/resolve/character/**",
                                 "/api/reports/admin/resolve/review/**"
                         ).hasAnyAuthority("ROLE_3", "ROLE_4")
-
+                        .requestMatchers("/api/actors/**").permitAll()
+                        .requestMatchers("/api/movies/**").permitAll()
 
                         .anyRequest().authenticated()
                 )

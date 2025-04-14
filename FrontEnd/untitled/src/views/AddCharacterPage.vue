@@ -111,42 +111,33 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form-group mb-2">
-            <label for="characterActor">Herec</label>
-            <input
+            <label for="characterNickname">Herec</label>
+            <AutocompleteInput
                 v-model="formData.actor"
-                name="actor"
-                type="text"
-                class="form-control"
-                id="characterActor"
+                :search-url="'http://localhost:8080/api/actors/search'"
                 placeholder="Zadejte jméno herce/herečky"
+                :required="false"
             />
           </div>
         </div>
         <div class="col-md-6">
           <div class="form-group mb-2">
             <label for="characterNickname">Dabér</label>
-            <input
+            <AutocompleteInput
                 v-model="formData.dabber"
-                name="dabber"
-                type="text"
-                class="form-control"
-                id="characterNickname"
-                placeholder="Zadejte jméno dabera/daberky"
+                :search-url="'http://localhost:8080/api/actors/search'"
+                placeholder="Zadejte jméno dabéra/dabérky"
+                :required="false"
             />
           </div>
-        </div>
+      </div>
       </div>
       <div class="form-group mb-2">
-        <label for="characterQuotes">Filmy *</label>
-        <textarea
+        <AutocompleteMultiInput
             v-model="formData.movies"
-            name="movies"
-            class="form-control"
-            id="characterQuotes"
-            rows="3"
-            placeholder="Zadejte filmy, ve kterých postava hrála oddělené středníkem (;)"
-            required
-        ></textarea>
+            ref="moviesInput"
+        />
+
       </div>
       <div class="form-group mb-2">
         <label for="characterQuotes">Hlášky</label>
@@ -156,7 +147,7 @@
             class="form-control"
             id="characterQuotes"
             rows="3"
-            placeholder="Zadejte hlášky postavy oddělené středníkem (;)"
+            placeholder="Zadejte hlášky postavy oddělené Enterem"
         ></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Odeslat</button>
@@ -171,8 +162,11 @@
 ```javascript
 <script>
 import axios from "axios";
+import AutocompleteInput from "@/components/AutocompleteInput.vue";
+import AutocompleteMultiInput from "@/components/AutocompleteMultiInput.vue";
 
 export default {
+  components: {AutocompleteMultiInput, AutocompleteInput},
 
   data() {
     return {
@@ -180,7 +174,7 @@ export default {
         name: "",
         type: "Animovaná",
         gender: "Muž",
-        film: "",
+        movies: "",
         desc: "",
         age: "",
         actor: "",
@@ -199,7 +193,8 @@ export default {
         Object.keys(this.formData).forEach((key) => {
           form.append(key, this.formData[key]);
         });
-
+        console.log(this.formData.movies)
+        console.log(form)
         const response = await axios.post(
             "http://localhost:8080/api/character/add",
             form,
@@ -224,7 +219,7 @@ export default {
         name: "",
         type: "Animovaná",
         gender: "Muž",
-        film: "",
+        movies: "",
         desc: "",
         age: "",
         actor: "",
@@ -232,7 +227,7 @@ export default {
         quotes: "",
         picture: null,
       };
-
+      this.$refs.moviesInput.reset(); // 👈 zavolá reset metodu z komponenty
       const fileInput = this.$refs.fileInput;
       if (fileInput) {
         fileInput.value = '';

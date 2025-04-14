@@ -84,10 +84,19 @@ public class CharacterController {
             HttpServletRequest request
     ) {
         try {
+            System.out.println("Rozeskávam");
             // 🎬 Rozsekneme filmy a hlášky
-            List<String> movieNames = List.of(movies.split(";"));
-            List<String> quoteList = new ArrayList<>();
-            quoteList = quotes != null && !quotes.isEmpty() ? List.of(quotes.split(";")) : List.of();
+            List<String> movieNames = Arrays.stream(movies.split("\\r?\\n"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+
+            List<String> quoteList = (quotes != null && !quotes.isEmpty())
+                    ? Arrays.stream(quotes.split("\\r?\\n"))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .toList()
+                    : List.of();
 
             // 🔥 Vytvoříme postavu
             Character character = new Character();

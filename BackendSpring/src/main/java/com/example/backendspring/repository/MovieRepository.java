@@ -24,4 +24,7 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
             "AND NOT EXISTS (SELECT 1 FROM characters_movies WHERE id_movie = :movieId)",
             nativeQuery = true)
     void deleteIfNotUsed(int movieId);
+
+    List<Movie> findByNameMovieContainingIgnoreCase(String name);
+
 }
