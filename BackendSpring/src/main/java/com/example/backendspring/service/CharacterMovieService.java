@@ -17,7 +17,7 @@ public class CharacterMovieService {
     private final CharacterRepository characterRepository;
     private final CharacterMovieRepository characterMovieRepository;
 
-    // ✅ Konstruktorová injekce (NENÍ POTŘEBA @Autowired)
+
     public CharacterMovieService(MovieRepository movieRepository,
                                  CharacterRepository characterRepository,
                                  CharacterMovieRepository characterMovieRepository) {
@@ -26,22 +26,19 @@ public class CharacterMovieService {
         this.characterMovieRepository = characterMovieRepository;
     }
 
-    // ✅ Opravené přiřazení postavy k filmu
+
     public void assignFilm(int movieId, int characterId) {
-        // Načtení objektů Movie a Character z databáze
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new RuntimeException("Film nenalezen"));
         Character character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new RuntimeException("Postava nenalezena"));
 
-        // Vytvoření vazby
         CharacterMovie characterMovie = new CharacterMovie(character, movie);
 
-        // Uložení do databáze
         characterMovieRepository.save(characterMovie);
     }
 
-    // Smazání všech filmů spojených s postavou
+    // Deletes  all films that were assigned to given character
     public void deleteAssignedFilms(int idCharacter) {
         characterMovieRepository.deleteByCharacterId(idCharacter);
     }

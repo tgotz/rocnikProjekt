@@ -28,12 +28,13 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    //setting required roles for certain APIs
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Povolení CORS
-                .csrf(csrf -> csrf.disable()) // ❌ Vypnout CSRF pro REST API
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 📌 REST API je bezstavové                .and()
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/character", "/api/character/{id}", "/api/character/{id}/similar", "/api/character/add").permitAll()  // ✅ Veřejné endpointy
                         .requestMatchers("/api/reviews/add").permitAll()  // ✅ Přidávání recenzí je veřejné
@@ -57,6 +58,11 @@ public class SecurityConfig {
                         ).hasAnyAuthority("ROLE_3", "ROLE_4")
                         .requestMatchers("/api/actors/**").permitAll()
                         .requestMatchers("/api/movies/**").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )

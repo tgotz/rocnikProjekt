@@ -13,7 +13,7 @@
         @keydown.enter="handleEnter"
     />
 
-    <!-- Našeptávač -->
+    <!-- Suggestions -->
     <ul v-if="filteredSuggestions.length" class="suggestions-list">
       <li
           v-for="(suggestion, index) in filteredSuggestions"
@@ -49,7 +49,6 @@ const updateActiveLine = (event) => {
   activeLineIndex.value = lines.length - 1;
 };
 
-// Získání návrhů z backendu
 const filterSuggestions = async () => {
   const lines = inputText.value.split("\n");
   const currentLine = lines[activeLineIndex.value]?.toLowerCase().trim();
@@ -70,21 +69,20 @@ const filterSuggestions = async () => {
 };
 
 
-// Přidání filmu z našeptávače
 const selectSuggestion = (movieName) => {
   const lines = inputText.value.split('\n');
   lines[activeLineIndex.value] = movieName;
-  lines.push(""); // odřádkujeme
+  lines.push(""); // enter
   inputText.value = lines.join('\n');
   filteredSuggestions.value = [];
 };
 
-// Enter potvrzuje film, i když není v seznamu
+// Enter confirms movie even if it's not from suggestions
 const handleEnter = () => {
-  filteredSuggestions.value = []; // schovej suggestiony
+  filteredSuggestions.value = []; // hide suggestions
 };
 
-// Expozice pro rodiče (např. AddCharacter.vue)
+// for parents
 defineExpose({
   getMovies: () => {
     return inputText.value

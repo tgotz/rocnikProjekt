@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "actors")  // Odpovídá tabulce v databázi
+@Table(name = "actors")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,8 +13,8 @@ public class Actor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;  // Primární klíč
+    private int id;
 
     @Column(nullable = false, unique = true)
-    private String name;  // Jméno herce
+    private String name;
 }

@@ -27,11 +27,11 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "id_character")
-    private Character character;  // může být null
+    private Character character;  // can be null
 
     @ManyToOne
     @JoinColumn(name = "id_review")
-    private Review review;  // může být null
+    private Review review;  // can be null
 
     @ManyToOne
     @JoinColumn(name = "reported_by", nullable = false)
@@ -46,7 +46,4 @@ public class Report {
 
     @Column(name = "date_resolved")
     private LocalDateTime dateResolved;
-
-    // Gettery a settery (nebo použij Lombok @Getter/@Setter/@Data)
-    // ...
 }

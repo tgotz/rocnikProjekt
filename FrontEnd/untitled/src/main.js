@@ -14,7 +14,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8080";
 (async () => {
     const app = createApp(App);
-
+    app.config.devtools = false;
     const pinia = createPinia(); // Pinia - for user management
     app.use(pinia);
 

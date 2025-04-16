@@ -10,13 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface CharacterMovieRepository extends JpaRepository<CharacterMovie, CharacterMovieId> {
 
-        // ✅ Opravené smazání všech filmů spojených s postavou
         @Transactional
         @Modifying
         @Query("DELETE FROM CharacterMovie cm WHERE cm.id.characterId = :characterId")
         void deleteByCharacterId(@Param("characterId") int characterId);
 
-        // ✅ Opravené smazání všech postav spojených s filmem
         @Transactional
         @Modifying
         @Query("DELETE FROM CharacterMovie cm WHERE cm.id.movieId = :movieId")

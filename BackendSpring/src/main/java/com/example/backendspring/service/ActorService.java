@@ -2,6 +2,7 @@ package com.example.backendspring.service;
 
 import com.example.backendspring.model.Actor;
 import com.example.backendspring.repository.ActorRepository;
+import com.example.backendspring.repository.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +13,16 @@ public class ActorService {
 
     @Autowired
     private ActorRepository actorRepository;
+    @Autowired
+    private CharacterRepository characterRepository;
 
-    // 🔹 Najde ID herce podle jména, pokud existuje, jinak vrátí -1
+    // finds actor by name - if not found returns -1
     public int getActorId(String actorName) {
         Optional<Actor> actor = actorRepository.findByName(actorName);
         return actor.map(Actor::getId).orElse(-1);
     }
 
-    // 🔹 Vloží herce, pokud ještě neexistuje, a vrátí jeho ID
+    //  if actor doesnt exixts - inserts new actor
     public int insertActor(String actorName) {
         Optional<Actor> existingActor = actorRepository.findByName(actorName);
         if (existingActor.isPresent()) {
@@ -32,11 +35,17 @@ public class ActorService {
         return newActor.getId();
     }
 
-    // 🔹 Smaže herce, pokud není použit v žádné postavě
+    // deletes actor if isn't used by any character
     public void deleteActorIfNotUsed(int actorId) {
-        actorRepository.deleteById(actorId);
+        boolean isUsedAsDabber = characterRepository.existsByDabberId(actorId);
+        boolean isUsedAsActor = characterRepository.existsByActorId(actorId);
+        System.out.println(isUsedAsDabber);
+        System.out.println(isUsedAsActor);
+        if (!isUsedAsDabber && !isUsedAsActor) {
+            actorRepository.deleteById(actorId);
+        }
     }
-    // Přidáme metodu findById
+
     public Actor findById(int id) {
         return actorRepository.findById(id).orElse(null);
     }

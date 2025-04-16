@@ -6,6 +6,7 @@ import com.example.backendspring.model.User;
 import com.example.backendspring.repository.UserRepository;
 import com.example.backendspring.service.OtpService;
 import com.example.backendspring.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,7 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Operation(summary = "Gets user info", description = "Gets user info. Can be used by any logged in user.")
     @GetMapping("/user-info")
     public ResponseEntity<Map<String, Object>> getUserInfo(HttpServletRequest request, HttpServletResponse response) {
         String token = jwtTokenProvider.getTokenFromCookies(request);
@@ -61,10 +63,11 @@ public class UserController {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(errorResponse);
         }
     }
+
+    @Operation(summary = "Gets user info for profile page", description = "Gets user info for profile page (review added count, character added count). Can be used by any logged in user.")
     @GetMapping("/profile")
     public ResponseEntity<Map<String, Object>> getProfile(HttpServletRequest request) {
         String token = jwtTokenProvider.getTokenFromCookies(request);
-System.out.println("zdeee");
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Integer userId = jwtTokenProvider.getUserIdFromToken(token);
             Map<String, Object> userInfo = userService.getUserProfile(userId);
@@ -75,11 +78,15 @@ System.out.println("zdeee");
         errorResponse.put("error", "Unauthorized");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
+
+    @Operation(summary = "Gets all users", description = "Gets all users - for dashboard. Can be used by users with role 3+")
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('ROLE_4')")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+    @Operation(summary = "Update user role", description = "Update user's role - can be used by users with role 3+. User can only update user to a role of his lvl -1 (user lvl3 can only upgrade to lvl2)")
     @PutMapping("/{id}/role")
     @PreAuthorize("hasAnyAuthority('ROLE_4', 'ROLE_3')")
     public ResponseEntity<String> updateUserRole(@PathVariable int id, @RequestParam int roleId) {
@@ -88,6 +95,8 @@ System.out.println("zdeee");
         userService.updateUserRole(id, role);
         return ResponseEntity.ok("Role uživatele byla úspěšně aktualizována.");
     }
+
+    @Operation(summary = "Delete user", description = "Deletes user. Can be used by user with role 3+. Cant delete users with same or higher role")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_4', 'ROLE_3')")
     public ResponseEntity<String> deleteUser(@PathVariable int id) {
@@ -95,6 +104,7 @@ System.out.println("zdeee");
         return ResponseEntity.ok("Uživatel byl úspěšně smazán.");
     }
 
+    @Operation(summary = "Sends otp", description = "Sends otp for registration. Can be used by anyon.")
     @PostMapping("/send-otp")
     public ResponseEntity<String> sendOtp(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -110,6 +120,7 @@ System.out.println("zdeee");
         }
     }
 
+    @Operation(summary = "Register", description = "Make a new account. Can be used by anyone.")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> request) {
         String username = request.get("username");
@@ -139,6 +150,7 @@ System.out.println("zdeee");
         return ResponseEntity.ok("Registrace proběhla. Zkontroluj e-mail a zadej OTP kód.");
     }
 
+    @Operation(summary = "Verify otp", description = "Verifies OTP token for registration / password change.")
     @PostMapping("/verify-otp")
     public ResponseEntity<String> verifyOtp(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -158,6 +170,7 @@ System.out.println("zdeee");
 
         return ResponseEntity.ok("Účet ověřen. Můžeš se přihlásit.");
     }
+    @Operation(summary = "Resend OTP", description = "Resends otp token.")
     @PostMapping("/resend-otp")
     public ResponseEntity<?> resendOtp(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -165,19 +178,18 @@ System.out.println("zdeee");
         return ResponseEntity.ok(Map.of("message", "Ověřovací kód byl znovu odeslán"));
     }
 
+    @Operation(summary = "Change password", description = "Changes your password.")
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request
     ) {
-        System.out.println("TADYY SOOM");
         String token = jwtTokenProvider.getTokenFromCookies(request);
         if (token == null || !jwtTokenProvider.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Neautorizovaný přístup.");
         }
 
         int userId = jwtTokenProvider.getUserIdFromToken(token);
-        System.out.println("TADYY SOOM2");
 
         String oldPassword = requestBody.get("oldPassword");
         String newPassword = requestBody.get("newPassword");

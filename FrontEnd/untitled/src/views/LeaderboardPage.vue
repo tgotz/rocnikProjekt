@@ -23,7 +23,7 @@
               {{ character.name }}
             </router-link>
           </td>
-          <td class="d-none d-lg-table-cell">{{ character.movies[0].nameMovie }}</td>
+          <td class="d-none d-lg-table-cell">{{ character.movies }}</td>
           <td class="d-none d-lg-table-cell">
             {{
               character.actorName && character.dabberName

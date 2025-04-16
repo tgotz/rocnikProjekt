@@ -101,9 +101,8 @@ export default {
     async deleteCharacter(id) {
       if (confirm("Opravdu chcete smazat tuto postavu?")) {
         try {
-          await axios.post(
+          await axios.delete(
               `http://localhost:8080/api/character/delete-character/${id}`,
-              {},
               { withCredentials: true }
           );
           // updating list of characters

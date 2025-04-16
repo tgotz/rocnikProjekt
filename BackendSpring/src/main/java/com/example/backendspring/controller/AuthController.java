@@ -5,6 +5,7 @@ import com.example.backendspring.dto.AuthResponse;
 import com.example.backendspring.model.User;
 import com.example.backendspring.repository.UserRepository;
 import com.example.backendspring.config.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
@@ -35,13 +36,14 @@ public class AuthController {
         this.userDetailsService = userDetailsService;
     }
 
+    @Operation(summary = "Logs user in.", description = "Logs user in. Can be used from log in page. Also checks if user has verified his email.")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
         try {
-            // ✅ Autentizace
+            // authentification
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
-            // ✅ Načtení uživatele z DB
+            // Getting user from DB
             Optional<User> userOpt = userRepository.findByUsername(authRequest.getUsername());
             if (userOpt.isEmpty()) {
                 return ResponseEntity.status(401).body("Uživatel neexistuje");
@@ -49,9 +51,8 @@ public class AuthController {
 
             User user = userOpt.get();
 
-            // ✅ ⚠️ NOVĚ: kontrola, zda je ověřený
+            // Did user verify his email?
             if (!user.isVerified()) {
-                // Volitelně můžeš poslat i email zpět, aby si ho frontend mohl předdat
                 return ResponseEntity.status(403).body(Map.of(
                         "error", "NOT_VERIFIED",
                         "message", "Účet není ověřený",
@@ -62,32 +63,33 @@ public class AuthController {
             }
 
 
-            // ✅ Generování tokenu
+            // generating token
             String token = jwtTokenProvider.generateToken(user);
             Cookie jwtCookie = new Cookie("token", token);
-            jwtCookie.setHttpOnly(true); // ✅ Ochrana před JavaScript útoky
-            jwtCookie.setSecure(false);  // ✅ Nastav `true`, pokud používáš HTTPS
-            jwtCookie.setPath("/");      // ✅ Zajištění, že cookie je dostupná v celém API
-            jwtCookie.setMaxAge(3600);   // ✅ Platnost 1 hodina
+            jwtCookie.setHttpOnly(true); //
+            jwtCookie.setSecure(false);  // set true if https
+            jwtCookie.setPath("/");      //
+            jwtCookie.setMaxAge(3600);   // 1 hour expiricy
 
-            response.addCookie(jwtCookie); // ✅ Odeslání cookie klientovi
+            response.addCookie(jwtCookie); //
 
-                    // ✅ Vrácení odpovědi
+
             return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getRole().getId(), user.getId()));
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body("Špatné přihlašovací údaje");
         }
     }
+    @Operation(summary = "Logs user out.", description = "Logs out user. Can be used from header - user details.")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         System.out.println("odhlašuju");
-        // ✅ Vytvoříme nový cookie s prázdnou hodnotou a okamžitou expirací
+        // Making a new cookie with no value
         Cookie cookie = new Cookie("token", "");
-        cookie.setMaxAge(0); // ⏳ Okamžitě expiruje
+        cookie.setMaxAge(0); // instant expiry
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // ✅ Použij `true`, pokud používáš HTTPS
-        cookie.setPath("/"); // 🌍 Globální cookie pro všechny endpointy
+        cookie.setSecure(false); // set true if https
+        cookie.setPath("/");
 
         response.addCookie(cookie);
 

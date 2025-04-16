@@ -3,6 +3,7 @@ package com.example.backendspring.controller;
 import com.example.backendspring.config.JwtTokenProvider;
 import com.example.backendspring.model.Review;
 import com.example.backendspring.service.ReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class ReviewController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Operation(summary = "Add a reivew", description = "Adds a reivew. Can be used by all logged in users.")
     @PostMapping("/add")
     public ResponseEntity<String> addReview(@RequestBody Review review) {
         try {
@@ -29,6 +31,7 @@ public class ReviewController {
             return ResponseEntity.badRequest().body("{\"status\": \"error\", \"message\": \"Chyba při přidání recenze!\"}");
         }
     }
+    @Operation(summary = "Delete review.", description = "Deletes review. Can be used by review author or users with role 3+")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteReview(@PathVariable int id, HttpServletRequest request) {
         String token = jwtTokenProvider.getTokenFromCookies(request);

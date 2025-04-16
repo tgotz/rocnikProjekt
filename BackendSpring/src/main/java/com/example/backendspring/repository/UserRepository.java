@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    // Najde uživatele podle jména
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     Optional<User> findById(int id);
 
+    //find all users details for user detail page
     @Query(value = """
     SELECT u.id, u.username, u.email, u.role_id, u.registrationDate, roles.role_name, 
            COUNT(DISTINCT c.id) AS characterCount,

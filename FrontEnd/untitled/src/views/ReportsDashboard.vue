@@ -56,7 +56,7 @@
                 class="btn btn-sm btn-success ms-2"
                 @click="resolveAll(group)"
             >
-              ✅ Vyřešit vše
+              Vyřešit vše
             </button>
           </div>
         </div>
@@ -74,14 +74,14 @@
           </p>
           </div>
           <ul>
-            <li v-for="(report, rIndex) in group.reports" :key="rIndex">
+            <li  class="pb-1" v-for="(report, rIndex) in group.reports" :key="rIndex">
               {{ formatDate(report.dateReported) }} — {{ report.reportedBy.username }}:
               <em>{{ report.description }}</em>
               <button
                   class="btn btn-sm btn-outline-success ms-2"
                   @click="resolveSingle(report.id)"
               >
-                ✅ Vyřešit
+                Vyřešit
               </button>
             </li>
           </ul>

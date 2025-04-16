@@ -7,6 +7,7 @@ import com.example.backendspring.service.CharacterService;
 import com.example.backendspring.service.QuoteService;
 import com.example.backendspring.service.ReviewService;
 import com.example.backendspring.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,8 @@ public class CharacterController {
         this.userService = userService;
     }
 
+
+    @Operation(summary = "Gets all characters", description = "Gets all approved characters. Is used  for homepage and character dashboard.")
     @GetMapping
     public ResponseEntity<List<Character>> getAllCharacters() {
         List<Character> characters = characterService.getCharacters();
@@ -43,6 +46,7 @@ public class CharacterController {
     }
 
 
+    @Operation(summary = "Get character details", description = "Outputs all character details. Is used for character detail page.")
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getCharacterDetail(@PathVariable int id) {
         Map<String, Object> responseData = new HashMap<>();
@@ -68,6 +72,7 @@ public class CharacterController {
         }
     }
 
+    @Operation(summary = "Add new character", description = "Adds new characters. If user is role 2+ auto approves the character, otherwise character needs  to get approved to appear on website.")
     @PostMapping(value = "/add", consumes = "multipart/form-data")
     public ResponseEntity<Map<String, String>> addCharacter(
             @RequestParam("name") String name,
@@ -84,13 +89,12 @@ public class CharacterController {
             HttpServletRequest request
     ) {
         try {
-            System.out.println("Rozeskávam");
-            // 🎬 Rozsekneme filmy a hlášky
+            // getting List from string - every new line is a new movie
             List<String> movieNames = Arrays.stream(movies.split("\\r?\\n"))
                     .map(String::trim)
                     .filter(s -> !s.isEmpty())
                     .toList();
-
+            // same for quotes
             List<String> quoteList = (quotes != null && !quotes.isEmpty())
                     ? Arrays.stream(quotes.split("\\r?\\n"))
                     .map(String::trim)
@@ -98,7 +102,7 @@ public class CharacterController {
                     .toList()
                     : List.of();
 
-            // 🔥 Vytvoříme postavu
+            // making new character
             Character character = new Character();
             character.setName(name);
             character.setType(type);
@@ -124,15 +128,14 @@ public class CharacterController {
                 moviesList.add(movie);
             }
             character.setMovies(moviesList);
-            // 🔥 Posíláme do service, kde přidáme filmy a hlášky
+            // adding user who created the character
             String token = jwtTokenProvider.getTokenFromCookies(request);
-            System.out.println(token);
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 int userId = jwtTokenProvider.getUserIdFromToken(token);
                 User user = userService.getUserById(userId);
                 character.setAddedBy(user);
+                // if user is lvl 2 or more - auto verify the character
                 if(user.getRole().getId() >= 2){
-                    System.out.println("skibidi");
                     character.setApproved(true);
                     character.setApprovedBy(user);
                 }
@@ -152,6 +155,7 @@ public class CharacterController {
     }
 
 
+    @Operation(summary = "Approving character", description = "Approving character. Can only be done my users with role 2+")
     @GetMapping("/approve")
     @PreAuthorize("hasAuthority('ROLE_MODERATOR')")
     public ResponseEntity<List<Map<String, Object>>> getUnapprovedCharacters() {
@@ -159,18 +163,27 @@ public class CharacterController {
         return ResponseEntity.ok(characters);
     }
 
-    @PostMapping("/delete-character/{id}")
+    @Operation(summary = "Deleting character", description = "Deleting character. Can only be done by people with role 2+")
+    @DeleteMapping("/delete-character/{id}" )
     @PreAuthorize("hasAnyAuthority('ROLE_2', 'ROLE_3', 'ROLE_4')")
-    public ResponseEntity<?> deleteCharacter(@PathVariable int id) {
+    public ResponseEntity<?> deleteCharacter(@PathVariable int id, HttpServletRequest request) {
         try {
-            characterService.deleteCharacter(id);
-            return ResponseEntity.ok().body("{\"message\": \"Character deleted successfully\"}");
+            String token = jwtTokenProvider.getTokenFromCookies(request);
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                int userId = jwtTokenProvider.getUserIdFromToken(token);
+                User user = userService.getUserById(userId);
+                characterService.deleteCharacter(id, user);
+                return ResponseEntity.ok().body("{\"message\": \"Character deleted successfully\"}");
+            }else{
+                return ResponseEntity.status(500).body("{\"error\": \"Failed to delete character due to insufficient role\"}");
+            }
         } catch (Exception e) {
             System.out.println(e);
-            return ResponseEntity.status(500).body("{\"error\": \"Failed to delete character\"}");
+            return ResponseEntity.status(500).body("{\"error\": \"Failed to delete character.0\"}");
         }
     }
 
+    @Operation(summary = "Approve character", description = "Approving a character. Can be used by users with role 2+")
     @PostMapping("/approve-character")
     @PreAuthorize("hasAnyAuthority('ROLE_2', 'ROLE_3', 'ROLE_4')") // ✅ Přístup pouze pro moderátory+
     public ResponseEntity<?> approveCharacter(@RequestBody Map<String, Object> requestBody) {
@@ -190,6 +203,7 @@ public class CharacterController {
             return ResponseEntity.internalServerError().body("{\"error\":\"An error occurred while approving the character.\"}");
         }
     }
+    @Operation(summary = "Updating a character", description = "Updates a characters, its movies, quotes, actors etc.")
     @PostMapping("/update-character")
     @PreAuthorize("hasAnyAuthority('ROLE_3', 'ROLE_4')") // 🔐 Role 3+
 
@@ -263,6 +277,7 @@ public class CharacterController {
                     .body("{\"error\":\"An error occurred while updating the character\"}");
         }
     }
+    @Operation(summary = "Dashboard data", description = "Gets data for character dashboard. Can be used by users with role 3+.")
     @GetMapping("/dashboard")
     @PreAuthorize("hasAnyAuthority('ROLE_3', 'ROLE_4')") // 🔐 Role 3+
     public ResponseEntity<List<Character>> getDashboardData() {
@@ -270,6 +285,7 @@ public class CharacterController {
         return ResponseEntity.ok(characterList);
     }
 
+    @Operation(summary = "Gets similiar characters", description = "Gets characters from the same film as input character. Is used in You might like section in character detail.")
     @GetMapping("/{id}/similar")
     public List<Character> getSimilarCharacters(@PathVariable int id) {
         return characterService.getSimilarCharacters(id);

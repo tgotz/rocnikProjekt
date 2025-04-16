@@ -13,8 +13,8 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;  // Primární klíč
+    private int id;
 
-    @Column(name = "name_movie", nullable = false, unique = true)  // ✅ Opravený název sloupce
+    @Column(name = "name_movie", nullable = false, unique = true)
     private String nameMovie;
 }

@@ -14,18 +14,16 @@ public class MovieService {
     @Autowired
     private MovieRepository movieRepository;
 
-    // Hledání filmů podle názvu
     public List<Movie> findMovieNames(String input) {
         return movieRepository.findByNameMovieContaining(input);
     }
 
-    // Vrátí ID filmu podle názvu
     public int getMovieIdByName(String filmName) {
         Optional<Movie> film = movieRepository.findByNameMovie(filmName);
         return film.map(Movie::getId).orElse(-1);
     }
 
-    // Vloží film, pokud neexistuje, a vrátí jeho ID
+    // inserts film - if it doesn't already exists.  Returns it's id
     public int insertMovie(String filmName) {
         Optional<Movie> existingFilm = movieRepository.findByNameMovie(filmName);
         if (existingFilm.isPresent()) {
@@ -38,7 +36,7 @@ public class MovieService {
         return newMovie.getId();
     }
 
-    // Smaže film, pokud není vázán na žádnou postavu
+    // deletes film if not used by any characters
     public void deleteMovieIfNotUsed(int filmId) {
         movieRepository.deleteIfNotUsed(filmId);
     }

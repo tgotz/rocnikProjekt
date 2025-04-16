@@ -29,7 +29,7 @@ public class CharacterService {
     @Autowired
     private CharacterMovieService characterMovieService;
 
-    // 📌 Přidání nové postavy (bez mazání filmů/citátů)
+    // adding a new character
     public Map<String, String> addCharacter(Character character, List<String> quotes) {
         try {
             int actorId = (character.getActor() != null) ?
@@ -71,7 +71,6 @@ public class CharacterService {
         }
     }
 
-    // 📌 Aktualizace postavy (bez změny obrázku a addedBy)
     public void updateCharacter(Character character, User user, List<String> quotes) {
         // ✅ Získáme původní postavu z databáze, aby byl zachován `picture` a `addedBy`
         Character existingCharacter = characterRepository.findById(character.getId())
@@ -136,17 +135,16 @@ public class CharacterService {
     }
 
 
-    // 📌 Vrátí detail postavy
     public Character getCharacterDetail(int id) {
         return characterRepository.findById(id).orElse(null);
     }
 
-    // 📌 Vrátí všechny schválené postavy
+    // gets all approved character
     public List<Character> getCharacters() {
         return characterRepository.findByApprovedTrue();
     }
 
-    // 📌 Vrátí všechny neschválené postavy
+    // gets all unapproved characters
     public List<Map<String, Object>> getUnapprovedCharactersWithQuotes() {
         List<Character> characters = characterRepository.findByApprovedFalse(); // 🔥 Získáme neschválené postavy
 
@@ -173,7 +171,7 @@ public class CharacterService {
 
 }
 
-    // 📌 Schválení postavy
+
     public void approveCharacter(int characterId, int userId) {
         Character character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new RuntimeException("Character not found"));
@@ -187,11 +185,19 @@ public class CharacterService {
     }
 
 
-    // 📌 Smazání postavy a kontrola vazeb na herce a filmy
-    public void deleteCharacter(int id) {
+    // Deletes character and its quotes + deletes actor and film if not used
+    public void deleteCharacter(int id, User user) {
         Character character = characterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Postava nenalezena"));
-        System.out.println("zde-1");
+
+        // if character is approved - cannot get deleted by users with role 2 or less
+        if(character.isApproved()){
+            if(user.getRole().getId() <= 2){
+                throw new RuntimeException("Nemáte dostatečné oprávnění");
+            }
+        }
+
+
         quoteService.deleteQuotes(character);
         int actorId = 0;
         if(character.getActor() != null) {
@@ -203,7 +209,6 @@ public class CharacterService {
         }
         List<Movie> movies = new ArrayList<>(character.getMovies());
 
-        System.out.println("zde");
 
         characterRepository.deleteById(id);
 
@@ -213,14 +218,13 @@ public class CharacterService {
         if(dabberId != 0){
             actorService.deleteActorIfNotUsed(dabberId);
         }
-System.out.println("zde1");
-        System.out.println(movies.size());
         for (Movie movie : movies) {
-            System.out.println(movie.getId());
             movieService.deleteMovieIfNotUsed(movie.getId());
         }
     }
 
+
+    // for leaderboards
     public List<CharacterLeaderboardDTO> getCharactersBySort(int sort) {
         Sort sortOption;
 
@@ -242,23 +246,21 @@ System.out.println("zde1");
         return characterRepository.findTopCharacters(pageable).getContent();
     }
 
+
+    //returns similiar chracters (max 4) - characters from same film
     public List<Character> getSimilarCharacters(int characterId) {
-        // Získáme detaily postavy podle ID
         Character character = characterRepository.findById(characterId)
                 .orElseThrow(() -> new RuntimeException("Postava s tímto ID nebyla nalezena"));
 
-        // Získáme seznam filmů, ve kterých je postava
         List<Movie> characterMovies = character.getMovies();
-        // Pokud postava není v žádném filmu, vracíme prázdný seznam
         if (characterMovies.isEmpty()) {
-            return List.of(); // nebo můžeš vrátit nějakou informaci, že postava nemá žádný film
+            return List.of();
         }
 
-        // Najdeme všechny postavy, které se vyskytují v těchto filmech, kromě aktuální postavy
         List<Character> charactersInSameMovies = characterRepository.findCharactersByMovies(characterMovies, characterId);
-        // Pokud chceme náhodně vybrat 3-4 postavy, použijeme random výběr
+
         Random random = new Random();
-        int limit = Math.min(4, charactersInSameMovies.size()); // Ne více než 4 postavy
+        int limit = Math.min(4, charactersInSameMovies.size());
         List<Character> similarCharacters = random.ints(0, charactersInSameMovies.size())
                 .distinct()
                 .limit(limit)

@@ -19,7 +19,7 @@ public class Character {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;  // POZOR! Místo id máš idCharacter
+    private int id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -69,8 +69,8 @@ public class Character {
     @ManyToMany
     @JoinTable(
             name = "characters_movies",
-            joinColumns = @JoinColumn(name = "id_character"),  // Opraveno
-            inverseJoinColumns = @JoinColumn(name = "id_movie")  // Opraveno
+            joinColumns = @JoinColumn(name = "id_character"),
+            inverseJoinColumns = @JoinColumn(name = "id_movie")
     )
 
     private List<Movie> movies = new ArrayList<>();

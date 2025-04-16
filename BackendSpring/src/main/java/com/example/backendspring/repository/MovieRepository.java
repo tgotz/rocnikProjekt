@@ -11,13 +11,13 @@ import java.util.Optional;
 
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
-    // 🔹 Najde filmy obsahující určitý text (vyhledávání podle části názvu)
+    // finds similiar moovies by part of name
     List<Movie> findByNameMovieContaining(String input);
 
-    // 🔹 Najde film podle přesného názvu
+
     Optional<Movie> findByNameMovie(String filmName);
 
-    // 🔹 Smaže film, pokud není přiřazen žádné postavě
+    // deletes film if no character uses it
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM movies WHERE id = :movieId " +

@@ -92,6 +92,8 @@ export default {
     const currentIndex = ref(0);
     const userStore = useUserStore();
 
+
+
     // fetching all characters
     const fetchCharacters = async () => {
       try {
@@ -156,9 +158,8 @@ export default {
     const rejectCharacter = async (id) => {
       console.log(id)
       try {
-        await axios.post(
+        await axios.delete(
             `http://localhost:8080/api/character/delete-character/${id}`,
-            {},
             { withCredentials: true }
         );
         characters.value.splice(currentIndex.value, 1);

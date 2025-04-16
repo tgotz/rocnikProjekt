@@ -20,7 +20,6 @@ public class CharacterMovie {
     @JoinColumn(name = "id_movie")  // Opraveno!
     private Movie movie;
 
-    // ✅ Konstruktor
     public CharacterMovie() {}
 
     public CharacterMovie(Character character, Movie movie) {
@@ -29,7 +28,6 @@ public class CharacterMovie {
         this.id = new CharacterMovieId(character.getId(), movie.getId());  // Oprava
     }
 
-    // ✅ Gettery
     public Character getCharacter() {
         return character;
     }

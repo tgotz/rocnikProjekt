@@ -45,31 +45,31 @@ public class JwtTokenProvider {
 
         public boolean validateToken(String token) {
             try {
-                // Pokud nemůžeme získat uživatelské jméno z tokenu, token není validní
+                // getting username from tokn
                 String username = getUsernameFromToken(token);
                 if (username == null) {
                     return false;
                 }
 
-                // Pokud je token expirovaný, není platný
+                // is token expired?
                 if (isTokenExpired(token)) {
                     return false;
                 }
 
-                // Pokud všechny podmínky prošly, token je validní
+                // token is valid
                 return true;
             } catch (SignatureException e) {
-                System.out.println("❌ Token není podepsán správně: " + e.getMessage());
+                System.out.println("Token není podepsán správně: " + e.getMessage());
             } catch (ExpiredJwtException e) {
-                System.out.println("❌ Token vypršel: " + e.getMessage());
+                System.out.println("Token vypršel: " + e.getMessage());
             } catch (MalformedJwtException e) {
-                System.out.println("❌ Token je poškozený: " + e.getMessage());
+                System.out.println("Token je poškozený: " + e.getMessage());
             } catch (UnsupportedJwtException e) {
-                System.out.println("❌ Token není podporován: " + e.getMessage());
+                System.out.println("Token není podporován: " + e.getMessage());
             } catch (IllegalArgumentException e) {
-                System.out.println("❌ Token je prázdný nebo neplatný: " + e.getMessage());
+                System.out.println("Token je prázdný nebo neplatný: " + e.getMessage());
             }
-            return false; // Pokud se dostaneme sem, token není validní
+            return false; // token isn't valid
         }
 
     public String getUsernameFromToken(String token) {

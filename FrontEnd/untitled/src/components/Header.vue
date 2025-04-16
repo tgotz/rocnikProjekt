@@ -71,8 +71,11 @@
                   <li v-if="user?.role && user.role >= 3">
                     <router-link class="dropdown-item" to="/dashboard">Správa postav</router-link>
                   </li>
-                  <li v-if="user?.role && user.role >= 4">
+                  <li v-if="user?.role && user.role >= 3">
                     <router-link class="dropdown-item" to="/manage-users">Správa uživatelů</router-link>
+                  </li>
+                  <li v-if="user?.role && user.role >= 3">
+                    <router-link class="dropdown-item" to="/reports-dashboard">Správa nahlášení</router-link>
                   </li>
                 </ul>
               </li>

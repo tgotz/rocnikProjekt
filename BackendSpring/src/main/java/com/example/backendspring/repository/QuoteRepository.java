@@ -8,10 +8,9 @@ import java.util.List;
 
 public interface QuoteRepository extends JpaRepository<Quote, Integer> {
 
-    // Najde všechny citáty dané postavy
     List<Quote> findByCharacter(Character character);
 
-    // Smaže všechny citáty postavy
+    //deletes all quotes of a character
     @Transactional
     void deleteByCharacter(Character character);
 }

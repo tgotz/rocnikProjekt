@@ -14,24 +14,21 @@ import java.util.Optional;
 
 public interface CharacterRepository extends JpaRepository<Character, Integer> {
 
-    // Najde postavu podle ID
     Optional<Character> findById(int id);
 
-    // Najde všechny schválené postavy
     List<Character> findByApprovedTrue();
 
-    // Najde všechny neschválené postavy
     List<Character> findByApprovedFalse();
 
-    // Smaže postavu podle ID
     @Transactional
     void deleteById(int id);
 
+    //getting characters for certain leaderboards - gets its average ratings etc
     @Query(value = """
         SELECT c.id AS id, c.name AS name, c.nickname AS nickname, 
-               d.name AS dabberName, a.name AS actorName, 
-               GROUP_CONCAT(m.name_movie SEPARATOR ', ') AS movies,
-               AVG(reviews.overall_rating) AS overall, 
+               d.name AS dabberName, a.name AS actorName,
+                MIN(m.name_movie) AS movies,
+                AVG(reviews.overall_rating) AS overall, 
                AVG(reviews.attractiveness_rating) AS attractiveness
         FROM characters c
         LEFT JOIN actors d ON d.id = c.id_dabber
@@ -48,5 +45,9 @@ public interface CharacterRepository extends JpaRepository<Character, Integer> {
             @Param("movies") List<Movie> movies,
             @Param("characterId") int characterId
     );
+
+    boolean existsByDabberId(int dabberId);
+    boolean existsByActorId(int actorId);
+
 
 }

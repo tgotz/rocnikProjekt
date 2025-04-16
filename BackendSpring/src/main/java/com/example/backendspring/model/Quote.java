@@ -22,6 +22,6 @@ public class Quote {
     private String textQuote;
 
     @ManyToOne
-    @JoinColumn(name = "id_character", referencedColumnName = "id")  // Odkazuje na sloupec id v Character
+    @JoinColumn(name = "id_character", referencedColumnName = "id")
     private Character character;
 }

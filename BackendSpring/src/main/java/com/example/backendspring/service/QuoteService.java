@@ -14,7 +14,7 @@ public class QuoteService {
     @Autowired
     private QuoteRepository quoteRepository;
 
-    // Vloží citát do databáze
+
     public void insertQuote(String textQuote, Character character) {
         Quote quote = new Quote();
         quote.setTextQuote(textQuote);
@@ -22,12 +22,10 @@ public class QuoteService {
         quoteRepository.save(quote);
     }
 
-    // Získá všechny citáty dané postavy
     public List<Quote> getQuotes(Character character) {
         return quoteRepository.findByCharacter(character);
     }
 
-    // Smaže všechny citáty postavy
     public void deleteQuotes(Character character) {
         quoteRepository.deleteByCharacter(character);
     }

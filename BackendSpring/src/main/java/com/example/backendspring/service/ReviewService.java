@@ -18,16 +18,15 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    // Vrátí všechny recenze dané postavy
     public List<Review> getReviews(Character character) {
         return reviewRepository.findByCharacter(character);
     }
 
-    // Vloží recenzi do databáze
     public void insertReview(Review review) {
         reviewRepository.save(review);
     }
 
+    //deletes review + checks if user is author of the review or is role 3+
     public void deleteReview(int reviewId, int currentUserId, int currentUserRole) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Recenze nenalezena"));

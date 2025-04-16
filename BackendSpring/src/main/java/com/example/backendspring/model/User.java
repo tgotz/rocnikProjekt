@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = "role")
-@ToString(exclude = "password")  // Zabrání úniku hesla při logování
+@ToString(exclude = "password")
 public class User {
 
     @Id
@@ -31,5 +31,5 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
-    private Role role;  // Nyní správně odkazuje na `Role` místo `int`
+    private Role role;
 }
