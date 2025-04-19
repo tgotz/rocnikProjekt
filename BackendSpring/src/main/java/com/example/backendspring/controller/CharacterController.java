@@ -185,7 +185,7 @@ public class CharacterController {
 
     @Operation(summary = "Approve character", description = "Approving a character. Can be used by users with role 2+")
     @PostMapping("/approve-character")
-    @PreAuthorize("hasAnyAuthority('ROLE_2', 'ROLE_3', 'ROLE_4')") // ✅ Přístup pouze pro moderátory+
+    @PreAuthorize("hasAnyAuthority('ROLE_2', 'ROLE_3', 'ROLE_4')")
     public ResponseEntity<?> approveCharacter(@RequestBody Map<String, Object> requestBody) {
 
         try {
@@ -205,8 +205,7 @@ public class CharacterController {
     }
     @Operation(summary = "Updating a character", description = "Updates a characters, its movies, quotes, actors etc.")
     @PostMapping("/update-character")
-    @PreAuthorize("hasAnyAuthority('ROLE_3', 'ROLE_4')") // 🔐 Role 3+
-
+    @PreAuthorize("hasAnyAuthority('ROLE_3', 'ROLE_4')")
     public ResponseEntity<?> updateCharacter(
             @RequestParam("id") int id,
             @RequestParam("name") String name,
@@ -281,7 +280,7 @@ public class CharacterController {
     @GetMapping("/dashboard")
     @PreAuthorize("hasAnyAuthority('ROLE_3', 'ROLE_4')") // 🔐 Role 3+
     public ResponseEntity<List<Character>> getDashboardData() {
-        List<Character> characterList = characterService.getCharacters();  // přes service/DAO
+        List<Character> characterList = characterService.getCharacters();
         return ResponseEntity.ok(characterList);
     }
 

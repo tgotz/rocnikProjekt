@@ -32,18 +32,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Povolení CORS
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) //
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/character", "/api/character/{id}", "/api/character/{id}/similar", "/api/character/add").permitAll()  // ✅ Veřejné endpointy
-                        .requestMatchers("/api/reviews/add").permitAll()  // ✅ Přidávání recenzí je veřejné
+                        .requestMatchers("/api/character", "/api/character/{id}", "/api/character/{id}/similar", "/api/character/add").permitAll()
+                        .requestMatchers("/api/reviews/add").hasAnyAuthority("ROLE_1", "ROLE_2", "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/leaderboard").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll() // Přihlášení a user-info jsou veřejné
+                        .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/users/profile", "/api/users/send-otp", "/api/users/change-password", "/api/reports/add").hasAnyAuthority("ROLE_1", "ROLE_2", "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/auth/logout", "/api/users/user-info", "api/users/register", "api/users/verify-otp", "api/users/resend-otp").permitAll()
-                        .requestMatchers("/api/character/approve").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4") // 🔒 Přístup jen pro moderátory+
-                        .requestMatchers("/api/character/delete-character/**").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4") // 🔥 Pouze ADMIN může mazat postavy
+                        .requestMatchers("/api/character/approve").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4")
+                        .requestMatchers("/api/character/delete-character/**").hasAnyAuthority("ROLE_2", "ROLE_3", "ROLE_4")
                         .requestMatchers( "/api/character/dashboard").hasAnyAuthority( "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/character/update-character").hasAnyAuthority( "ROLE_3", "ROLE_4")
                         .requestMatchers("/api/users", "api/users/{id}", "api/users/{id}/role").hasAnyAuthority("ROLE_3", "ROLE_4")

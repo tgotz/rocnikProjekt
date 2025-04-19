@@ -1,0 +1,1049 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /api/users/{id}/role:
+    put:
+      tags:
+        - user-controller
+      summary: Update user role
+      description: >-
+        Update user's role - can be used by users with role 3+. User can only
+        update user to a role of his lvl -1 (user lvl3 can only upgrade to lvl2)
+      operationId: updateUserRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: roleId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/reports/{id}/resolve:
+    put:
+      tags:
+        - report-controller
+      summary: Resolve a report.
+      description: >-
+        Resolves a report. Can be used by users with role 3+ from report
+        dashboard.
+      operationId: resolveReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: solvedById
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/users/verify-otp:
+    post:
+      tags:
+        - user-controller
+      summary: Verify otp
+      description: Verifies OTP token for registration / password change.
+      operationId: verifyOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/users/send-otp:
+    post:
+      tags:
+        - user-controller
+      summary: Sends otp
+      description: Sends otp for registration. Can be used by anyon.
+      operationId: sendOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/users/resend-otp:
+    post:
+      tags:
+        - user-controller
+      summary: Resend OTP
+      description: Resends otp token.
+      operationId: resendOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/users/register:
+    post:
+      tags:
+        - user-controller
+      summary: Register
+      description: Make a new account. Can be used by anyone.
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/users/change-password:
+    post:
+      tags:
+        - user-controller
+      summary: Change password
+      description: Changes your password.
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/reviews/add:
+    post:
+      tags:
+        - review-controller
+      summary: Add a reivew
+      description: Adds a reivew. Can be used by all logged in users.
+      operationId: addReview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/reports/resolve/review/{id}:
+    post:
+      tags:
+        - report-controller
+      summary: Resolve ALL reports of a review.
+      description: Resolves ALL reports of a review., can be used by user with role 3+
+      operationId: resolveReviewReports
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/reports/resolve/character/{id}:
+    post:
+      tags:
+        - report-controller
+      summary: Resolve ALL reports of a character.
+      description: Resolves ALL reports of a character., can be used by user with role 3+
+      operationId: resolveCharacterReports
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/reports/add:
+    post:
+      tags:
+        - report-controller
+      summary: Add report
+      description: Adds a new report. Can be used by any logged in user.
+      operationId: createReport
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Report'
+  /api/character/update-character:
+    post:
+      tags:
+        - character-controller
+      summary: Updating a character
+      description: Updates a characters, its movies, quotes, actors etc.
+      operationId: updateCharacter
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: gender
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: description
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: age
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: nickname
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: actor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: dabber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: movies
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: quotes
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/character/approve-character:
+    post:
+      tags:
+        - character-controller
+      summary: Approve character
+      description: Approving a character. Can be used by users with role 2+
+      operationId: approveCharacter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/character/add:
+    post:
+      tags:
+        - character-controller
+      summary: Add new character
+      description: >-
+        Adds new characters. If user is role 2+ auto approves the character,
+        otherwise character needs  to get approved to appear on website.
+      operationId: addCharacter
+      parameters:
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: gender
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: desc
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: age
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: nickname
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: actor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: dabber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: movies
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: quotes
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - picture
+              type: object
+              properties:
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /api/auth/logout:
+    post:
+      tags:
+        - auth-controller
+      summary: Logs user out.
+      description: Logs out user. Can be used from header - user details.
+      operationId: logout
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/auth/login:
+    post:
+      tags:
+        - auth-controller
+      summary: Logs user in.
+      description: >-
+        Logs user in. Can be used from log in page. Also checks if user has
+        verified his email.
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/users:
+    get:
+      tags:
+        - user-controller
+      summary: Gets all users
+      description: Gets all users - for dashboard. Can be used by users with role 3+
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /api/users/user-info:
+    get:
+      tags:
+        - user-controller
+      summary: Gets user info
+      description: Gets user info. Can be used by any logged in user.
+      operationId: getUserInfo
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /api/users/profile:
+    get:
+      tags:
+        - user-controller
+      summary: Gets user info for profile page
+      description: >-
+        Gets user info for profile page (review added count, character added
+        count). Can be used by any logged in user.
+      operationId: getProfile
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /api/reports:
+    get:
+      tags:
+        - report-controller
+      summary: Get all reports.
+      description: Gets all reports. Can be used by users with role 3+
+      operationId: getAllReports
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+  /api/reports/reviews:
+    get:
+      tags:
+        - report-controller
+      summary: Gets report of review.
+      description: >-
+        Gets all reviews that have any unresolved reports, gets their report
+        count, last report date etc. Can be used by users with role 3+
+      operationId: getReviewReports
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: object
+  /api/reports/review/{id}:
+    get:
+      tags:
+        - report-controller
+      summary: Gets all reports of a specific review
+      description: >-
+        Gets all unresolved reports of a specific review, can be used by user
+        with role 3+
+      operationId: getReviewReports_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+  /api/reports/characters:
+    get:
+      tags:
+        - report-controller
+      summary: Gets report of characters.
+      description: >-
+        Gets all characters that have any unresolved reports, gets their report
+        count, last report date etc. Can be used by users with role 3+
+      operationId: getCharacterReports
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: object
+  /api/reports/character/{id}:
+    get:
+      tags:
+        - report-controller
+      summary: Gets all reports of a specific character
+      description: >-
+        Gets all unresolved reports of a specific character, can be used by user
+        with role 3+
+      operationId: getCharacterReports_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+  /api/movies/search:
+    get:
+      tags:
+        - movie-controller
+      summary: Search movies based on query.
+      description: Finds movies that include input query. Used for autofill in forms.
+      operationId: searchMovies
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+  /api/leaderboard:
+    get:
+      tags:
+        - leaderboard-controller
+      summary: Gets leaderboard data.
+      description: Gets leaderboard data.
+      operationId: getLeaderboard
+      parameters:
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            default: overall DESC
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CharacterLeaderboardDTO'
+  /api/character:
+    get:
+      tags:
+        - character-controller
+      summary: Gets all characters
+      description: >-
+        Gets all approved characters. Is used  for homepage and character
+        dashboard.
+      operationId: getAllCharacters
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Character'
+  /api/character/{id}:
+    get:
+      tags:
+        - character-controller
+      summary: Get character details
+      description: Outputs all character details. Is used for character detail page.
+      operationId: getCharacterDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /api/character/{id}/similar:
+    get:
+      tags:
+        - character-controller
+      summary: Gets similiar characters
+      description: >-
+        Gets characters from the same film as input character. Is used in You
+        might like section in character detail.
+      operationId: getSimilarCharacters
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Character'
+  /api/character/dashboard:
+    get:
+      tags:
+        - character-controller
+      summary: Dashboard data
+      description: Gets data for character dashboard. Can be used by users with role 3+.
+      operationId: getDashboardData
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Character'
+  /api/character/approve:
+    get:
+      tags:
+        - character-controller
+      summary: Approving character
+      description: Approving character. Can only be done my users with role 2+
+      operationId: getUnapprovedCharacters
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    type: object
+  /api/actors/search:
+    get:
+      tags:
+        - actor-controller
+      summary: Get actors similiar to input
+      description: >-
+        Outputs all actors  that  include input. Is used for auto filling actors
+        in forms
+      operationId: searchActors
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Actor'
+  /api/users/{id}:
+    delete:
+      tags:
+        - user-controller
+      summary: Delete user
+      description: >-
+        Deletes user. Can be used by user with role 3+. Cant delete users with
+        same or higher role
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/reviews/{id}:
+    delete:
+      tags:
+        - review-controller
+      summary: Delete review.
+      description: Deletes review. Can be used by review author or users with role 3+
+      operationId: deleteReview
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/character/delete-character/{id}:
+    delete:
+      tags:
+        - character-controller
+      summary: Deleting character
+      description: Deleting character. Can only be done by people with role 2+
+      operationId: deleteCharacter
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+components:
+  schemas:
+    Actor:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    Character:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+        dateAdded:
+          type: string
+          format: date-time
+        type:
+          type: string
+        gender:
+          type: string
+        age:
+          type: integer
+          format: int32
+        nickname:
+          type: string
+        imageBytes:
+          type: array
+          items:
+            type: string
+            format: byte
+        approved:
+          type: boolean
+        actor:
+          $ref: '#/components/schemas/Actor'
+        dabber:
+          $ref: '#/components/schemas/Actor'
+        addedBy:
+          $ref: '#/components/schemas/User'
+        approvedBy:
+          $ref: '#/components/schemas/User'
+        movies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        nameMovie:
+          type: string
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        overallRating:
+          type: integer
+          format: int32
+        attractivenessRating:
+          type: integer
+          format: int32
+        dateAdded:
+          type: string
+          format: date-time
+        reviewText:
+          type: string
+        character:
+          $ref: '#/components/schemas/Character'
+        user:
+          $ref: '#/components/schemas/User'
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        roleName:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        verified:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/Role'
+    ReportRequestDTO:
+      type: object
+      properties:
+        description:
+          type: string
+        id_character:
+          type: integer
+          format: int32
+        id_review:
+          type: integer
+          format: int32
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        description:
+          type: string
+        solved:
+          type: boolean
+        character:
+          $ref: '#/components/schemas/Character'
+        review:
+          $ref: '#/components/schemas/Review'
+        reportedBy:
+          $ref: '#/components/schemas/User'
+        solvedBy:
+          $ref: '#/components/schemas/User'
+        dateReported:
+          type: string
+          format: date-time
+        dateResolved:
+          type: string
+          format: date-time
+    AuthRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    CharacterLeaderboardDTO:
+      type: object
+      properties:
+        overall:
+          type: number
+          format: double
+        dabberName:
+          type: string
+        attractiveness:
+          type: number
+          format: double
+        actorName:
+          type: string
+        name:
+          type: string
+        id:
+          type: integer
+          format: int32
+        movies:
+          type: string
+        nickname:
+          type: string
