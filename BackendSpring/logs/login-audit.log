@@ -1,0 +1,7 @@
+2025-05-03 15:54:55 INFO  - LOGIN SUCCESS: user=admin, ip=127.0.0.1
+2025-05-03 15:57:08 WARN  - LOGIN FAIL: user=ales, ip=127.0.0.1, reason=Špatné přihlašovací údaje
+2025-05-03 15:57:21 WARN  - LOGIN FAIL: user=uzivatel, ip=127.0.0.1, reason=Špatné přihlašovací údaje
+2025-05-03 15:57:36 WARN  - LOGIN FAIL: user=uzivatel, ip=127.0.0.1, reason=Špatné přihlašovací údaje
+2025-05-03 15:57:37 WARN  - LOGIN FAIL: user=uzivatel, ip=127.0.0.1, reason=Špatné přihlašovací údaje
+2025-05-03 15:57:38 WARN  - LOGIN FAIL: user=uzivatel, ip=127.0.0.1, reason=Špatné přihlašovací údaje
+2025-05-03 15:57:42 INFO  - LOGIN SUCCESS: user=uzivatel, ip=127.0.0.1

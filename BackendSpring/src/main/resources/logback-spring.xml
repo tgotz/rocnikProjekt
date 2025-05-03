@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+<logger name="login-audit" level="INFO" additivity="false">
+    <appender-ref ref="LOGIN_AUDIT"/>
+</logger>
+
+<appender name="LOGIN_AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/login-audit.log</file>
+    <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level - %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>logs/login-audit.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <maxHistory>30</maxHistory>
+    </rollingPolicy>
+</appender>
+</configuration>

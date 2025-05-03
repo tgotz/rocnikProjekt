@@ -205,7 +205,7 @@ export default {
 .bi-person-circle{
   text-shadow:none;
 }
-.dropdown-item{
+.dropdown-menu .dropdown-item{
   text-shadow:none;
 }
 </style>
