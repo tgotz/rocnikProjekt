@@ -197,3 +197,15 @@ export default {
   },
 };
 </script>
+<style>
+.navbar-nav li{
+  text-shadow: 0 0px 3px rgba(0,0,0,0.8);
+
+}
+.bi-person-circle{
+  text-shadow:none;
+}
+.dropdown-item{
+  text-shadow:none;
+}
+</style>

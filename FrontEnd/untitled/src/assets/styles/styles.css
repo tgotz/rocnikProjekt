@@ -125,7 +125,7 @@ body {
   }
   .outline-heading{
     -webkit-text-stroke:1px white;
-    color: rgba(29, 30, 42, .4);
+    color: rgba(29, 30, 42, .6);
     font-size: 3rem;
   }
   a{
