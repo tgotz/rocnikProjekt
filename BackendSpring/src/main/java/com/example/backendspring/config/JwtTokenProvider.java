@@ -45,7 +45,7 @@ public class JwtTokenProvider {
 
         public boolean validateToken(String token) {
             try {
-                // getting username from tokn
+                // getting username from token
                 String username = getUsernameFromToken(token);
                 if (username == null) {
                     return false;

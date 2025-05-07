@@ -72,7 +72,6 @@ public class CharacterService {
     }
 
     public void updateCharacter(Character character, User user, List<String> quotes) {
-        // ✅ Získáme původní postavu z databáze, aby byl zachován `picture` a `addedBy`
         Character existingCharacter = characterRepository.findById(character.getId())
                 .orElseThrow(() -> new RuntimeException("Postava nenalezena"));
 
@@ -93,28 +92,22 @@ public class CharacterService {
         character.setActor(actorService.findById(actorId));
         character.setDabber(actorService.findById(dabberId));
 
-        // ❌ Smazání filmů a hlášek (ponecháme pokud nemá být změněno)
         characterMovieService.deleteAssignedFilms(character.getId());
         quoteService.deleteQuotes(character);
 
-        // ✅ Nastavení správných hodnot (ponechání obrázku a addedBy)
         character.setActor(actorService.findById(actorId));
         character.setDabber(actorService.findById(dabberId));
 
-        // ✅ Zachování `addedBy` z existující postavy
         character.setAddedBy(existingCharacter.getAddedBy());
 
-        // ✅ Zachování `picture`, pokud nebyl poslán nový
         if (character.getImageBytes() == null || character.getImageBytes().length == 0) {
             character.setImageBytes(existingCharacter.getImageBytes());
         }
 
-        // ✅ Aktualizace schválení
         character.setApprovedBy(user);
         character.setApproved(true);
         character.setDateAdded(new Date());
 
-        // ✅ Aktualizace filmů (přiřazení existujících nebo vytvoření nových)
         for (Movie movie : character.getMovies()) {
             int movieId = movieService.getMovieId(movie.getNameMovie());
             if (movieId == -1) {
@@ -123,10 +116,8 @@ public class CharacterService {
             movie.setId(movieId);
         }
 
-        // ✅ Uložení aktualizované postavy
         Character updatedCharacter = characterRepository.save(character);
 
-        // ✅ Přidání nových hlášek
         for (String quote : quotes) {
             if (!quote.isEmpty()) {
                 quoteService.insertQuote(quote, updatedCharacter);
@@ -162,7 +153,6 @@ public class CharacterService {
             charData.put("description", character.getDescription());
             charData.put("image", character.getImageBytes());
 
-            // 🔥 Načteme quotes z QuoteService
             List<Quote> quotes = quoteService.getQuotes(character);
             charData.put("quotes", quotes);
 

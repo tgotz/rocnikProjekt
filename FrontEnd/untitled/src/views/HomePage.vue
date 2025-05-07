@@ -8,7 +8,7 @@
             :filters="filters"
             @filters-changed="onFiltersChanged"
         />      </div>
-      <div class="col-xl-9">
+      <div class="col-xl-9" id="database">
         <CharacterList :characters="filteredCharacters" />
       </div>
     </div>
@@ -99,26 +99,26 @@ export default {
     changePage(newPage) {
       if (newPage > 0 && newPage <= this.totalPages) {
         this.currentPage = newPage;
-        this.updateURL(); // Aktualizuj URL
-        this.filterCharacters(); // Aktualizuj filtrovaná data
+        this.updateURL();
+        this.filterCharacters();
       }
     },
 
     onFiltersChanged(newFilters) {
       this.filters = newFilters;
-      this.currentPage = 1; // Reset na první stránku
-      this.updateURL(); // Aktualizuj URL
-      this.filterCharacters(); // Aktualizuj filtrovaná data
+      this.currentPage = 1;
+      this.updateURL();
+      this.filterCharacters();
     },
 
     updateURL() {
       const query = {
         page: this.currentPage,
-        search: this.filters.search || undefined, // Odeber z URL, pokud je prázdné
+        search: this.filters.search || undefined,
         showCartoon: this.filters.showCartoon,
         showIRL: this.filters.showIRL,
         genders: this.filters.genders.join(','),
-        sortOrder: this.filters.sortOrder || undefined, // Odeber z URL, pokud je prázdné
+        sortOrder: this.filters.sortOrder || undefined,
       };
       this.$router.push({ query });
     },
