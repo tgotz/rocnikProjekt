@@ -54,7 +54,7 @@ export default {
     },
     async sendOtp() {
       try {
-        const response = await axios.post('/api/users/resend-otp', {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/resend-otp`, {
           email: this.email
         });
         this.message = response.data.message || 'Kód byl znovu odeslán';
@@ -64,7 +64,7 @@ export default {
     },
     async verifyOtp() {
       try {
-        const response = await axios.post('/api/users/verify-otp', {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/verify-otp`, {
           email: this.email,
           otpCode: this.otpCode
         });
@@ -77,7 +77,7 @@ export default {
     async loginAfterVerification() {
       const password = localStorage.getItem('tempPassword'); // Načteme heslo z localStorage
       try {
-        const response = await axios.post('/api/auth/login', {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
           username: this.username,
           password: password
         }, { withCredentials: true });
