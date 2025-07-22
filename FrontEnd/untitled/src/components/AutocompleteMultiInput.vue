@@ -59,7 +59,7 @@ const filterSuggestions = async () => {
   }
 
   try {
-    const response = await axios.get(`http://localhost:8080/api/movies/search?query=${encodeURIComponent(currentLine)}`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/movies/search?query=${encodeURIComponent(currentLine)}`, {
       withCredentials: true,
     });
     filteredSuggestions.value = response.data;

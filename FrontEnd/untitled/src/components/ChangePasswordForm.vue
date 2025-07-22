@@ -61,7 +61,7 @@ const startCountdown = (duration = 30) => {
 const requestOtp = async () => {
   isButtonDisabled.value = true;
   try {
-    await axios.post("http://localhost:8080/api/users/send-otp", {
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/users/send-otp`, {
       email: props.user.email
     }, { withCredentials: true });
 
@@ -76,7 +76,7 @@ const requestOtp = async () => {
 
 const submitChange = async () => {
   try {
-    await axios.post("http://localhost:8080/api/users/change-password", {
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/users/change-password`, {
       oldPassword: oldPassword.value,
       newPassword: newPassword.value,
       otp: otp.value,

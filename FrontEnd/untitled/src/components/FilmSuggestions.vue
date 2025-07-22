@@ -39,7 +39,7 @@ export default {
     async fetchSuggestions() {
       if (this.query.length < 3) return;
       try {
-        const response = await fetch(`http://localhost:8080/FilmSuggestions?q=${this.query}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/FilmSuggestions?q=${this.query}`);
         this.suggestions = await response.json();
       } catch (error) {
         console.error('Chyba při načítání návrhů:', error);

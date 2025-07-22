@@ -114,7 +114,7 @@
             <label for="characterNickname">Herec</label>
             <AutocompleteInput
                 v-model="formData.actor"
-                :search-url="'http://localhost:8080/api/actors/search'"
+                :search-url="`${apiUrl}/api/actors/search`"
                 placeholder="Zadejte jméno herce/herečky"
                 :required="false"
             />
@@ -125,7 +125,7 @@
             <label for="characterNickname">Dabér</label>
             <AutocompleteInput
                 v-model="formData.dabber"
-                :search-url="'http://localhost:8080/api/actors/search'"
+                :search-url="`${apiUrl}/api/actors/search`"
                 placeholder="Zadejte jméno dabéra/dabérky"
                 :required="false"
             />
@@ -155,12 +155,10 @@
   </div>
 </template>
 
----
 
-### 2. **Přidejte JavaScript pro zpracování dat**
-
-```javascript
 <script>
+const apiUrl = import.meta.env.VITE_API_URL;
+
 import axios from "axios";
 import AutocompleteInput from "@/components/AutocompleteInput.vue";
 import AutocompleteMultiInput from "@/components/AutocompleteMultiInput.vue";
@@ -196,7 +194,7 @@ export default {
         console.log(this.formData.movies)
         console.log(form)
         const response = await axios.post(
-            "http://localhost:8080/api/character/add",
+            `${import.meta.env.VITE_API_URL}/api/character/add`,
             form,
             {
               headers: {

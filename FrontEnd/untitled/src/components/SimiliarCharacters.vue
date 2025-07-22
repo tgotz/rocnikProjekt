@@ -32,7 +32,7 @@ export default {
     async fetchSimilarCharacters() {
       try {
         const response = await axios.get(
-            `http://localhost:8080/api/character/${this.characterId}/similar`
+            `${import.meta.env.VITE_API_URL}/api/character/${this.characterId}/similar`
         );
         this.similarCharacters = response.data;
       } catch (error) {

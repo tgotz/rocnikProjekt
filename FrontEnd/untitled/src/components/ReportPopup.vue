@@ -46,7 +46,7 @@ const submitReport = async () => {
       return;
     }
     console.log(payload)
-    await axios.post(`http://localhost:8080/api/reports/add?userId=${props.userId}`, payload, {
+    await axios.post(`${import.meta.env.VITE_API_URL}/api/reports/add?userId=${props.userId}`, payload, {
       withCredentials: true
     });
 

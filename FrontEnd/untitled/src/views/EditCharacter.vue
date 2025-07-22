@@ -97,7 +97,7 @@
             <label for="characterActor">Herec/herečka</label>
             <AutocompleteInput
                 v-model="actorName"
-                :search-url="'http://localhost:8080/api/actors/search'"
+                :search-url="`${apiUrl}/api/actors/search`"
                 placeholder="Zadejte jméno herce/herečky"
                 :required="false"
             />
@@ -108,7 +108,7 @@
             <label for="characterActor">Daber/dabérka</label>
             <AutocompleteInput
                 v-model="dabberName"
-                :search-url="'http://localhost:8080/api/actors/search'"
+                :search-url="`${apiUrl}/api/actors/search`"
                 placeholder="Zadejte jméno dabéra/dabérky"
                 :required="false"
             />
@@ -141,6 +141,7 @@
 </template>
 
 <script>
+const apiUrl = import.meta.env.VITE_API_URL;
 import axios from "axios";
 import { useUserStore } from "../stores/userStore";
 import AutocompleteInput from "@/components/AutocompleteInput.vue";
@@ -201,7 +202,7 @@ export default {
   methods: {
     async fetchCharacter(id) {
       try {
-        const response = await axios.get(`http://localhost:8080/api/character/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/character/${id}`);
         this.character = response.data.character;
         this.quotes = response.data.quotes;
         this.quotesInput = this.quotes.map(q => q.textQuote).join("\n");
@@ -292,7 +293,7 @@ export default {
           formData.append("picture", this.imageFile);
         }
 
-        await axios.post("http://localhost:8080/api/character/update-character", formData, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/character/update-character`, formData, {
           withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",

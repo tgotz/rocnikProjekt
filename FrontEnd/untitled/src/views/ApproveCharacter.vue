@@ -97,7 +97,7 @@ export default {
     // fetching all characters
     const fetchCharacters = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/character/approve", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/character/approve`, {
           withCredentials: true,
         });
         characters.value = response.data;
@@ -129,7 +129,7 @@ export default {
       console.log(userStore.userId);
       try {
         const response = await axios.post(
-            "http://localhost:8080/api/character/approve-character",
+            `${import.meta.env.VITE_API_URL}/api/character/approve-character`,
             {
               id: id, // ID postavy
               userId: userStore.userId // id of user who's approving the character (currently logged in)
@@ -159,7 +159,7 @@ export default {
       console.log(id)
       try {
         await axios.delete(
-            `http://localhost:8080/api/character/delete-character/${id}`,
+            `${import.meta.env.VITE_API_URL}/api/character/delete-character/${id}`,
             { withCredentials: true }
         );
         characters.value.splice(currentIndex.value, 1);

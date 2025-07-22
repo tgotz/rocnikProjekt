@@ -123,7 +123,7 @@ export default {
           user: {id: userId}
         };
 
-        const response = await axios.post("http://localhost:8080/api/reviews/add", requestData, {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/reviews/add`, requestData, {
           headers: { "Content-Type": "application/json" },
         });
 

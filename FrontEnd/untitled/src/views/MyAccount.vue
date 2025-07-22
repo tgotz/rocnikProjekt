@@ -67,7 +67,7 @@ export default {
   async mounted() {
     const store = useUserStore();
     try {
-      const response = await axios.get("http://localhost:8080/api/users/profile", { withCredentials: true });
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/profile`, { withCredentials: true });
       this.user = { ...response.data };
       console.log(this.user)
       // Můžeš volat i /api/user-stats nebo něco, co ti dá třeba počet postav

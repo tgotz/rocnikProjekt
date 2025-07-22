@@ -107,10 +107,10 @@ export default {
     async fetchReports() {
       try {
         const [charRes, revRes] = await Promise.all([
-          axios.get("http://localhost:8080/api/reports/characters", {
+          axios.get(`${import.meta.env.VITE_API_URL}/api/reports/characters`, {
             withCredentials: true,
           }),
-          axios.get("http://localhost:8080/api/reports/reviews", {
+          axios.get(`${import.meta.env.VITE_API_URL}/api/reports/reviews`, {
             withCredentials: true,
           }),
         ]);
@@ -118,7 +118,7 @@ export default {
         const characters = await Promise.all(
             charRes.data.map(async ([id, name, count, latest]) => {
               const detail = await axios.get(
-                  `http://localhost:8080/api/reports/character/${id}`,
+                  `${import.meta.env.VITE_API_URL}/api/reports/character/${id}`,
                   { withCredentials: true }
               );
               return {
@@ -136,7 +136,7 @@ export default {
         const reviews = await Promise.all(
             revRes.data.map(async ([id, username, count, latest]) => {
               const detail = await axios.get(
-                  `http://localhost:8080/api/reports/review/${id}`,
+                  `${import.meta.env.VITE_API_URL}/api/reports/review/${id}`,
                   { withCredentials: true }
               );
               return {
@@ -168,7 +168,7 @@ export default {
               : `/api/reports/resolve/review/${group.id}`;
 
       try {
-        await axios.post(`http://localhost:8080${endpoint}`, {}, { withCredentials: true });
+        await axios.post(`${import.meta.env.VITE_API_URL}${endpoint}`, {}, { withCredentials: true });
         alert("Reporty byly označeny jako vyřešené.");
         this.fetchReports(); // Refresh
       } catch (err) {
@@ -177,7 +177,7 @@ export default {
     },
     async resolveSingle(reportId) {
       try {
-        await axios.put(`http://localhost:8080/api/reports/${reportId}/resolve?solvedById=1`, {}, {
+        await axios.put(`${import.meta.env.VITE_API_URL}/api/reports/${reportId}/resolve?solvedById=1`, {}, {
           withCredentials: true,
         });
         alert("Report označen jako vyřešený.");

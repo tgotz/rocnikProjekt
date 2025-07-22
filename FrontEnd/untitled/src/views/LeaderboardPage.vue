@@ -57,7 +57,7 @@ export default {
     async fetchLeaderboard() {
       try {
         const sort = this.$route.query.sort || "overall DESC";
-        const response = await axios.get("http://localhost:8080/api/leaderboard", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/leaderboard`, {
           params: { sort },
         });
 

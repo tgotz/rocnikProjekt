@@ -89,7 +89,7 @@ export default {
   methods: {
     async fetchCharacters() {
       try {
-        const response = await axios.get("http://localhost:8080/api/character/dashboard", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/character/dashboard`, {
           withCredentials: true,
         });
         this.characters = response.data;
@@ -102,7 +102,7 @@ export default {
       if (confirm("Opravdu chcete smazat tuto postavu?")) {
         try {
           await axios.delete(
-              `http://localhost:8080/api/character/delete-character/${id}`,
+              `${import.meta.env.VITE_API_URL}/api/character/delete-character/${id}`,
               { withCredentials: true }
           );
           // updating list of characters

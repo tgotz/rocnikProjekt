@@ -54,7 +54,7 @@ export default {
       const userStore = useUserStore();
 
       try {
-        const response = await axios.post("http://localhost:8080/api/auth/login", {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
           username: this.username,
           password: this.password,
         });
@@ -90,7 +90,7 @@ export default {
     async checkLoginStatus() {
       const userStore = useUserStore();
       try {
-        const response = await axios.get("http://localhost:8080/api/users/user-info", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/user-info`, {
           withCredentials: true,
         });
 

@@ -70,7 +70,7 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get("http://localhost:8080/api/users", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`, {
           withCredentials: true,
         });
         this.users = response.data;
@@ -95,7 +95,7 @@ export default {
         }
 
         await axios.put(
-            `http://localhost:8080/api/users/${userId}/role`,
+            `${import.meta.env.VITE_API_URL}/api/users/${userId}/role`,
             null, // žádné body (data), jen query param
             {
               params: {
@@ -115,7 +115,7 @@ export default {
       if (!confirm("Opravdu chcete tohoto uživatele smazat?")) return;
 
       try {
-        await axios.delete(`http://localhost:8080/api/users/${userId}`, {
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
           withCredentials: true,
         });
 

@@ -86,7 +86,7 @@ export default {
       if (confirm("Opravdu chcete smazat tuto postavu?")) {
         try {
           await axios.post(
-              `http://localhost:8080/api/character/delete-character/${id}`,
+              `${import.meta.env.VITE_API_URL}/api/character/delete-character/${id}`,
               {},
               { withCredentials: true }
           );
@@ -98,7 +98,7 @@ export default {
     },
     async fetchCharacterData() {
       try {
-        const response = await axios.get(`http://localhost:8080/api/character/${this.$route.params.id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/character/${this.$route.params.id}`);
 
         this.character = response.data.character;
         this.quotes = response.data.quotes;
@@ -115,7 +115,7 @@ export default {
       if (!confirm("Opravdu chcete smazat tuto recenzi?")) return;
 
       try {
-        await axios.delete(`http://localhost:8080/api/reviews/${reviewId}`, {
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/reviews/${reviewId}`, {
           withCredentials: true
         });
         this.reviews = this.reviews.filter(r => r.id !== reviewId);

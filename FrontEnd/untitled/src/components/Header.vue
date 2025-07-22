@@ -133,7 +133,7 @@ export default {
 
     const checkLoginStatus = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/users/user-info", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/user-info`, {
           withCredentials: true,
         });
 
@@ -171,7 +171,7 @@ export default {
 
     const logout = async () => {
       try {
-        await axios.post("http://localhost:8080/api/auth/logout", {}, { withCredentials: true });
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {}, { withCredentials: true });
         userStore.clearUser();
       } catch (error) {
         console.error("Chyba při odhlašování:", error);

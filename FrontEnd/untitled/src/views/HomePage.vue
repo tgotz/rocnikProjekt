@@ -48,7 +48,7 @@ export default {
   methods: {
     async fetchCharacters() {
       try {
-        const response = await axios.get('http://localhost:8080/api/character');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/character`);
         this.characters = response.data;
         this.filterCharacters();
       } catch (error) {

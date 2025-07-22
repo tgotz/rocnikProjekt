@@ -95,7 +95,7 @@ export default {
     async checkLoginStatus() {
       const userStore = useUserStore();
       try {
-        const response = await axios.get("http://localhost:8080/api/users/user-info", {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users/user-info`, {
           withCredentials: true,
         });
 
