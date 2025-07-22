@@ -109,13 +109,13 @@ const createAppRouter = async (pinia) => {
         },
         {
             path:'/my-account',
-            name: MyAccount,
+            name: 'MyAccount',
             component: MyAccount,
             beforeEnter: requireRole(1),
         },
         {
             path:'/reports-dashboard',
-            name: ReportsDashboard,
+            name: 'ReportsDashboard',
             component: ReportsDashboard,
             beforeEnter: requireRole(3),
         }

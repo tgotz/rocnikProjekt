@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: characters
+      MYSQL_USER: webik
+      MYSQL_PASSWORD: webik69
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+
+  backend:
+    build:
+      context: ./backendspring
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/characters
+      SPRING_DATASOURCE_USERNAME: webik
+      SPRING_DATASOURCE_PASSWORD: webik69
+
+  frontend:
+    build:
+      context: ./frontend/untitled
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+
