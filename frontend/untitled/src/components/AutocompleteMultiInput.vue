@@ -8,6 +8,7 @@
         rows="4"
         placeholder="Zadejte název filmu a potvrďte Enterem. Každý řádek = jeden film."
         @input="filterSuggestions"
+        @compositioned="filteredSuggestions"
         @click="updateActiveLine"
         @keyup="updateActiveLine"
         @keydown.enter="handleEnter"

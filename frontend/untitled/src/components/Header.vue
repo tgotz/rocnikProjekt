@@ -4,20 +4,22 @@
       <nav class="navbar navbar-dark navbar-expand-lg">
         <div class="container-fluid">
           <router-link
-                class="navbar-brand"
-                :to="{
+              class="navbar-brand"
+              :to="{
                  path: '/',
                  query: {
                  showCartoon: 'true',
                  showIRL: 'true',
                   genders: ['Muž', 'Žena', 'Jiné'].join(','),
                 },
-                  }">
+                  }"
+              @click="closeNavbar">
             <h1>
               <img class="navbar-logo" src="/images/logo.png" alt="logo" />
             </h1>
           </router-link>
           <button
+              ref="navbarToggler"
               class="navbar-toggler"
               type="button"
               data-bs-toggle="collapse"
@@ -25,10 +27,11 @@
               aria-controls="navbarNavDropdown"
               aria-expanded="false"
               aria-label="Toggle navigation"
+              data-target="#navbar-collapse"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+          <div ref="navbarCollapse" class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
             <ul class="navbar-nav d-flex align-items-center">
               <li class="nav-item">
                 <router-link
@@ -40,7 +43,8 @@
                  showIRL: 'true',
                   genders: ['Muž', 'Žena', 'Jiné'].join(','),
                 },
-                  }">Domů</router-link>
+                  }"
+                    @click="closeNavbar">Domů</router-link>
               </li>
               <li class="nav-item dropdown">
                 <a
@@ -54,18 +58,18 @@
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/leaderboard', query: { sort: 1 } }">Nejoblíbenější</router-link>
+                    <router-link class="dropdown-item" :to="{ path: '/leaderboard', query: { sort: 1 } }" @click="closeNavbar">Nejoblíbenější</router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/leaderboard', query: { sort: 2 } }">Nejnenáviděnější</router-link>
+                    <router-link class="dropdown-item" :to="{ path: '/leaderboard', query: { sort: 2 } }" @click="closeNavbar">Nejnenáviděnější</router-link>
                   </li>
                   <li>
-                    <router-link class="dropdown-item" :to="{ path: '/leaderboard', query: { sort: 3 } }">Nejatraktivnější</router-link>
+                    <router-link class="dropdown-item" :to="{ path: '/leaderboard', query: { sort: 3 } }" @click="closeNavbar">Nejatraktivnější</router-link>
                   </li>
                 </ul>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link text-white" to="/add-character">Přidat postavu</router-link>
+                <router-link class="nav-link text-white" to="/add-character" @click="closeNavbar">Přidat postavu</router-link>
               </li>
               <!-- administration dropdown - for logged in users only -->
               <li
@@ -84,16 +88,16 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li v-if="user?.role && user.role >= 2">
-                    <router-link class="dropdown-item" to="/approve-characters">Schvalování postav</router-link>
+                    <router-link class="dropdown-item" to="/approve-characters" @click="closeNavbar">Schvalování postav</router-link>
                   </li>
                   <li v-if="user?.role && user.role >= 3">
-                    <router-link class="dropdown-item" to="/dashboard">Správa postav</router-link>
+                    <router-link class="dropdown-item" to="/dashboard" @click="closeNavbar">Správa postav</router-link>
                   </li>
                   <li v-if="user?.role && user.role >= 4">
-                    <router-link class="dropdown-item" to="/manage-users">Správa uživatelů</router-link>
+                    <router-link class="dropdown-item" to="/manage-users" @click="closeNavbar">Správa uživatelů</router-link>
                   </li>
                   <li v-if="user?.role && user.role >= 3">
-                    <router-link class="dropdown-item" to="/reports-dashboard">Správa nahlášení</router-link>
+                    <router-link class="dropdown-item" to="/reports-dashboard" @click="closeNavbar">Správa nahlášení</router-link>
                   </li>
                 </ul>
               </li>
@@ -145,7 +149,7 @@
                     <strong>Role:</strong> {{ roleLabel }}
                   </li>
                   <li>
-                    <router-link to="/my-account" class="dropdown-item">Můj účet</router-link>
+                    <router-link to="/my-account" class="dropdown-item" @click="closeNavbar">Můj účet</router-link>
                   </li>
                   <li>
                     <button class="dropdown-item" @click="logout">Odhlásit se</button>
@@ -168,6 +172,8 @@ import { ref, computed, onMounted } from "vue";
 export default {
   setup() {
     const userStore = useUserStore();
+    const navbarCollapse = ref(null);
+    const navbarToggler = ref(null);
     const user = computed(() => userStore.user);
     const isLoggedIn = computed(() => userStore.isLoggedIn);
 
@@ -211,8 +217,9 @@ export default {
 
     const logout = async () => {
       try {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {}, { withCredentials: true });
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {}, {withCredentials: true});
         userStore.clearUser();
+        closeNavbar();
       } catch (error) {
         console.error("Chyba při odhlašování:", error);
       }
@@ -220,6 +227,17 @@ export default {
 
     const redirectToLogin = () => {
       window.location.href = "/login";
+    };
+
+    // Function to close the navbar collapse using template refs
+    const closeNavbar = () => {
+      if (navbarCollapse.value && navbarCollapse.value.classList.contains('show')) {
+        navbarCollapse.value.classList.remove('show');
+        if (navbarToggler.value) {
+          navbarToggler.value.setAttribute('aria-expanded', 'false');
+          navbarToggler.value.classList.add('collapsed');
+        }
+      }
     };
 
     onMounted(() => {
@@ -233,19 +251,24 @@ export default {
       logout,
       redirectToLogin,
       roleLabel,
+      closeNavbar,
+      navbarCollapse,
+      navbarToggler,
     };
   },
 };
 </script>
-<style>
-.navbar-nav li{
-  text-shadow: 0 0px 3px rgba(0,0,0,0.8);
 
+<style>
+.navbar-nav li {
+  text-shadow: 0 0px 3px rgba(0, 0, 0, 0.8);
 }
-.bi-person-circle{
-  text-shadow:none;
+
+.bi-person-circle {
+  text-shadow: none;
 }
-.dropdown-menu .dropdown-item{
-  text-shadow:none;
+
+.dropdown-menu .dropdown-item {
+  text-shadow: none;
 }
 </style>

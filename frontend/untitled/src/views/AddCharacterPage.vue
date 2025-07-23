@@ -157,7 +157,6 @@
 
 
 <script>
-const apiUrl = import.meta.env.VITE_API_URL;
 
 import axios from "axios";
 import AutocompleteInput from "@/components/AutocompleteInput.vue";
@@ -168,6 +167,7 @@ export default {
 
   data() {
     return {
+      apiUrl: import.meta.env.VITE_API_URL, // <-- sem
       formData: {
         name: "",
         type: "Animovaná",
