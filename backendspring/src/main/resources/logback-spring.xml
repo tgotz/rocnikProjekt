@@ -15,4 +15,19 @@
         <maxHistory>30</maxHistory>
     </rollingPolicy>
 </appender>
+   <!-- 🌐 HTTP REQUEST LOGGER -->
+    <logger name="HttpRequestLogger" level="INFO" additivity="false">
+        <appender-ref ref="HTTP_LOG_FILE"/>
+    </logger>
+
+    <appender name="HTTP_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/http-requests.log</file>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/http-requests.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
 </configuration>
