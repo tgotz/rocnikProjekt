@@ -7,12 +7,11 @@
         v-model="inputText"
         rows="4"
         placeholder="Zadejte název filmu a potvrďte Enterem. Každý řádek = jeden film."
-        @input="filterSuggestions"
-        @compositioned="filteredSuggestions"
         @click="updateActiveLine"
-        @keyup="updateActiveLine"
+        @keyup="onKeyup"
         @keydown.enter="handleEnter"
     />
+
 
     <!-- Suggestions -->
     <ul v-if="filteredSuggestions.length" class="suggestions-list">
@@ -43,6 +42,11 @@ const filteredSuggestions = ref([]);
 watch(inputText, (val) => {
   emit('update:modelValue', val);
 });
+const onKeyup = (event) => {
+  const newValue = event.target.value;
+  updateActiveLine(event);
+  filterSuggestions(newValue);
+};
 const updateActiveLine = (event) => {
   const position = event.target.selectionStart;
   const value = event.target.value;
@@ -50,8 +54,9 @@ const updateActiveLine = (event) => {
   activeLineIndex.value = lines.length - 1;
 };
 
-const filterSuggestions = async () => {
-  const lines = inputText.value.split("\n");
+const filterSuggestions = async (rawValue = null) => {
+  const fullText = rawValue ?? inputText.value;
+  const lines = fullText.split("\n");
   const currentLine = lines[activeLineIndex.value]?.toLowerCase().trim();
 
   if (!currentLine || currentLine.length < 2) {
