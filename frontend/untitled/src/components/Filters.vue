@@ -79,42 +79,54 @@
 
 <script>
 export default {
-  props: {
-    filters: {
-      type: Object,
-      required: true,
-    },
-  },
   data() {
     return {
-      localFilters: {...this.filters},
+      localFilters: {
+        search: '',
+        genders: [],
+        showCartoon: true,
+        showIRL: true,
+        sortOrder: '',
+      },
     };
   },
   watch: {
-    filters: {
-      deep: true,
-      handler(newFilters) {
-        this.localFilters = {...newFilters};
+    // Sleduj URL parametry a aktualizuj localFilters
+    '$route.query': {
+      immediate: true,
+      handler(query) {
+        this.localFilters.search = query.search || '';
+        this.localFilters.genders = query.genders
+            ? Array.isArray(query.genders)
+                ? query.genders
+                : query.genders.split(',')
+            : ['Muž', 'Žena', 'Jiné'];
+
+        this.localFilters.showCartoon =
+            query.showCartoon !== undefined ? query.showCartoon === 'true' : true;
+        this.localFilters.showIRL =
+            query.showIRL !== undefined ? query.showIRL === 'true' : true;
+
+        this.localFilters.sortOrder = query.sortOrder || '';
       },
     },
   },
   methods: {
     applyFilters() {
+      // Pokud není žádné pohlaví vybráno → nastav všechny
       if (this.localFilters.genders.length === 0) {
         this.localFilters.genders = ['Muž', 'Žena', 'Jiné'];
       }
 
-      console.log('Odesílám filtry:', this.localFilters);
+      // Pokud není zvolen žádný typ postavy → nastav oba
+      if (!this.localFilters.showCartoon && !this.localFilters.showIRL) {
+        this.localFilters.showCartoon = true;
+        this.localFilters.showIRL = true;
+      }
+
+      // Emitni filtry
       this.$emit('filters-changed', this.localFilters);
     },
-  },
-  mounted() {
-    if (this.localFilters.genders.length === 0) {
-      this.localFilters.genders = ['Muž', 'Žena', 'Jiné'];
-    }
-    if (this.localFilters.sortOrder === undefined) {
-      this.localFilters.sortOrder = '';
-    }
   },
 };
 </script>

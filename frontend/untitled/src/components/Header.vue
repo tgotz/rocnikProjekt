@@ -79,23 +79,52 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-item dropdown fs-2" style="cursor: pointer;">
+              <li class="nav-item dropdown" style="cursor: pointer;">
+                <!-- desktop - icon -->
                 <a
                     v-if="isLoggedIn"
-                    class="nav-link"
+                    class="nav-link d-none d-lg-block fs-2"
                     href="#"
                     role="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                 >
-                  <i class="bi bi-person-circle logged-in"></i>
+                  <i class="bi bi-person-circle logged-in fs-2"></i>
                 </a>
+                <a
+                    v-else
+                    class="nav-link text-white logged-out d-none d-lg-block fs-2"
+                    @click="redirectToLogin"
+                >
+                  <i class="bi bi-person-circle"></i>
+                </a>
+
+                <!-- Mobile device - text -->
+                <a
+                    v-if="isLoggedIn"
+                    class="nav-link text-white d-block d-lg-none"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                  Můj účet
+                </a>
+                <a
+                    v-else
+                    class="nav-link text-white d-block d-lg-none"
+                    @click="redirectToLogin"
+                >
+                  Můj účet
+                </a>
+
+                <!-- DROPDOWN MENU (funguje pro obě varianty) -->
                 <ul class="dropdown-menu dropdown-menu-end" v-if="isLoggedIn">
                   <li class="dropdown-item">
                     <strong>Uživatel:</strong> {{ user?.username }}
                   </li>
                   <li class="dropdown-item">
-                    <strong>Role:</strong> {{ roleLabel}}
+                    <strong>Role:</strong> {{ roleLabel }}
                   </li>
                   <li>
                     <router-link to="/my-account" class="dropdown-item">Můj účet</router-link>
@@ -104,13 +133,6 @@
                     <button class="dropdown-item" @click="logout">Odhlásit se</button>
                   </li>
                 </ul>
-                <a
-                    v-else
-                    class="nav-link text-white logged-out"
-                    @click="redirectToLogin"
-                >
-                  <i class="bi bi-person-circle"></i>
-                </a>
               </li>
             </ul>
           </div>
