@@ -23,7 +23,7 @@
     </div>
 
     <p class="d-flex justify-content-center mt-5">
-      <a href="#database">
+      <a href="#" @click.prevent="scrollToDatabase">
         <i class="arrow"></i>
       </a>
     </p>
@@ -112,6 +112,12 @@ export default {
           .addClass('text-center slick-carousel-item');
 
     },
+    scrollToDatabase() {
+      const target = document.getElementById('database');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   },
 };
 </script>

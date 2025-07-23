@@ -89,7 +89,8 @@ public class SecurityConfig {
     "http://csdfp.cz",
     "http://*.csdfp.cz",
     "https://csdfp.cz",
-    "https://*.csdfp.cz"
+    "https://*.csdfp.cz",
+    "http://localhost:5173/"
 
     ));
 

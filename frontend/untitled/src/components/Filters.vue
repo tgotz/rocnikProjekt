@@ -61,7 +61,7 @@
           </div>
         </div>
         <div class="col-12 col-sm-3 col-xl-12 mt-2">
-          <select class="mb-2" v-model="localFilters.sortOrder">
+          <select class="mb-2 w-100" v-model="localFilters.sortOrder">
             <option value="">Seřadit dle</option>
             <option value="name ASC">Jméno (A-Z)</option>
             <option value="name DESC">Jméno (Z-A)</option>

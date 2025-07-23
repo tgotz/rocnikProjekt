@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Carousel v-if="characters.length > 0" :characters="characters" />
+    <Carousel class="d-none d-md-block" v-if="characters.length > 0" :characters="characters" />
     <div class="row">
       <h4 id="database" class="text-center fs-2 my-5">Databáze postav</h4>
       <div class="col-xl-3">
@@ -55,6 +55,7 @@ export default {
         console.error('Error fetching characters:', error);
       }
     },
+
 
     filterCharacters() {
       const { search, showCartoon, showIRL, genders, sortOrder } = this.filters;

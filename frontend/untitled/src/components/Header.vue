@@ -3,7 +3,16 @@
     <div class="container">
       <nav class="navbar navbar-dark navbar-expand-lg">
         <div class="container-fluid">
-          <router-link class="navbar-brand" to="/">
+          <router-link
+                class="navbar-brand"
+                :to="{
+                 path: '/',
+                 query: {
+                 showCartoon: 'true',
+                 showIRL: 'true',
+                  genders: ['Muž', 'Žena', 'Jiné'].join(','),
+                },
+                  }">
             <h1>
               <img class="navbar-logo" src="/images/logo.png" alt="logo" />
             </h1>
@@ -22,7 +31,16 @@
           <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
             <ul class="navbar-nav d-flex align-items-center">
               <li class="nav-item">
-                <router-link class="nav-link active" aria-current="page" to="/">Domů</router-link>
+                <router-link
+                    class="nav-link active"
+                    :to="{
+                 path: '/',
+                 query: {
+                 showCartoon: 'true',
+                 showIRL: 'true',
+                  genders: ['Muž', 'Žena', 'Jiné'].join(','),
+                },
+                  }">Domů</router-link>
               </li>
               <li class="nav-item dropdown">
                 <a
