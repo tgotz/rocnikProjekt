@@ -2,7 +2,7 @@
   <div class="autocomplete-wrapper position-relative">
     <input
         v-model="input"
-        @input="onInput"
+        @keyup="onKeyup"
         type="text"
         class="form-control"
         :placeholder="placeholder"
@@ -42,17 +42,22 @@ watch(() => props.modelValue, (val) => {
   input.value = val;
 });
 
-const onInput = async () => {
-  emit("update:modelValue", input.value);
+const onKeyup = (event) => {
+  const value = event.target.value;
+  input.value = value;
+  emit("update:modelValue", value);
+  filterSuggestions(value);
+};
 
-  if (input.value.length < 2) {
+const filterSuggestions = async (value) => {
+  if (!value || value.length < 2) {
     suggestions.value = [];
     return;
   }
 
   try {
     const res = await axios.get(props.searchUrl, {
-      params: { query: input.value },
+      params: { query: value },
       withCredentials: true,
     });
     suggestions.value = res.data;
@@ -61,6 +66,7 @@ const onInput = async () => {
     console.error("Autocomplete error:", err);
   }
 };
+
 
 const select = (item) => {
   input.value = item;
