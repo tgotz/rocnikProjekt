@@ -20,6 +20,7 @@ public class RequestLoggingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+	System.out.println(">>> FILTR AKTIVNÍ <<<");
 
         HttpServletRequest req = (HttpServletRequest) request;
 

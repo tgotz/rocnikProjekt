@@ -1,1 +1,11 @@
-2025-07-22 16:57:26 INFO  - LOGIN SUCCESS: user=admin, ip=0:0:0:0:0:0:0:1
+2025-07-23 11:28:06 INFO  - LOGIN SUCCESS: user=admin, ip=77.48.128.37
+2025-07-23 11:28:21 INFO  - LOGIN SUCCESS: user=admin, ip=77.48.128.37
+2025-07-23 11:28:29 INFO  - LOGIN SUCCESS: user=admin, ip=77.48.128.37
+2025-07-23 11:28:54 INFO  - LOGIN SUCCESS: user=uzivatel, ip=77.48.128.37
+2025-07-23 11:29:27 WARN  - LOGIN FAIL: user=Admin, ip=77.48.128.37, reason=Špatné přihlašovací údaje
+2025-07-23 11:29:58 INFO  - LOGIN SUCCESS: user=admin, ip=77.48.128.37
+2025-07-23 11:39:16 INFO  - LOGIN SUCCESS: user=admin, ip=77.48.128.37
+2025-07-23 11:39:42 WARN  - LOGIN FAIL: user=Admin, ip=77.48.128.37, reason=Špatné přihlašovací údaje
+2025-07-23 11:39:47 INFO  - LOGIN SUCCESS: user=admin, ip=77.48.128.37
+2025-07-23 11:46:09 INFO  - LOGIN SUCCESS: user=admin, ip=77.48.128.37
+2025-07-23 11:46:27 INFO  - LOGIN SUCCESS: user=moderator, ip=77.48.128.37
